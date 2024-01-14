@@ -3,21 +3,21 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@expo/metro-config": "*",
+    "@expo/vector-icons": "*",
+    "@nx/expo": "*",
     "@testing-library/jest-native": "*",
     "@testing-library/react-native": "*",
-    "metro-config": "*",
-    "react-native": "*",
     "expo": "*",
-    "react-native-svg": "*",
-    "react-native-web": "*",
-    "@expo/vector-icons": "*",
     "expo-font": "*",
-    "react": "*",
+    "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "*",
-    "@nx/expo": "*",
-    "@expo/metro-config": "*",
+    "metro-config": "*",
+    "react": "*",
+    "react-native": "*",
+    "react-native-svg": "*",
     "react-native-svg-transformer": "*",
-    "expo-splash-screen": "~0.20.5"
+    "react-native-web": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",
@@ -26,6 +26,7 @@
     "ios": "expo run:ios"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "pod-install": "^0.1.39"
   }
 }

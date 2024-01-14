@@ -220,6 +220,9 @@ importers:
       '@babel/core':
         specifier: ^7.20.0
         version: 7.23.7
+      pod-install:
+        specifier: ^0.1.39
+        version: 0.1.39
 
 packages:
 
@@ -2068,7 +2071,7 @@ packages:
     resolution: {integrity: sha512-Y4RpSL9EqaPF+Vd2GrK6r7Xx7Dv0Xdq3AGAD9C0KwV21WqP/scj/dpjxFY+ABwmdhNsFzYXb8fmDyh4tiKenPQ==}
     dependencies:
       '@expo/json-file': 8.2.36
-      '@expo/spawn-async': 1.7.0
+      '@expo/spawn-async': 1.7.2
       ansi-regex: 5.0.1
       chalk: 4.1.2
       find-up: 5.0.0
@@ -2646,7 +2649,6 @@ packages:
       - debug
       - detox
       - eas-cli
-      - encoding
       - esbuild
       - eslint
       - expo
@@ -11104,6 +11106,11 @@ packages:
   /pngjs@6.0.0:
     resolution: {integrity: sha512-TRzzuFRRmEoSW/p1KVAmiOgPco2Irlah+bGFCeNfJXxxYGwSw7YwAOAcd7X28K/m5bjBWKsC29KyoMfHbypayg==}
     engines: {node: '>=12.13.0'}
+
+  /pod-install@0.1.39:
+    resolution: {integrity: sha512-0kVvdLYe0CtfJEr+ISvTMxAEB0UF4JMRToPjuu9xAAq1mEqA2Ql5u7uLWX1m45BMM+7NfU4LnBbnfNjmQE9GCw==}
+    hasBin: true
+    dev: true
 
   /portfinder@1.0.32:
     resolution: {integrity: sha512-on2ZJVVDXRADWE6jnQaX0ioEylzgBpQk8r55NE4wjXW1ZxO+BgDlY6DXwj20i0V8eB4SenDQ00WEaxfiIQPcxg==}
