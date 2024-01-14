@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Mobile",
-    "slug": "mobile",
+    "name": "movie-web",
+    "slug": "mw-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,6 +17,7 @@
       "**/*"
     ],
     "ios": {
+	  "jsEngine": "jsc",
       "supportsTablet": true,
       "bundleIdentifier": "dev.movieweb.app"
     },
