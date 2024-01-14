@@ -16,10 +16,16 @@
     "expo-status-bar": "*",
     "@nx/expo": "*",
     "@expo/metro-config": "*",
-    "react-native-svg-transformer": "*"
+    "react-native-svg-transformer": "*",
+    "expo-splash-screen": "~0.20.5"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",
-    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/mobile"
+    "eas-build-post-install": "cd ../../ && node tools/scripts/eas-build-post-install.mjs . apps/mobile",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
   }
 }
