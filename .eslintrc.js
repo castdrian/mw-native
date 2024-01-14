@@ -10,7 +10,6 @@ module.exports = {
     'tests/*',
     '/*.cjs',
     '/*.js',
-    '/*.ts',
     '/**/*.test.ts',
     'test/*',
   ],
