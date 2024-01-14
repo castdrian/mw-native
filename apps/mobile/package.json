@@ -17,7 +17,9 @@
     "react-native": "*",
     "react-native-svg": "*",
     "react-native-svg-transformer": "*",
-    "react-native-web": "*"
+    "react-native-web": "*",
+    "@babel/core": "*",
+    "pod-install": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",
