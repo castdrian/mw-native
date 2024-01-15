@@ -39,7 +39,6 @@
     "jest-circus": "^29.4.1",
     "jest-environment-jsdom": "^29.4.1",
     "jest-expo": "~49.0.0",
-    "metro-resolver": "0.76.8",
     "nx": "17.2.8",
     "prettier": "^3.0.3",
     "react-test-renderer": "18.2.0",
