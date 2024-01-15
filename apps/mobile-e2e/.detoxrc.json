@@ -11,19 +11,19 @@
   "apps": {
     "ios.debug": {
       "type": "ios.app",
-      "build": "cd ../../apps/mobile/ios && xcodebuild -workspace Mobile.xcworkspace -scheme Mobile -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath ./build -quiet",
-      "binaryPath": "../../apps/mobile/ios/build/Build/Products/Debug-iphonesimulator/Mobile.app"
+      "build": "cd ../../apps/mobile/ios && xcodebuild -workspace movieweb.xcworkspace -scheme movieweb -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath ./build -quiet",
+      "binaryPath": "../../apps/mobile/ios/build/Build/Products/Debug-iphonesimulator/movieweb.app"
     },
     "ios.release": {
       "type": "ios.app",
-      "build": "cd ../../apps/mobile/ios && xcodebuild -workspace Mobile.xcworkspace -scheme Mobile -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath ./build -quiet",
-      "binaryPath": "../../apps/mobile/ios/build/Build/Products/Release-iphonesimulator/Mobile.app"
+      "build": "cd ../../apps/mobile/ios && xcodebuild -workspace movieweb.xcworkspace -scheme movieweb -configuration Release -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14' -derivedDataPath ./build -quiet",
+      "binaryPath": "../../apps/mobile/ios/build/Build/Products/Release-iphonesimulator/movieweb.app"
     },
 
     "ios.local": {
       "type": "ios.app",
-      "build": "pnpm exec nx run mobile:build --platform ios --profile preview --wait --local --no-interactive --output=../../apps/mobile/dist/Mobile.tar.gz",
-      "binaryPath": "../../apps/mobile/dist/Mobile.app"
+      "build": "pnpm exec nx run mobile:build --platform ios --profile preview --wait --local --no-interactive --output=../../apps/mobile/dist/movieweb.tar.gz",
+      "binaryPath": "../../apps/mobile/dist/movieweb.app"
     },
 
     "android.debug": {
@@ -39,8 +39,8 @@
 
     "android.local": {
       "type": "android.apk",
-      "build": "pnpm exec nx run mobile:build --platform android --profile preview --wait --local --no-interactive --output=../../apps/mobile/dist/Mobile.apk",
-      "binaryPath": "../../apps/mobile/dist/Mobile.apk"
+      "build": "pnpm exec nx run mobile:build --platform android --profile preview --wait --local --no-interactive --output=../../apps/mobile/dist/movieweb.apk",
+      "binaryPath": "../../apps/mobile/dist/movieweb.apk"
     }
   },
   "devices": {
