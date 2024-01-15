@@ -4,6 +4,7 @@
     "slug": "mw-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
+	"scheme":"dev.movieweb.app",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -33,6 +34,7 @@
       "bundler": "metro"
     },
     "plugins": [
+	  "expo-router",
       [
         "@config-plugins/detox",
         {
@@ -43,6 +45,9 @@
           ]
         }
       ]
-    ]
+    ],
+	"experiments": {
+	   "typedRoutes": true
+	}
   }
 }
