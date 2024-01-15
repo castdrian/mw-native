@@ -82,7 +82,7 @@ jobs:
         run: pnpm exec nx run mobile:prebuild --platform=ios
 
       - name: Build iOS app
-        run: cd apps/mobile/ios && xcodebuild archive -workspace movieweb.xcworkspace -scheme "movieweb" -configuration "Release"  -archivePath "build/app.xcarchive" -destination generic/platform=iOS CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+        run: cd apps/mobile/ios && xcodebuild archive -workspace movieweb.xcworkspace -scheme "movieweb" -sdk iphoneos -configuration "Release"  -archivePath "build/app.xcarchive" -destination generic/platform=iOS CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
           
       - name: Export .ipa from .xcarchive
         run: |
