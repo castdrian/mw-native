@@ -1,0 +1,52 @@
+name: build mobile app
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-ios:
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Xcode Select Version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.1.0'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 21
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build native iOS modules
+        run: pnpm exec nx run mobile:prebuild --platform=ios
+
+      - name: Build iOS app
+        run: cd apps/mobile/ios && xcodebuild archive -workspace movieweb.xcworkspace -scheme "movieweb" -configuration "Release"  -archivePath "build/app.xcarchive" -destination generic/platform=iOS CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          
+      - name: Export .ipa from .xcarchive
+        run: mv apps/mobile/ios/build/app.xcarchive/Products/Applications apps/mobile/ios/build/app.xcarchive/Products/Payload && zip -r apps/mobile/ios/build/movie-web.ipa -C apps/mobile/ios/build/app.xcarchive/Products/ Payload
+
+      - name: Upload movie-web.ipa as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: ./apps/mobile/ios/build/movie-web.ipa
