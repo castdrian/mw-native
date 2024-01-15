@@ -43,7 +43,10 @@ jobs:
         run: cd apps/mobile/ios && xcodebuild archive -workspace movieweb.xcworkspace -scheme "movieweb" -configuration "Release"  -archivePath "build/app.xcarchive" -destination generic/platform=iOS CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
           
       - name: Export .ipa from .xcarchive
-        run: mv apps/mobile/ios/build/app.xcarchive/Products/Applications apps/mobile/ios/build/app.xcarchive/Products/Payload && zip -r apps/mobile/ios/build/movie-web.ipa -C apps/mobile/ios/build/app.xcarchive/Products/ Payload
+        run: |
+          mv apps/mobile/ios/build/app.xcarchive/Products/Applications apps/mobile/ios/build/app.xcarchive/Products/Payload
+          cd apps/mobile/ios/build/app.xcarchive/Products
+          zip -r ../../movie-web.ipa Payload
 
       - name: Upload movie-web.ipa as artifact
         uses: actions/upload-artifact@v4
