@@ -3,6 +3,7 @@ import { Tabs } from 'expo-router';
 import { StyleProp, TextStyle } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import { globalStyles } from '../../styles/global';
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -45,9 +46,12 @@ export default function TabLayout() {
           paddingVertical: 18,
           height: 82,
         },
-        tabBarLabelStyle: {
-          marginTop: 2,
-        },
+        tabBarLabelStyle: [
+          {
+            marginTop: 2,
+          },
+          globalStyles.fOpenSansMedium,
+        ],
       }}
     >
       <Tabs.Screen
@@ -72,7 +76,7 @@ export default function TabLayout() {
         name="search"
         options={{
           title: 'Search',
-          tabBarLabel: 'test',
+          tabBarLabel: '',
           tabBarShowLabel: false,
           tabBarLabelStyle: {
             display: 'none',

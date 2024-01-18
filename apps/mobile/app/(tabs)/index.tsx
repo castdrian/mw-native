@@ -1,31 +1,13 @@
-import { StyleSheet } from 'react-native';
+import { RegularText } from '../../components/Styled';
+import ScreenLayout from '../../components/layout/screenLayout';
+import { globalStyles } from '../../styles/global';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
-import Colors from '../../constants/Colors';
-
-export default function TabOneScreen() {
+export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-    </View>
+    <ScreenLayout title="Home" subtitle="This is where all magic happens">
+      <RegularText style={globalStyles.textWhite}>
+        Movies will be listed here
+      </RegularText>
+    </ScreenLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: Colors.dark.shade900,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

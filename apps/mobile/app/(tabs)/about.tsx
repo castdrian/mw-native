@@ -1,19 +1,20 @@
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+import ScreenLayout from '../../components/layout/screenLayout';
+import { globalStyles } from '../../styles/global';
+import { RegularText } from '../../components/Styled';
 
 export default function TabTwoScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <ScreenLayout
+      title="About"
+      subtitle="What is movie-web and how content is served?"
+    >
+      <RegularText style={globalStyles.textWhite}>
+        No content is served from movie-web directly and movie web does not host
+        anything.
+      </RegularText>
+    </ScreenLayout>
   );
 }
 

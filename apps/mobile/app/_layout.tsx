@@ -28,7 +28,12 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     // eslint-disable-next-line global-require
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    OpenSansRegular: require('../assets/fonts/OpenSans-Regular.ttf'),
+    OpenSansLight: require('../assets/fonts/OpenSans-Light.ttf'),
+    OpenSansMedium: require('../assets/fonts/OpenSans-Medium.ttf'),
+    OpenSansBold: require('../assets/fonts/OpenSans-Bold.ttf'),
+    OpenSansSemiBold: require('../assets/fonts/OpenSans-SemiBold.ttf'),
+    OpenSansExtra: require('../assets/fonts/OpenSans-ExtraBold.ttf'),
     ...FontAwesome.font,
   });
 

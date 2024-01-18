@@ -1,35 +1,14 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+import { RegularText } from '../../components/Styled';
+import ScreenLayout from '../../components/layout/screenLayout';
+import { globalStyles } from '../../styles/global';
+import { StyleSheet, Text } from 'react-native';
 
 export default function SettingsScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <ScreenLayout title="Settings" subtitle="Need to change something?">
+      <RegularText style={globalStyles.textWhite}>
+        Settings would be listed in here. Coming soon
+      </RegularText>
+    </ScreenLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
