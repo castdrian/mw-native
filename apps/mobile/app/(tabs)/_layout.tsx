@@ -1,30 +1,8 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-import { StyleProp, TextStyle } from 'react-native';
 
 import Colors from '../../constants/Colors';
+import TabBarIcon from '../../components/TabBarIcon';
 import { globalStyles } from '../../styles/global';
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color?: string;
-  focused?: boolean;
-  style?: StyleProp<TextStyle>;
-}) {
-  return (
-    <FontAwesome
-      color={
-        props.color ||
-        (props.focused ? Colors.dark.purple300 : Colors.dark.shade300)
-      }
-      size={24}
-      {...props}
-    />
-  );
-}
 
 export default function TabLayout() {
   return (
@@ -68,7 +46,7 @@ export default function TabLayout() {
         options={{
           title: 'About',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon name="500px" focused={focused} />
+            <TabBarIcon name="info-circle" focused={focused} />
           ),
         }}
       />

@@ -2,6 +2,7 @@ import { globalStyles } from '../../styles/global';
 import { Image, Text, View } from 'react-native';
 import styles from './styles';
 import { BoldText, RegularText } from '../Styled';
+import { TMDB_POSTER_PATH } from '../../constants/General';
 
 export default function Item() {
   return (
@@ -9,7 +10,7 @@ export default function Item() {
       <View style={styles.imageWrapper}>
         <Image
           source={{
-            uri: 'https://image.tmdb.org/t/p/w342//gdIrmf2DdY5mgN6ycVP0XlzKzbE.jpg',
+            uri: `${TMDB_POSTER_PATH}/w342//gdIrmf2DdY5mgN6ycVP0XlzKzbE.jpg`,
             width: 200,
           }}
           style={styles.image}

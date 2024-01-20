@@ -4,7 +4,7 @@ import ScreenLayout from '../../components/layout/screenLayout';
 import { globalStyles } from '../../styles/global';
 import { RegularText } from '../../components/Styled';
 
-export default function TabTwoScreen() {
+export default function AboutScreen() {
   return (
     <ScreenLayout
       title="About"
