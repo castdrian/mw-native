@@ -16,7 +16,7 @@
     "@testing-library/react-native": "*",
     "expo": "*",
     "expo-font": "^11.4.0",
-    "expo-linking": "^6.0.0",
+    "expo-linking": "^5.0.2",
     "expo-router": "^2.0.14",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "*",
@@ -32,7 +32,16 @@
     "react-native-screens": "^3.29.0",
     "react-native-svg": "*",
     "react-native-svg-transformer": "*",
-    "react-native-web": "^0.19.10"
+    "react-native-web": "^0.19.10",
+    "@rnx-kit/metro-config": "*",
+    "@rnx-kit/metro-resolver-symlinks": "*",
+    "@types/react": "*",
+    "eslint-plugin-react": "*",
+    "eslint-plugin-react-hooks": "*",
+    "jest": "*",
+    "jest-expo": "*",
+    "react-test-renderer": "*",
+    "typescript": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",
