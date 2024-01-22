@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
-import Colors from '../constants/Colors';
+
+import Colors from '../constants/Colors.js';
 
 type Props = {
   focused?: boolean;
@@ -7,13 +8,13 @@ type Props = {
 } & React.ComponentProps<typeof FontAwesome>;
 
 export default function TabBarIcon({
-  color = Colors.dark.shade300,
+  color = Colors.shade[300],
   focused,
   ...rest
 }: Props) {
   return (
     <FontAwesome
-      color={color || (focused ? Colors.dark.purple300 : Colors.dark.shade300)}
+      color={color || (focused ? Colors.purple[300] : Colors.shade[300])}
       size={24}
       {...rest}
     />

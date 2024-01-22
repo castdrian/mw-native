@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "../../dist/out-tsc",
     "types": ["node"]
   },
@@ -11,5 +12,5 @@
     "**/*.spec.tsx",
     "test-setup.ts"
   ],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "constants/Colors.ts", "tailwind.config.mjs"]
 }

@@ -1,11 +1,10 @@
-import { RegularText } from '../../components/Styled';
-import ScreenLayout from '../../components/layout/screenLayout';
-import { globalStyles } from '../../styles/global';
+import ScreenLayout from '../../components/layout/ScreenLayout';
+import { RegularText } from '../../components/ui/Text';
 
 export default function HomeScreen() {
   return (
     <ScreenLayout title="Home" subtitle="This is where all magic happens">
-      <RegularText style={globalStyles.textWhite}>
+      <RegularText className="text-white">
         Movies will be listed here
       </RegularText>
     </ScreenLayout>

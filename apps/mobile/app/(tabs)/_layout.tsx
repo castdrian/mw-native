@@ -1,7 +1,7 @@
 import { Tabs } from 'expo-router';
 
-import Colors from '../../constants/Colors';
 import TabBarIcon from '../../components/TabBarIcon';
+import Colors from '../../constants/Colors.js';
 import { globalStyles } from '../../styles/global';
 
 export default function TabLayout() {
@@ -12,9 +12,9 @@ export default function TabLayout() {
       }}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.dark.purple100,
+        tabBarActiveTintColor: Colors.purple[100],
         tabBarStyle: {
-          backgroundColor: Colors.dark.shade700,
+          backgroundColor: Colors.shade[700],
           borderTopColor: 'transparent',
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
@@ -65,7 +65,7 @@ export default function TabLayout() {
               style={{
                 position: 'relative',
                 top: -1,
-                backgroundColor: Colors.dark.purple400,
+                backgroundColor: Colors.purple[400],
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

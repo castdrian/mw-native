@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { globalStyles } from '../../styles/global';
-import { styles } from './styles';
-import { BoldText, RegularText } from '../Styled';
+
+import { BoldText, RegularText } from '../ui/Text';
 
 type Props = {
   title?: React.ReactNode | string;
@@ -11,21 +10,15 @@ type Props = {
 
 export default function ScreenLayout({ title, subtitle, children }: Props) {
   return (
-    <View
-      style={[
-        globalStyles.pageContainer,
-        globalStyles.container,
-        styles.container,
-      ]}
-    >
+    <View className="bg-shade-900 flex-1 py-12">
       {typeof title === 'string' && (
-        <BoldText style={globalStyles.sectionTitle}>{title}</BoldText>
+        <BoldText className="text-2xl font-bold text-white">{title}</BoldText>
       )}
       {typeof title !== 'string' && title}
-      <RegularText style={[{ marginTop: 4 }, globalStyles.sectionSubtitle]}>
+      <RegularText className="text-shade-200 mt-1 text-sm">
         {subtitle}
       </RegularText>
-      <View style={styles.children}>{children}</View>
+      <View className="py-3">{children}</View>
     </View>
   );
 }
