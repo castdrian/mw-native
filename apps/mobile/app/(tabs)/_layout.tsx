@@ -1,54 +1,102 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
+import { Tabs } from 'expo-router';
 
 import Colors from '../../constants/Colors';
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import TabBarIcon from '../../components/TabBarIcon';
+import { globalStyles } from '../../styles/global';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
+      sceneContainerStyle={{
+        backgroundColor: '#000',
+      }}
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerShown: false,
+        tabBarActiveTintColor: Colors.dark.purple100,
+        tabBarStyle: {
+          backgroundColor: Colors.dark.shade700,
+          borderTopColor: 'transparent',
+          borderTopRightRadius: 20,
+          borderTopLeftRadius: 20,
+          height: 80,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 18,
+          height: 82,
+        },
+        tabBarLabelStyle: [
+          {
+            marginTop: 2,
+          },
+          globalStyles.fOpenSansMedium,
+        ],
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: 'Home',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="home" focused={focused} />
           ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="about"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'About',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="info-circle" focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: 'Search',
+          tabBarLabel: '',
+          tabBarShowLabel: false,
+          tabBarLabelStyle: {
+            display: 'none',
+          },
+          tabBarIconStyle: {},
+          tabBarIcon: () => (
+            <TabBarIcon
+              style={{
+                position: 'relative',
+                top: -1,
+                backgroundColor: Colors.dark.purple400,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                aspectRatio: 1,
+                borderRadius: 100,
+                textAlign: 'center',
+                textAlignVertical: 'center',
+                height: 56,
+              }}
+              name="search"
+              color="#FFF"
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Settings',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="cog" focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Account',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon name="user" focused={focused} />
+          ),
         }}
       />
     </Tabs>
