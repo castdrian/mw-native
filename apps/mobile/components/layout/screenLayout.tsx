@@ -1,6 +1,4 @@
-import { View } from 'react-native';
-
-import { BoldText, RegularText } from '../ui/Text';
+import { StyledText, StyledView } from '../ui/Styled';
 
 type Props = {
   title?: React.ReactNode | string;
@@ -10,15 +8,17 @@ type Props = {
 
 export default function ScreenLayout({ title, subtitle, children }: Props) {
   return (
-    <View className="bg-shade-900 flex-1 py-12">
+    <StyledView tw="bg-shade-900 flex-1 p-12">
       {typeof title === 'string' && (
-        <BoldText className="text-2xl font-bold text-white">{title}</BoldText>
+        <StyledText className="text-2xl font-bold text-white">
+          {title}
+        </StyledText>
       )}
       {typeof title !== 'string' && title}
-      <RegularText className="text-shade-200 mt-1 text-sm">
+      <StyledText className="mt-1 text-sm font-bold text-white">
         {subtitle}
-      </RegularText>
-      <View className="py-3">{children}</View>
-    </View>
+      </StyledText>
+      <StyledView className="py-3">{children}</StyledView>
+    </StyledView>
   );
 }

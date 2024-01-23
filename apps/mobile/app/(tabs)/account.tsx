@@ -1,5 +1,5 @@
 import ScreenLayout from '../../components/layout/ScreenLayout';
-import { RegularText } from '../../components/ui/Text';
+import { StyledText } from '../../components/ui/Styled';
 
 export default function AccountScreen() {
   return (
@@ -7,9 +7,7 @@ export default function AccountScreen() {
       title="Account"
       subtitle="Manage your movie web account from here"
     >
-      <RegularText className="text-white">
-        Hey Bro! what are you up to?
-      </RegularText>
+      <StyledText>Hey Bro! what are you up to?</StyledText>
     </ScreenLayout>
   );
 }

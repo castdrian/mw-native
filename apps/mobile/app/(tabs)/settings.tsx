@@ -1,12 +1,10 @@
 import ScreenLayout from '../../components/layout/ScreenLayout';
-import { RegularText } from '../../components/ui/Text';
+import { StyledText } from '../../components/ui/Styled';
 
 export default function SettingsScreen() {
   return (
     <ScreenLayout title="Settings" subtitle="Need to change something?">
-      <RegularText className="text-white">
-        Settings would be listed in here. Coming soon
-      </RegularText>
+      <StyledText>Settings would be listed in here. Coming soon</StyledText>
     </ScreenLayout>
   );
 }

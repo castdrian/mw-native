@@ -43,7 +43,7 @@
     "react-native-web": "^0.19.10",
     "react-test-renderer": "*",
     "typescript": "*",
-    "tailwindcss": "*"
+    "tailwindcss": "3.3.2"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",
@@ -65,7 +65,6 @@
     "jest-expo": "~49.0.0",
     "pod-install": "^0.1.39",
     "react-test-renderer": "18.2.0",
-    "tailwindcss": "^3.4.1",
     "typescript": "~5.2.2"
   },
   "overrides": {

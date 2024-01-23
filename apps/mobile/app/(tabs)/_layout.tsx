@@ -1,10 +1,16 @@
 import { Tabs } from 'expo-router';
+import { NativeWindStyleSheet } from 'nativewind';
 
 import TabBarIcon from '../../components/TabBarIcon';
-import Colors from '../../constants/Colors.js';
 import { globalStyles } from '../../styles/global';
+import useTailwind from '../hooks/useTailwind';
+
+NativeWindStyleSheet.setOutput({
+  default: 'native',
+});
 
 export default function TabLayout() {
+  const { colors } = useTailwind();
   return (
     <Tabs
       sceneContainerStyle={{
@@ -12,9 +18,9 @@ export default function TabLayout() {
       }}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.purple[100],
+        tabBarActiveTintColor: colors.purple[100],
         tabBarStyle: {
-          backgroundColor: Colors.shade[700],
+          backgroundColor: colors.shade[700],
           borderTopColor: 'transparent',
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
@@ -55,7 +61,6 @@ export default function TabLayout() {
         options={{
           title: 'Search',
           tabBarLabel: '',
-          tabBarShowLabel: false,
           tabBarLabelStyle: {
             display: 'none',
           },
@@ -65,7 +70,7 @@ export default function TabLayout() {
               style={{
                 position: 'relative',
                 top: -1,
-                backgroundColor: Colors.purple[400],
+                backgroundColor: colors.purple[400],
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

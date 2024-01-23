@@ -1,5 +1,5 @@
 import ScreenLayout from '../../components/layout/ScreenLayout';
-import { RegularText } from '../../components/ui/Text';
+import { StyledText } from '../../components/ui/Styled';
 
 export default function AboutScreen() {
   return (
@@ -7,10 +7,10 @@ export default function AboutScreen() {
       title="About"
       subtitle="What is movie-web and how content is served?"
     >
-      <RegularText className="text-white">
+      <StyledText>
         No content is served from movie-web directly and movie web does not host
         anything.
-      </RegularText>
+      </StyledText>
     </ScreenLayout>
   );
 }

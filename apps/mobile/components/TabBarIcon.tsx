@@ -1,20 +1,16 @@
 import { FontAwesome } from '@expo/vector-icons';
 
-import Colors from '../constants/Colors.js';
+import useTailwind from '../app/hooks/useTailwind';
 
 type Props = {
   focused?: boolean;
-  color?: string;
 } & React.ComponentProps<typeof FontAwesome>;
 
-export default function TabBarIcon({
-  color = Colors.shade[300],
-  focused,
-  ...rest
-}: Props) {
+export default function TabBarIcon({ focused, ...rest }: Props) {
+  const { colors } = useTailwind();
   return (
     <FontAwesome
-      color={color || (focused ? Colors.purple[300] : Colors.shade[300])}
+      color={focused ? colors.purple[300] : colors.shade[300]}
       size={24}
       {...rest}
     />
