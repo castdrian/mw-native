@@ -1,5 +1,6 @@
+import { Text } from 'react-native';
+
 import ScreenLayout from '../../components/layout/ScreenLayout';
-import { StyledText } from '../../components/ui/Styled';
 
 export default function AboutScreen() {
   return (
@@ -7,10 +8,10 @@ export default function AboutScreen() {
       title="About"
       subtitle="What is movie-web and how content is served?"
     >
-      <StyledText>
+      <Text>
         No content is served from movie-web directly and movie web does not host
         anything.
-      </StyledText>
+      </Text>
     </ScreenLayout>
   );
 }

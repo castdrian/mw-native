@@ -12,5 +12,5 @@
     "**/*.spec.tsx",
     "test-setup.ts"
   ],
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "tailwind.config.js"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "tailwind.config.ts"]
 }

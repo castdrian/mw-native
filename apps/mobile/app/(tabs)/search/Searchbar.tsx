@@ -1,9 +1,9 @@
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
+import { View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
-import { StyledView } from '../../../components/ui/Styled';
 import useTailwind from '../../hooks/useTailwind';
 
 export default function Searchbar() {
@@ -25,10 +25,10 @@ export default function Searchbar() {
   );
 
   return (
-    <StyledView className="mb-6 mt-4 flex-row items-center rounded-full border">
-      <StyledView className="ml-1 w-12 items-center justify-center">
+    <View className="mb-6 mt-4 flex-row items-center rounded-full border">
+      <View className="ml-1 w-12 items-center justify-center">
         <FontAwesome5 name="search" size={18} color={colors.shade[200]} />
-      </StyledView>
+      </View>
       <TextInput
         value={keyword}
         autoFocus
@@ -38,6 +38,6 @@ export default function Searchbar() {
         placeholderTextColor={colors.shade[200]}
         className="w-full rounded-3xl py-3 pr-5 text-white"
       />
-    </StyledView>
+    </View>
   );
 }
