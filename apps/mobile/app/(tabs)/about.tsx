@@ -1,6 +1,6 @@
 import { Text } from 'react-native';
 
-import ScreenLayout from '../../components/layout/ScreenLayout';
+import ScreenLayout from '../components/layout/ScreenLayout';
 
 export default function AboutScreen() {
   return (

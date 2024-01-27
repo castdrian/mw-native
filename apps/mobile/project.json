@@ -8,7 +8,8 @@
       "executor": "@nx/expo:start",
       "dependsOn": ["ensure-symlink", "sync-deps"],
       "options": {
-        "port": 8081
+        "port": 8081,
+        "clear": true
       }
     },
     "serve": {

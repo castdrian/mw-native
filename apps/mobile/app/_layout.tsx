@@ -10,8 +10,9 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
-import useTailwind from './hooks/useTailwind';
-import '../styles/global.css';
+import Colors from './constants/Colors';
+
+import './styles/global.css';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -58,7 +59,6 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const { colors } = useTailwind();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -67,7 +67,7 @@ function RootLayoutNav() {
           gestureEnabled: true,
           headerShown: false,
           contentStyle: {
-            backgroundColor: colors.shade[900],
+            backgroundColor: Colors.background,
           },
         }}
       >

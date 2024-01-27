@@ -42,7 +42,9 @@ const { mergeConfig } = require('metro-config');
 const { withNativeWind } = require('nativewind/metro');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
 
-const defaultConfig = getDefaultConfig(__dirname);
+const defaultConfig = getDefaultConfig(__dirname, {
+  isCSSEnabled: true,
+});
 const { assetExts, sourceExts } = defaultConfig.resolver;
 
 /**
@@ -67,7 +69,7 @@ const customConfig = {
 const nativeWindConfig = withNativeWind(
   mergeConfig(defaultConfig, customConfig),
   {
-    input: './styles/global.css',
+    input: './app/styles/global.css',
     configPath: './tailwind.config.ts',
   },
 );
@@ -81,5 +83,4 @@ const nxConfig = withNxMetro(nativeWindConfig, {
   // Specify folders to watch, in addition to Nx defaults (workspace libraries and node_modules)
   watchFolders: [],
 });
-
 module.exports = nxConfig;

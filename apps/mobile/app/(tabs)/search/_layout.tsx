@@ -1,8 +1,8 @@
 import { ScrollView, Text, View } from 'react-native';
 
 import Searchbar from './Searchbar';
-import Item from '../../../components/item/item';
-import ScreenLayout from '../../../components/layout/ScreenLayout';
+import ScreenLayout from '../../components/layout/ScreenLayout';
+import Item from '../../components/item/item';
 
 export default function SearchScreen() {
   return (
@@ -10,7 +10,7 @@ export default function SearchScreen() {
       <ScreenLayout
         title={
           <View className="flex-row items-center">
-            <Text className="text-2xl font-bold">Search</Text>
+            <Text className="text-2xl font-bold text-white">Search</Text>
           </View>
         }
         subtitle="Looking for something?"

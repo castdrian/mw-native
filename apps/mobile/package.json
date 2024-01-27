@@ -29,6 +29,7 @@
     "expo-web-browser": "^12.5.0",
     "jest": "*",
     "jest-expo": "*",
+    "metro": "*",
     "metro-config": "*",
     "nativewind": "^4.0.23",
     "pod-install": "*",
@@ -67,11 +68,5 @@
     "pod-install": "^0.1.39",
     "react-test-renderer": "18.2.0",
     "typescript": "~5.2.2"
-  },
-  "overrides": {
-    "react-refresh": "~0.14.0"
-  },
-  "resolutions": {
-    "react-refresh": "~0.14.0"
   }
 }
