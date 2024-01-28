@@ -17,6 +17,8 @@
     "@testing-library/jest-native": "*",
     "@testing-library/react-native": "*",
     "@types/react": "*",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
     "eslint-plugin-react": "*",
     "eslint-plugin-react-hooks": "*",
     "expo": "*",
@@ -37,15 +39,16 @@
     "react-dom": "18.2.0",
     "react-native": "*",
     "react-native-gesture-handler": "^2.14.1",
+    "react-native-reanimated": "~3.3.0",
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "^3.29.0",
     "react-native-svg": "*",
     "react-native-svg-transformer": "*",
     "react-native-web": "^0.19.10",
-    "react-native-reanimated": "~3.3.0",
     "react-test-renderer": "*",
-    "typescript": "*",
-    "tailwindcss": "3.3.2"
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss": "3.3.2",
+    "typescript": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",
