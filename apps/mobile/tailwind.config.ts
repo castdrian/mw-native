@@ -12,7 +12,13 @@ export default {
         extend: {
           colors,
           fontFamily: {
-
+            sans: ['OpenSansRegular'],
+            thin: ['OpenSansLight'],
+            normal: ['OpenSansRegular'],
+            medium: ['OpenSansMedium'],
+            semibold: ['OpenSansSemiBold'],
+            bold: ['OpenSansBold'],
+            extrabold: ['OpenSansExtra'],
           }
         },
       },

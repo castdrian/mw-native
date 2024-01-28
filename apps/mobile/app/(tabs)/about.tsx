@@ -1,4 +1,4 @@
-import { Text } from 'react-native';
+import { Text } from '../components/ui/Text';
 
 import ScreenLayout from '../components/layout/ScreenLayout';
 
