@@ -1,9 +1,10 @@
 import { ScrollView, View } from 'react-native';
-import { Text } from '../../components/ui/Text';
+
+import Item from '@/components/item/item';
+import ScreenLayout from '@/components/layout/ScreenLayout';
+import { Text } from '@/components/ui/Text';
 
 import Searchbar from './Searchbar';
-import ScreenLayout from '../../components/layout/ScreenLayout';
-import Item from '../../components/item/item';
 
 export default function SearchScreen() {
   return (

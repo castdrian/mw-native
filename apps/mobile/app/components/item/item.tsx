@@ -1,7 +1,7 @@
 import { Image, View } from 'react-native';
-import { Text } from '../../components/ui/Text';
 
-import { TMDB_POSTER_PATH } from '../../constants/General';
+import { Text } from '@/components/ui/Text';
+import { TMDB_POSTER_PATH } from '@/constants/General';
 
 export default function Item() {
   return (

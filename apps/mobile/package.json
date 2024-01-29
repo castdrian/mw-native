@@ -48,7 +48,8 @@
     "react-test-renderer": "*",
     "tailwind-merge": "^2.2.1",
     "tailwindcss": "3.3.2",
-    "typescript": "*"
+    "typescript": "*",
+    "prettier-plugin-tailwindcss": "*"
   },
   "scripts": {
     "eas-build-pre-install": "cd ../../ && node tools/scripts/eas-build-pre-install.mjs . apps/mobile && cp pnpm-lock.yaml apps/mobile",

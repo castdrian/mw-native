@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 import { Text as RNText, TextProps } from 'react-native';
 
-import { cn } from '../../lib/utils';
+import { cn } from '@/lib/utils';
 
 const textVariants = cva('text-white');
 

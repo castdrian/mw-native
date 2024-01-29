@@ -1,5 +1,5 @@
-import ScreenLayout from '../components/layout/ScreenLayout';
-import { Text } from '../components/ui/Text';
+import ScreenLayout from '@/components/layout/ScreenLayout';
+import { Text } from '@/components/ui/Text';
 
 export default function HomeScreen() {
   return (

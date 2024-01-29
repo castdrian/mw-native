@@ -1,5 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
-import Colors from '../constants/Colors';
+
+import Colors from '@/constants/Colors';
 
 type Props = {
   focused?: boolean;

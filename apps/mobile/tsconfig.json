@@ -10,6 +10,12 @@
     "strict": true,
     "declaration": true,
     "allowJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "./app/*"
+      ],
+    }
   },
   "files": [],
   "include": [".expo/types/**/*.ts", "expo-env.d.ts"],

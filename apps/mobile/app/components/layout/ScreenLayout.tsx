@@ -1,5 +1,6 @@
 import { View } from 'react-native';
-import { Text } from '../../components/ui/Text';
+
+import { Text } from '@/components/ui/Text';
 
 type Props = {
   title?: React.ReactNode | string;
