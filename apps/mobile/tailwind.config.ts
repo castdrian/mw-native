@@ -19,7 +19,7 @@ export default {
             semibold: ['OpenSansSemiBold'],
             bold: ['OpenSansBold'],
             extrabold: ['OpenSansExtra'],
-          }
+          },
         },
       },
     },

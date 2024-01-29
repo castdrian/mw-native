@@ -1,9 +1,17 @@
-import { TextProps, Text as RNText } from 'react-native';
-import { cn } from '../../lib/utils';
 import { cva } from 'class-variance-authority';
+import { Text as RNText, TextProps } from 'react-native';
 
-const textVariants = cva('font-sans text-white');
+import { cn } from '../../lib/utils';
 
-export const Text = ({ className, ...props }: TextProps) => {
-  return <RNText className={cn(textVariants(), className)} {...props} />;
-};
+const textVariants = cva('text-white');
+
+export function Text({ className, ...props }: TextProps) {
+  return (
+    <RNText
+      className={cn(className, textVariants(), {
+        'font-sans': !className?.includes('font-'),
+      })}
+      {...props}
+    />
+  );
+}

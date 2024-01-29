@@ -1,4 +1,5 @@
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
+import { Text } from '../../components/ui/Text';
 
 import { TMDB_POSTER_PATH } from '../../constants/General';
 
