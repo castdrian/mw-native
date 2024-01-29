@@ -15,7 +15,7 @@ export default function Item() {
           className="h-full w-full object-cover"
         />
       </View>
-      <Text className="font-bold text-white">Hamilton</Text>
+      <Text className="font-bold">Hamilton</Text>
       <View className="flex-row items-center gap-3">
         <Text className="text-xs text-gray-600">Movie</Text>
         <View className="h-1 w-1 rounded-3xl bg-gray-600" />

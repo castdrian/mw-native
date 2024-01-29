@@ -3,7 +3,8 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import Colors from '../../constants/Colors';
+
+import Colors from '@/constants/Colors';
 
 export default function Searchbar() {
   const [keyword, setKeyword] = useState('');

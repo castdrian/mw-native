@@ -12,7 +12,7 @@ export default function SearchScreen() {
       <ScreenLayout
         title={
           <View className="flex-row items-center">
-            <Text className="text-2xl font-bold text-white">Search</Text>
+            <Text className="text-2xl font-bold">Search</Text>
           </View>
         }
         subtitle="Looking for something?"
