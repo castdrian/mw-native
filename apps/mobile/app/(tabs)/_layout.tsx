@@ -1,20 +1,19 @@
 import { Tabs } from 'expo-router';
 
-import Colors from '../../constants/Colors';
-import TabBarIcon from '../../components/TabBarIcon';
-import { globalStyles } from '../../styles/global';
+import TabBarIcon from '@/components/TabBarIcon';
+import Colors from '@/constants/Colors';
 
 export default function TabLayout() {
   return (
     <Tabs
       sceneContainerStyle={{
-        backgroundColor: '#000',
+        backgroundColor: Colors.background,
       }}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.dark.purple100,
+        tabBarActiveTintColor: Colors.primary[100],
         tabBarStyle: {
-          backgroundColor: Colors.dark.shade700,
+          backgroundColor: Colors.secondary[700],
           borderTopColor: 'transparent',
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
@@ -28,7 +27,6 @@ export default function TabLayout() {
           {
             marginTop: 2,
           },
-          globalStyles.fOpenSansMedium,
         ],
       }}
     >
@@ -55,26 +53,9 @@ export default function TabLayout() {
         options={{
           title: 'Search',
           tabBarLabel: '',
-          tabBarShowLabel: false,
-          tabBarLabelStyle: {
-            display: 'none',
-          },
-          tabBarIconStyle: {},
           tabBarIcon: () => (
             <TabBarIcon
-              style={{
-                position: 'relative',
-                top: -1,
-                backgroundColor: Colors.dark.purple400,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                aspectRatio: 1,
-                borderRadius: 100,
-                textAlign: 'center',
-                textAlignVertical: 'center',
-                height: 56,
-              }}
+              className=" bg-primary-400 flex aspect-[1/1] h-14 items-center justify-center rounded-full text-center text-2xl text-white"
               name="search"
               color="#FFF"
             />

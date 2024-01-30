@@ -4,20 +4,19 @@
     "slug": "mw-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-	"scheme":"dev.movieweb.app",
+    "scheme": "dev.movieweb.app",
+    "userInterfaceStyle": "automatic",
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-	"jsEngine": "jsc",
+    "jsEngine": "jsc",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.movieweb.app"
@@ -34,20 +33,17 @@
       "bundler": "metro"
     },
     "plugins": [
-	  "expo-router",
+      "expo-router",
       [
         "@config-plugins/detox",
         {
           "skipProguard": false,
-          "subdomains": [
-            "10.0.2.2",
-            "localhost"
-          ]
+          "subdomains": ["10.0.2.2", "localhost"]
         }
       ]
     ],
-	"experiments": {
-	   "typedRoutes": true
-	}
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

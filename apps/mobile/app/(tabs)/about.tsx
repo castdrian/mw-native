@@ -1,8 +1,5 @@
-import { StyleSheet } from 'react-native';
-
-import ScreenLayout from '../../components/layout/screenLayout';
-import { globalStyles } from '../../styles/global';
-import { RegularText } from '../../components/Styled';
+import ScreenLayout from '@/components/layout/ScreenLayout';
+import { Text } from '@/components/ui/Text';
 
 export default function AboutScreen() {
   return (
@@ -10,27 +7,10 @@ export default function AboutScreen() {
       title="About"
       subtitle="What is movie-web and how content is served?"
     >
-      <RegularText style={globalStyles.textWhite}>
+      <Text>
         No content is served from movie-web directly and movie web does not host
         anything.
-      </RegularText>
+      </Text>
     </ScreenLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

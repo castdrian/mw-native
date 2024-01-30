@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -9,7 +10,9 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
-import Colors from '../constants/Colors';
+import Colors from '@/constants/Colors';
+
+import './styles/global.css';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -27,7 +30,6 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    // eslint-disable-next-line global-require
     OpenSansRegular: require('../assets/fonts/OpenSans-Regular.ttf'),
     OpenSansLight: require('../assets/fonts/OpenSans-Light.ttf'),
     OpenSansMedium: require('../assets/fonts/OpenSans-Medium.ttf'),
@@ -65,12 +67,11 @@ function RootLayoutNav() {
           gestureEnabled: true,
           headerShown: false,
           contentStyle: {
-            backgroundColor: Colors.dark.shade900,
+            backgroundColor: Colors.background,
           },
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>
   );

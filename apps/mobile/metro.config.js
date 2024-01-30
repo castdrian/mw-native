@@ -1,9 +1,12 @@
 const { withNxMetro } = require('@nx/expo');
 const { getDefaultConfig } = require('@expo/metro-config');
 const { mergeConfig } = require('metro-config');
+const { withNativeWind } = require('nativewind/metro');
 const exclusionList = require('metro-config/src/defaults/exclusionList');
 
-const defaultConfig = getDefaultConfig(__dirname);
+const defaultConfig = getDefaultConfig(__dirname, {
+  isCSSEnabled: true,
+});
 const { assetExts, sourceExts } = defaultConfig.resolver;
 
 /**
@@ -18,14 +21,22 @@ const customConfig = {
   },
   resolver: {
     assetExts: assetExts.filter((ext) => ext !== 'svg'),
-    sourceExts: [...sourceExts, 'svg'],
+    sourceExts: [...sourceExts, 'svg', 'mjs'],
     blockList: exclusionList([/^(?!.*node_modules).*\/dist\/.*/]),
     // unstable_enableSymlinks: true,
     // unstable_enablePackageExports: true,
   },
 };
 
-module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
+const nativeWindConfig = withNativeWind(
+  mergeConfig(defaultConfig, customConfig),
+  {
+    input: './app/styles/global.css',
+    configPath: './tailwind.config.ts',
+  },
+);
+
+const nxConfig = withNxMetro(nativeWindConfig, {
   // Change this to true to see debugging info.
   // Useful if you have issues resolving modules
   debug: false,
@@ -34,3 +45,4 @@ module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
   // Specify folders to watch, in addition to Nx defaults (workspace libraries and node_modules)
   watchFolders: [],
 });
+module.exports = nxConfig;

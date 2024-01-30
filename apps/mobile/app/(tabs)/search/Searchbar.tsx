@@ -1,10 +1,10 @@
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useFocusEffect } from 'expo-router';
 import { useCallback, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { globalStyles } from '../../../styles/global';
-import Colors from '../../../constants/Colors';
-import { useFocusEffect } from 'expo-router';
+
+import Colors from '@/constants/Colors';
 
 export default function Searchbar() {
   const [keyword, setKeyword] = useState('');
@@ -24,41 +24,19 @@ export default function Searchbar() {
   );
 
   return (
-    <View
-      style={{
-        ...globalStyles.flexRow,
-        ...globalStyles.itemsCenter,
-        ...globalStyles.border,
-        ...globalStyles.roundedFull,
-        marginTop: 14,
-        marginBottom: 24,
-      }}
-    >
-      <View
-        style={{
-          ...globalStyles.justifyCenter,
-          ...globalStyles.itemsCenter,
-          width: 48,
-          marginLeft: 4,
-        }}
-      >
-        <FontAwesome5 name="search" size={18} color={Colors.dark.shade200} />
+    <View className="border-primary-400 focus-within:border-primary-300 mb-6 mt-4 flex-row items-center rounded-full border">
+      <View className="ml-1 w-12 items-center justify-center">
+        <FontAwesome5 name="search" size={18} color={Colors.secondary[200]} />
       </View>
       <TextInput
         value={keyword}
-        autoFocus={true}
+        autoFocus
         onChangeText={(text) => setKeyword(text)}
         ref={inputRef}
         placeholder="What are you looking for?"
-        placeholderTextColor={Colors.dark.shade200}
-        style={[
-          globalStyles.input,
-          globalStyles.fOpenSansRegular,
-          {
-            width: '100%',
-          },
-        ]}
-      ></TextInput>
+        placeholderTextColor={Colors.secondary[200]}
+        className="w-full rounded-3xl py-3 pr-5 text-white focus-visible:outline-none"
+      />
     </View>
   );
 }
