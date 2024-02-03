@@ -1,0 +1,66 @@
+{
+  "name": "@movie-web/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "clean": "git clean -xdf .expo .turbo node_modules",
+    "dev": "expo start",
+    "dev:android": "expo start --android",
+    "dev:ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@expo/metro-config": "^0.17.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "expo": "~50.0.5",
+    "expo-constants": "~15.4.5",
+    "expo-linking": "~6.2.2",
+    "expo-router": "~3.4.6",
+    "expo-splash-screen": "~0.26.4",
+    "expo-status-bar": "~1.11.1",
+    "expo-web-browser": "^12.8.2",
+    "nativewind": "~4.0.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.73.2",
+    "react-native-css-interop": "~0.0.22",
+    "react-native-gesture-handler": "~2.14.1",
+    "react-native-reanimated": "~3.6.2",
+    "react-native-safe-area-context": "~4.8.2",
+    "react-native-screens": "~3.29.0",
+    "react-native-web": "^0.19.10",
+    "tailwind-merge": "^2.2.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/runtime": "^7.23.9",
+    "@movie-web/eslint-config": "workspace:^0.2.0",
+    "@movie-web/prettier-config": "workspace:^0.1.0",
+    "@movie-web/tailwind-config": "workspace:^0.1.0",
+    "@movie-web/tsconfig": "workspace:^0.1.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/react": "^18.2.48",
+    "eslint": "^8.56.0",
+    "prettier": "^3.1.1",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@movie-web/eslint-config/base",
+      "@movie-web/eslint-config/react"
+    ],
+    "ignorePatterns": [
+      "expo-plugins/**"
+    ]
+  },
+  "prettier": "@movie-web/prettier-config"
+}
