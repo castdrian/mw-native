@@ -6,7 +6,7 @@ const defineConfig = (): ExpoConfig => ({
   scheme: "dev.movieweb.app",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/icon.png",
+  icon: "./assets/images/icon.png",
   userInterfaceStyle: "automatic",
   splash: {
     image: "./assets/images/splash.png",

@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { TextInput, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -24,7 +23,7 @@ export default function Searchbar() {
   );
 
   return (
-    <View className="border-primary-400 focus-within:border-primary-300 mb-6 mt-4 flex-row items-center rounded-full border">
+    <View className="mb-6 mt-4 flex-row items-center rounded-full border border-primary-400 focus-within:border-primary-300">
       <View className="ml-1 w-12 items-center justify-center">
         <FontAwesome5 name="search" size={18} color={Colors.secondary[200]} />
       </View>
