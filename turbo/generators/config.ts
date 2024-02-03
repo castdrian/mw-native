@@ -10,7 +10,7 @@ interface PackageJson {
 
 export default function generator(plop: PlopTypes.NodePlopAPI): void {
   plop.setGenerator("init", {
-    description: "Generate a new package for the Acme Monorepo",
+    description: "Generate a new package for the movie-web native-app Monorepo",
     prompts: [
       {
         type: "input",
