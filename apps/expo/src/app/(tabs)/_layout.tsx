@@ -56,7 +56,7 @@ export default function TabLayout() {
           tabBarLabel: "",
           tabBarIcon: () => (
             <TabBarIcon
-              className="top-2 flex aspect-[1/1] h-14 items-center justify-center rounded-full bg-primary-400 text-center align-middle text-2xl text-white"
+              className="flex aspect-[1/1] h-14 items-center justify-center rounded-full bg-primary-400 text-center align-middle text-2xl text-white"
               name="search"
               color="#FFF"
             />
