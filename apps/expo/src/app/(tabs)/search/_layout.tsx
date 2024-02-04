@@ -3,15 +3,14 @@ import { ScrollView, View } from "react-native";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
+import type { ItemData } from "~/components/item/item";
 import Item from "~/components/item/item";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { Text } from "~/components/ui/Text";
 import Searchbar from "./Searchbar";
 
 export default function SearchScreen() {
-  const [searchResults, setSearchResults] = useState<
-    { title: string; posterUrl: string; year: number; type: "movie" | "tv" }[]
-  >([]);
+  const [searchResults, setSearchResults] = useState<ItemData[]>([]);
 
   const handleSearchChange = async (query: string) => {
     if (query.length > 0) {
@@ -45,11 +44,7 @@ export default function SearchScreen() {
   );
 }
 
-async function fetchSearchResults(
-  query: string,
-): Promise<
-  { title: string; posterUrl: string; year: number; type: "movie" | "tv" }[]
-> {
+async function fetchSearchResults(query: string): Promise<ItemData[]> {
   const results = await searchTitle(query);
 
   return results
@@ -57,6 +52,7 @@ async function fetchSearchResults(
       switch (result.media_type) {
         case "movie":
           return {
+            id: result.id.toString(),
             title: result.title,
             posterUrl: getMediaPoster(result.poster_path),
             year: new Date(result.release_date).getFullYear(),
@@ -64,6 +60,7 @@ async function fetchSearchResults(
           };
         case "tv":
           return {
+            id: result.id.toString(),
             title: result.name,
             posterUrl: getMediaPoster(result.poster_path),
             year: new Date(result.first_air_date).getFullYear(),
@@ -73,14 +70,5 @@ async function fetchSearchResults(
           return undefined;
       }
     })
-    .filter(
-      (
-        item,
-      ): item is {
-        title: string;
-        posterUrl: string;
-        year: number;
-        type: "movie" | "tv";
-      } => item !== undefined,
-    );
+    .filter((item): item is ItemData => item !== undefined);
 }

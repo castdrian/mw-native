@@ -2,11 +2,15 @@ import { Image, View } from "react-native";
 
 import { Text } from "~/components/ui/Text";
 
-export default function Item({
-  data,
-}: {
-  data: { title: string; type: string; year: number; posterUrl: string };
-}) {
+export interface ItemData {
+  id: string;
+  title: string;
+  type: "movie" | "tv";
+  year: number;
+  posterUrl: string;
+}
+
+export default function Item({ data }: { data: ItemData }) {
   const { title, type, year, posterUrl } = data;
 
   return (
