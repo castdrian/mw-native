@@ -1,7 +1,12 @@
 import { Image, View } from "react-native";
+
 import { Text } from "~/components/ui/Text";
 
-export default function Item({ data }: { data: { title: string, type: string, year: number, posterUrl: string } }) {
+export default function Item({
+  data,
+}: {
+  data: { title: string; type: string; year: number; posterUrl: string };
+}) {
   const { title, type, year, posterUrl } = data;
 
   return (

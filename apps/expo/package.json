@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.17.3",
-	"@movie-web/tmdb": "*",
+    "@movie-web/tmdb": "*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "~50.0.5",
