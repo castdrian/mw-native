@@ -50,7 +50,6 @@ async function fetchSearchResults(
 ): Promise<
   { title: string; posterUrl: string; year: number; type: "movie" | "tv" }[]
 > {
-  console.log("Fetching results for:", query);
   const results = await searchTitle(query);
 
   return results
