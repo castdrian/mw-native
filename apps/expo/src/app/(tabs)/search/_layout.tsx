@@ -45,7 +45,7 @@ export default function SearchScreen() {
 }
 
 async function fetchSearchResults(query: string): Promise<ItemData[]> {
-  const results = await searchTitle(query)
+  const results = await searchTitle(query);
 
   return results
     .map((result) => {
