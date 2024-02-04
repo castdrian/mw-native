@@ -1,3 +1,4 @@
+import { View } from "react-native";
 import { Tabs } from "expo-router";
 
 import Colors from "@movie-web/tailwind-config/colors";
@@ -55,11 +56,9 @@ export default function TabLayout() {
           title: "Search",
           tabBarLabel: "",
           tabBarIcon: () => (
-            <TabBarIcon
-              className="flex aspect-[1/1] h-14 items-center justify-center rounded-full bg-primary-400 text-center align-middle text-2xl text-white"
-              name="search"
-              color="#FFF"
-            />
+            <View className="android:top-2 ios:top-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-primary-400 text-center align-middle text-2xl text-white">
+              <TabBarIcon name="search" color="#FFF" />
+            </View>
           ),
         }}
       />
