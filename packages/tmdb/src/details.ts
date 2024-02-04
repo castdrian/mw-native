@@ -9,20 +9,15 @@ export async function fetchMediaDetails(
   { type: "movie" | "tv"; result: TvShowDetails | MovieDetails } | undefined
 > {
   try {
-    let result: TvShowDetails | MovieDetails;
+    const result =
+      type === "movie"
+        ? await tmdb.movies.details(parseInt(id, 10))
+        : await tmdb.tvShows.details(parseInt(id, 10));
 
-    switch (type) {
-      case "tv":
-        result = await tmdb.tvShows.details(parseInt(id, 10));
-        break;
-      case "movie":
-        result = await tmdb.movies.details(parseInt(id, 10));
-        break;
-      default:
-        return undefined;
-    }
-
-    return { type, result };
+    return {
+      type,
+      result,
+    };
   } catch (ex) {
     return undefined;
   }
