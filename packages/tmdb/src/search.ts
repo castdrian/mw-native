@@ -1,9 +1,6 @@
-import type { MovieDetails, TvShowDetails } from "tmdb-ts";
-import { TMDB } from "tmdb-ts";
+import type { MovieWithMediaType, TVWithMediaType } from "tmdb-ts";
 
-const TMDB_API_KEY =
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTM1ZTgyMzE4OTc0NTgxNDJmZjljZTE4ODExNWRlNiIsInN1YiI6IjY0OTM0ZDQ1ODliNTYxMDExYzliZDVhMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.AzWnIcxPNgDwGdzeIZ_C3mRC_5_qy-Z-SRPglLjzlNc";
-const tmdb = new TMDB(TMDB_API_KEY);
+import { tmdb } from "./util";
 
 export async function searchTitle(query: string) {
   try {
@@ -18,38 +15,8 @@ export async function searchTitle(query: string) {
 
     if (!results.length) throw new Error("No results found");
 
-    return results;
+    return results as unknown as MovieWithMediaType[] | TVWithMediaType[];
   } catch (ex) {
     throw new Error(`Error searching for title: ${(ex as Error).message}`);
   }
-}
-
-export async function fetchMediaDetails(
-  id: string,
-  type: "movie" | "tv",
-): Promise<
-  { type: "movie" | "tv"; result: TvShowDetails | MovieDetails } | undefined
-> {
-  try {
-    let result: TvShowDetails | MovieDetails;
-
-    switch (type) {
-      case "tv":
-        result = await tmdb.tvShows.details(parseInt(id, 10));
-        break;
-      case "movie":
-        result = await tmdb.movies.details(parseInt(id, 10));
-        break;
-      default:
-        return undefined;
-    }
-
-    return { type, result };
-  } catch (ex) {
-    return undefined;
-  }
-}
-
-export function getMediaPoster(posterPath: string): string {
-  return `https://image.tmdb.org/t/p/w185/${posterPath}`;
 }

@@ -47,28 +47,13 @@ export default function SearchScreen() {
 async function fetchSearchResults(query: string): Promise<ItemData[]> {
   const results = await searchTitle(query);
 
-  return results
-    .map((result) => {
-      switch (result.media_type) {
-        case "movie":
-          return {
-            id: result.id.toString(),
-            title: result.title,
-            posterUrl: getMediaPoster(result.poster_path),
-            year: new Date(result.release_date).getFullYear(),
-            type: result.media_type,
-          };
-        case "tv":
-          return {
-            id: result.id.toString(),
-            title: result.name,
-            posterUrl: getMediaPoster(result.poster_path),
-            year: new Date(result.first_air_date).getFullYear(),
-            type: result.media_type,
-          };
-        default:
-          return undefined;
-      }
-    })
-    .filter((item): item is ItemData => item !== undefined);
+  return results.map((result) => ({
+    id: result.id.toString(),
+    title: result.media_type === "tv" ? result.name : result.title,
+    posterUrl: getMediaPoster(result.poster_path),
+    year: new Date(
+      result.media_type === "tv" ? result.first_air_date : result.release_date,
+    ).getFullYear(),
+    type: result.media_type,
+  }));
 }
