@@ -102,7 +102,7 @@ jobs:
       - name: Export .ipa from .app
         run: |
           mkdir -p ios/build/Build/Products/Release-iphoneos/Payload
-          mv ios/build/Build/Products/Release-iphoneos/imagilink.app ios/build/Build/Products/Release-iphoneos/Payload/
+          mv ios/build/Build/Products/Release-iphoneos/movieweb.app ios/build/Build/Products/Release-iphoneos/Payload/
           cd ios/build/Build/Products/Release-iphoneos
           zip -r ../../../movie-web.ipa Payload
 
