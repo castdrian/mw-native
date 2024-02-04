@@ -19,9 +19,8 @@ export default function Item({ data }: { data: ItemData }) {
         <Image
           source={{
             uri: posterUrl,
-            width: 200,
           }}
-          className="h-full w-full object-cover"
+          className="h-full w-full"
         />
       </View>
       <Text className="font-bold">{title}</Text>
