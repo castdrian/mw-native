@@ -56,7 +56,7 @@ async function fetchSearchResults(query: string): Promise<ItemData[]> {
             title: result.title,
             posterUrl: getMediaPoster(result.poster_path),
             year: new Date(result.release_date).getFullYear(),
-            type: result.media_type as "movie",
+            type: result.media_type,
           };
         case "tv":
           return {
@@ -64,7 +64,7 @@ async function fetchSearchResults(query: string): Promise<ItemData[]> {
             title: result.name,
             posterUrl: getMediaPoster(result.poster_path),
             year: new Date(result.first_air_date).getFullYear(),
-            type: result.media_type as "tv",
+            type: result.media_type,
           };
         default:
           return undefined;
