@@ -5,7 +5,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 
 import Colors from "@movie-web/tailwind-config/colors";
 
-export default function Searchbar() {
+export default function Searchbar({ onSearchChange }: { onSearchChange: (text: string) => void }) {
   const [keyword, setKeyword] = useState("");
   const inputRef = useRef<TextInput>(null);
 
@@ -22,6 +22,11 @@ export default function Searchbar() {
     }, []),
   );
 
+  const handleChange = (text: string) => {
+    setKeyword(text);
+    onSearchChange(text);
+  };
+
   return (
     <View className="mb-6 mt-4 flex-row items-center rounded-full border border-primary-400 focus-within:border-primary-300">
       <View className="ml-1 w-12 items-center justify-center">
@@ -29,7 +34,7 @@ export default function Searchbar() {
       </View>
       <TextInput
         value={keyword}
-        onChangeText={(text) => setKeyword(text)}
+		onChangeText={handleChange}
         ref={inputRef}
         placeholder="What are you looking for?"
         placeholderTextColor={Colors.secondary[200]}

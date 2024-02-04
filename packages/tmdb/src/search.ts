@@ -5,7 +5,7 @@ const TMDB_API_KEY =
   "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkYTM1ZTgyMzE4OTc0NTgxNDJmZjljZTE4ODExNWRlNiIsInN1YiI6IjY0OTM0ZDQ1ODliNTYxMDExYzliZDVhMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.AzWnIcxPNgDwGdzeIZ_C3mRC_5_qy-Z-SRPglLjzlNc";
 const tmdb = new TMDB(TMDB_API_KEY);
 
-export async function searchTitle(query: string): Promise<unknown[]> {
+export async function searchTitle(query: string) {
   try {
     const rawResults = await tmdb.search.multi({
       query,
