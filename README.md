@@ -20,7 +20,7 @@ apps
 packages
   ├─ tmdb
   |   └─ Typesafe API calls to The Movie Database
-  └─ providers
+  └─ provider-utils
       └─ Typesafe API calls to the video providers 
 tooling
   ├─ eslint
