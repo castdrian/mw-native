@@ -34,6 +34,9 @@ importers:
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.20)
+      '@movie-web/tmdb':
+        specifier: '*'
+        version: link:../../packages/tmdb
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0

@@ -4,7 +4,7 @@ const defineConfig = (): ExpoConfig => ({
   name: "movie-web",
   slug: "mw-mobile",
   scheme: "dev.movieweb.app",
-  version: "1.0.0",
+  version: "0.1.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "automatic",
