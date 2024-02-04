@@ -1,4 +1,5 @@
-import { Image, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, View, TouchableOpacity } from "react-native";
 
 import { Text } from "~/components/ui/Text";
 
@@ -11,10 +12,18 @@ export interface ItemData {
 }
 
 export default function Item({ data }: { data: ItemData }) {
+  const router = useRouter();
   const { title, type, year, posterUrl } = data;
 
+  const handlePress = () => {
+    console.log('Item pressed. Opening VideoPlayer...');
+	router.push('/video-player');
+  };
+
   return (
-    <View className="w-full">
+    <TouchableOpacity onPress={handlePress} style={{ width: '100%' }}>
+      {
+	<View className="w-full">
       <View className="mb-2 aspect-[9/14] w-full overflow-hidden rounded-2xl">
         <Image
           source={{
@@ -32,5 +41,7 @@ export default function Item({ data }: { data: ItemData }) {
         <Text className="text-sm text-gray-600">{year}</Text>
       </View>
     </View>
+	}
+    </TouchableOpacity>
   );
 }
