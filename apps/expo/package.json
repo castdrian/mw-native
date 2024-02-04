@@ -11,8 +11,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
 	"apk": "expo prebuild --platform=android && cd android && ./gradlew assembleRelease",
-    "ipa": "expo prebuild --platform=ios && cd ios && xcodebuild -workspace movie-web.xcworkspace -scheme movie-web -sdk iphoneos -configuration Release -derivedDataPath build -destination generic/platform=iOS CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO",
-    "ipa:sim": "expo prebuild --platform=ios && cd ios && xcodebuild -workspace movie-web.xcworkspace -scheme movie-web -sdk iphonesimulator -configuration Release -derivedDataPath build -destination \"generic/platform=iOS Simulator\" CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO",
+    "ipa": "expo prebuild --platform=ios && cd ios && xcodebuild -workspace movieweb.xcworkspace -scheme movieweb -sdk iphoneos -configuration Release -derivedDataPath build -destination generic/platform=iOS CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO",
+    "ipa:sim": "expo prebuild --platform=ios && cd ios && xcodebuild -workspace movieweb.xcworkspace -scheme movieweb -sdk iphonesimulator -configuration Release -derivedDataPath build -destination \"generic/platform=iOS Simulator\" CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"

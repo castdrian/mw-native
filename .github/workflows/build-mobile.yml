@@ -59,7 +59,7 @@ jobs:
         run: pnpm install
 
       - name: Build Android app
-        run: cd apps/expo && pnpm apk
+        run: cd apps/expo && pnpm run apk
 
       - name: Rename apk
         run: mv android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/movie-web.apk
@@ -97,7 +97,7 @@ jobs:
         run: pnpm install
 
       - name: Build iOS app
-        run: cd apps/expo && pnpm ipa
+        run: cd apps/expo && pnpm run ipa
           
       - name: Export .ipa from .app
         run: |

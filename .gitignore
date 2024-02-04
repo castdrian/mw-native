@@ -17,6 +17,8 @@ coverage
 dist/
 expo-env.d.ts
 apps/expo/.gitignore
+ios/
+android/
 
 # production
 build
