@@ -1,0 +1,143 @@
+name: release mobile app
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  bump-version:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+  
+        - name: Automated Version Bump
+          uses: phips28/gh-action-bump-version@v10.1.1
+          with:
+            skip-tag:  'true'
+            commit-message: 'chore: bump mobile version to {{version}} [skip ci]'
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            
+  build-android:
+    runs-on: ubuntu-latest
+    needs: [bump-version]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Android app
+        run: cd apps/expo && pnpm run apk
+
+      - name: Rename apk
+        run: cd apps/expo && mv android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/movie-web.apk
+
+      - name: Upload movie-web.apk as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: ./apps/expo/android/app/build/outputs/apk/release/movie-web.apk
+
+  build-ios:
+    runs-on: macos-14
+    needs: [bump-version]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Xcode Select Version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.1.0'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+  
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build iOS app
+        run: cd apps/expo && pnpm run ipa
+          
+      - name: Export .ipa from .app
+        run: |
+          cd apps/expo
+          mkdir -p ios/build/Build/Products/Release-iphoneos/Payload
+          mv ios/build/Build/Products/Release-iphoneos/movieweb.app ios/build/Build/Products/Release-iphoneos/Payload/
+          cd ios/build/Build/Products/Release-iphoneos
+          zip -r ../../../movie-web.ipa Payload
+
+      - name: Upload movie-web.ipa as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: ./apps/expo/ios/build/movie-web.ipa
+
+  release-app:
+    runs-on: ubuntu-latest
+    needs: [build-android, build-ios]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+
+      - name: Get package version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.package-version.outputs.current-version }}          
+          files: |
+            movie-web.apk
+            movie-web.ipa
+          fail_on_unmatched_files: true
+          token: ${{ env.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

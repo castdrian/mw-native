@@ -34,6 +34,9 @@ importers:
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.20)
+      '@movie-web/tmdb':
+        specifier: '*'
+        version: link:../../packages/tmdb
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -131,6 +134,31 @@ importers:
       tailwindcss:
         specifier: ^3.4.0
         version: 3.4.1
+      typescript:
+        specifier: ^5.3.3
+        version: 5.3.3
+
+  packages/tmdb:
+    dependencies:
+      tmdb-ts:
+        specifier: ^1.6.1
+        version: 1.6.1
+    devDependencies:
+      '@movie-web/eslint-config':
+        specifier: workspace:^0.2.0
+        version: link:../../tooling/eslint
+      '@movie-web/prettier-config':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/prettier
+      '@movie-web/tsconfig':
+        specifier: workspace:^0.1.0
+        version: link:../../tooling/typescript
+      eslint:
+        specifier: ^8.56.0
+        version: 8.56.0
+      prettier:
+        specifier: ^3.1.1
+        version: 3.2.4
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
@@ -9536,6 +9564,14 @@ packages:
       no-case: 2.3.2
       upper-case: 1.1.3
     dev: true
+
+  /tmdb-ts@1.6.1:
+    resolution: {integrity: sha512-TJQYQctzky03z8bhlJtZ9ZjFHNvLhpow3qKHMMZj2LEOvlqcJ/Dyy33IyuBROrhzWLelkmGraAA718B0ENP1Fg==}
+    dependencies:
+      cross-fetch: 3.1.8
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /tmp@0.0.33:
     resolution: {integrity: sha512-jRCJlojKnZ3addtTOjdIqoRuPEKBvNXcGYqzO6zWZX8KfKEpnGY5jfggJQ3EjKuu8D4bJRr0y+cYJFmYbImXGw==}
