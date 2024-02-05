@@ -26,6 +26,7 @@
     "expo-constants": "~15.4.5",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.6",
+    "expo-screen-orientation": "~6.4.1",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
     "expo-web-browser": "^12.8.2",
