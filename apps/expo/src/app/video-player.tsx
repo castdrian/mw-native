@@ -7,6 +7,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 import {
+  findHighestQuality,
   getVideoUrl,
   transformSearchResultToScrapeMedia,
 } from "@movie-web/provider-utils";
@@ -28,6 +29,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [videoUrl, setVideoUrl] = useState("");
+  const [headers, setHeaders] = useState({} as Record<string, string>);
   const [isLoading, setIsLoading] = useState(true);
   const videoPlayer = useRef<VideoRef>(null);
   const router = useRouter();
@@ -56,19 +58,38 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           episode,
         );
 
-        const videoUrl = await getVideoUrl(scrapeMedia);
-        if (!videoUrl) {
+        const stream = await getVideoUrl(scrapeMedia);
+        if (!stream) {
           await ScreenOrientation.lockAsync(
             ScreenOrientation.OrientationLock.PORTRAIT_UP,
           );
           return router.push("/(tabs)");
         }
-        return videoUrl;
+        return stream;
       };
 
       setIsLoading(true);
-      const url = await fetchVideo();
-      if (url) {
+      const stream = await fetchVideo();
+
+      if (stream) {
+        let highestQuality;
+        let url;
+
+        switch (stream.type) {
+          case "file":
+            highestQuality = findHighestQuality(stream);
+            url = highestQuality ? stream.qualities[highestQuality]?.url : null;
+            return url ?? null;
+          case "hls":
+            url = stream.playlist;
+        }
+
+        const combinedHeaders = {
+          ...stream.headers,
+          ...stream.preferredHeaders,
+        };
+
+        setHeaders(combinedHeaders);
         setVideoUrl(url);
         setIsLoading(false);
       } else {
@@ -123,7 +144,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
     <SafeAreaView style={styles.container}>
       <Video
         ref={videoPlayer}
-        source={{ uri: videoUrl }}
+        source={{ uri: videoUrl, headers }}
         style={styles.fullScreen}
         fullscreen={true}
         paused={false}

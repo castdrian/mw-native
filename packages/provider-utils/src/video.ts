@@ -3,6 +3,7 @@ import type {
   Qualities,
   RunnerOptions,
   ScrapeMedia,
+  Stream,
 } from "@movie-web/providers";
 import {
   makeProviders,
@@ -10,7 +11,7 @@ import {
   targets,
 } from "@movie-web/providers";
 
-export async function getVideoUrl(media: ScrapeMedia): Promise<string | null> {
+export async function getVideoUrl(media: ScrapeMedia): Promise<Stream | null> {
   const providers = makeProviders({
     fetcher: makeStandardFetcher(fetch),
     target: targets.NATIVE,
@@ -23,23 +24,12 @@ export async function getVideoUrl(media: ScrapeMedia): Promise<string | null> {
 
   const results = await providers.runAll(options);
   if (!results) return null;
-
-  let highestQuality;
-  let url;
-
-  switch (results.stream.type) {
-    case "file":
-      highestQuality = findHighestQuality(results.stream);
-      url = highestQuality
-        ? results.stream.qualities[highestQuality]?.url
-        : null;
-      return url ?? null;
-    case "hls":
-      return results.stream.playlist;
-  }
+  return results.stream;
 }
 
-function findHighestQuality(stream: FileBasedStream): Qualities | undefined {
+export function findHighestQuality(
+  stream: FileBasedStream,
+): Qualities | undefined {
   const qualityOrder: Qualities[] = [
     "4k",
     "1080",
