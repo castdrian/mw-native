@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { VideoRef } from 'react-native-video';
 import Video from 'react-native-video';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { useLocalSearchParams } from "expo-router";
 
 interface VideoPlayerState {
   videoUrl: string;
@@ -12,13 +13,23 @@ interface VideoPlayerState {
   paused: boolean;
 }
 
-class VideoPlayer extends Component<object, VideoPlayerState> {
-  private videoPlayer: React.RefObject<VideoRef>;
+interface VideoPlayerProps {
+	videoUrl: string;
+}
 
-  constructor(props: object) {
+export default function VideoPlayerWrapper() {
+	const params = useLocalSearchParams();
+	const videoUrl = typeof params.videoUrl === 'string' ? params.videoUrl : '';
+	return <VideoPlayer videoUrl={videoUrl} />;
+  }
+
+  class VideoPlayer extends Component<VideoPlayerProps, VideoPlayerState> {
+	private videoPlayer: React.RefObject<VideoRef>;
+
+   constructor(props: VideoPlayerProps) {
     super(props);
     this.state = {
-      videoUrl: '',
+      videoUrl: props.videoUrl || '',
       fullscreen: true,
       isLoading: true,
       paused: false
@@ -31,10 +42,14 @@ class VideoPlayer extends Component<object, VideoPlayerState> {
 	  await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
 	};
   
-	if (this.videoPlayer.current) {
-	  this.videoPlayer.current.presentFullscreenPlayer();
-	  void lockOrientation();
-	}
+	const { videoUrl } = this.props;
+	
+	this.setState({ videoUrl }, () => {
+	  if (this.videoPlayer.current) {
+		this.videoPlayer.current.presentFullscreenPlayer();
+		void lockOrientation();
+	  }
+	});
   }
 
   componentWillUnmount() {
@@ -98,5 +113,3 @@ const styles = StyleSheet.create({
   },
     
 });
-
-export default VideoPlayer;

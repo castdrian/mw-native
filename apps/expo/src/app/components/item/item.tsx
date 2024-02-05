@@ -16,8 +16,11 @@ export default function Item({ data }: { data: ItemData }) {
   const { title, type, year, posterUrl } = data;
 
   const handlePress = () => {
-    console.log('Item pressed. Opening VideoPlayer...');
 	router.push('/video-player');
+	// router.push({
+	// 	pathname: '/video-player',
+	// 	params: { videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4' }
+	//   });
   };
 
   return (
