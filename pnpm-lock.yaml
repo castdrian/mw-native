@@ -34,9 +34,18 @@ importers:
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.20)
+      '@movie-web/provider-utils':
+        specifier: '*'
+        version: link:../../packages/provider-utils
       '@movie-web/tmdb':
         specifier: '*'
         version: link:../../packages/tmdb
+      '@react-native-anywhere/polyfill-base64':
+        specifier: 0.0.1-alpha.0
+        version: 0.0.1-alpha.0
+      '@react-navigation/native':
+        specifier: ^6.1.9
+        version: 6.1.9(react-native@0.73.2)(react@18.2.0)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -149,6 +158,9 @@ importers:
       '@movie-web/providers':
         specifier: ^2.1.1
         version: 2.1.1
+      tmdb-ts:
+        specifier: ^1.6.1
+        version: 1.6.1
     devDependencies:
       '@movie-web/eslint-config':
         specifier: workspace:^0.2.0
@@ -2387,6 +2399,12 @@ packages:
       react: 18.2.0
     dev: false
 
+  /@react-native-anywhere/polyfill-base64@0.0.1-alpha.0:
+    resolution: {integrity: sha512-OF3idcETV622AyFvvK54ot2EG0G43tZTZJyWtFHtrEKUmoUvSuC5DOMeLino0TwBQJn2s26MBnIPVgokBJb/xw==}
+    dependencies:
+      base-64: 0.1.0
+    dev: false
+
   /@react-native-community/cli-clean@12.3.0:
     resolution: {integrity: sha512-iAgLCOWYRGh9ukr+eVQnhkV/OqN3V2EGd/in33Ggn/Mj4uO6+oUncXFwB+yjlyaUNz6FfjudhIz09yYGSF+9sg==}
     dependencies:
@@ -3837,6 +3855,10 @@ packages:
 
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  /base-64@0.1.0:
+    resolution: {integrity: sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==}
+    dev: false
 
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}

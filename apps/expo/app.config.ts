@@ -19,7 +19,7 @@ const defineConfig = (): ExpoConfig => ({
   ios: {
     bundleIdentifier: "dev.movieweb.app",
     supportsTablet: true,
-	requireFullScreen: true,
+    requireFullScreen: true,
   },
   android: {
     package: "dev.movieweb.app",
@@ -41,13 +41,15 @@ const defineConfig = (): ExpoConfig => ({
     tsconfigPaths: true,
     typedRoutes: true,
   },
-  plugins: ["expo-router", [
-	"expo-screen-orientation",
-	{
-	  initialOrientation: "DEFAULT"
-	}
-  ]
-],
+  plugins: [
+    "expo-router",
+    [
+      "expo-screen-orientation",
+      {
+        initialOrientation: "DEFAULT",
+      },
+    ],
+  ],
 });
 
 export default defineConfig;

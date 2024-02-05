@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { StyleSheet, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import type { VideoRef } from 'react-native-video';
-import Video from 'react-native-video';
-import * as ScreenOrientation from 'expo-screen-orientation';
+import type { VideoRef } from "react-native-video";
+import React, { Component } from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Video from "react-native-video";
 import { useLocalSearchParams } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 interface VideoPlayerState {
   videoUrl: string;
@@ -14,53 +14,57 @@ interface VideoPlayerState {
 }
 
 interface VideoPlayerProps {
-	videoUrl: string;
+  videoUrl: string;
 }
 
 export default function VideoPlayerWrapper() {
-	const params = useLocalSearchParams();
-	const videoUrl = typeof params.videoUrl === 'string' ? params.videoUrl : '';
-	return <VideoPlayer videoUrl={videoUrl} />;
-  }
+  const params = useLocalSearchParams();
+  const videoUrl = typeof params.videoUrl === "string" ? params.videoUrl : "";
+  return <VideoPlayer videoUrl={videoUrl} />;
+}
 
-  class VideoPlayer extends Component<VideoPlayerProps, VideoPlayerState> {
-	private videoPlayer: React.RefObject<VideoRef>;
+class VideoPlayer extends Component<VideoPlayerProps, VideoPlayerState> {
+  private videoPlayer: React.RefObject<VideoRef>;
 
-   constructor(props: VideoPlayerProps) {
+  constructor(props: VideoPlayerProps) {
     super(props);
     this.state = {
-      videoUrl: props.videoUrl || '',
+      videoUrl: props.videoUrl || "",
       fullscreen: true,
       isLoading: true,
-      paused: false
+      paused: false,
     };
     this.videoPlayer = React.createRef();
   }
 
   componentDidMount() {
-	const lockOrientation = async () => {
-	  await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-	};
-  
-	const { videoUrl } = this.props;
-	
-	this.setState({ videoUrl }, () => {
-	  if (this.videoPlayer.current) {
-		this.videoPlayer.current.presentFullscreenPlayer();
-		void lockOrientation();
-	  }
-	});
+    const lockOrientation = async () => {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE,
+      );
+    };
+
+    const { videoUrl } = this.props;
+
+    this.setState({ videoUrl }, () => {
+      if (this.videoPlayer.current) {
+        this.videoPlayer.current.presentFullscreenPlayer();
+        void lockOrientation();
+      }
+    });
   }
 
   componentWillUnmount() {
-	const unlockOrientation = async () => {
-	  await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
-	}
+    const unlockOrientation = async () => {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP,
+      );
+    };
 
-	if (this.videoPlayer.current) {
-	  this.videoPlayer.current.dismissFullscreenPlayer();
-	}
-	void unlockOrientation();
+    if (this.videoPlayer.current) {
+      this.videoPlayer.current.dismissFullscreenPlayer();
+    }
+    void unlockOrientation();
   }
 
   onVideoLoadStart = () => {
@@ -71,9 +75,9 @@ export default function VideoPlayerWrapper() {
     this.setState({ isLoading: false });
   };
 
-//   onVideoError = () => {  // probably useful later
-//     console.log("Video playback error");
-//   };
+  //   onVideoError = () => {  // probably useful later
+  //     console.log("Video playback error");
+  //   };
 
   render() {
     return (
@@ -84,7 +88,7 @@ export default function VideoPlayerWrapper() {
           style={styles.fullScreen}
           fullscreen={this.state.fullscreen}
           paused={this.state.paused}
-		  controls={true}
+          controls={true}
           onLoadStart={this.onVideoLoadStart}
           onReadyForDisplay={this.onReadyForDisplay}
           // onError={this.onVideoError}
@@ -98,18 +102,18 @@ export default function VideoPlayerWrapper() {
 }
 
 const styles = StyleSheet.create({
+  // taken from example, probably needs to be nativewind stuff instead
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
   },
   fullScreen: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
   },
-    
 });

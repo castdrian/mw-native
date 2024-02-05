@@ -29,6 +29,7 @@
   },
   "prettier": "@movie-web/prettier-config",
   "dependencies": {
-    "@movie-web/providers": "^2.1.1"
+    "@movie-web/providers": "^2.1.1",
+    "tmdb-ts": "^1.6.1"
   }
 }
