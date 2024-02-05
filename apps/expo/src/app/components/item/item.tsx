@@ -51,7 +51,6 @@ export default function Item({ data }: { data: ItemData }) {
       );
       return router.push("/(tabs)");
     }
-    console.log(videoUrl);
 
     router.push({
       pathname: "/video-player",
