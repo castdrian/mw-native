@@ -11,8 +11,8 @@ export async function fetchMediaDetails(
   try {
     const result =
       type === "movie"
-        ? await tmdb.movies.details(parseInt(id, 10))
-        : await tmdb.tvShows.details(parseInt(id, 10));
+        ? await tmdb.movies.details(parseInt(id, 10), ["external_ids"])
+        : await tmdb.tvShows.details(parseInt(id, 10), ["external_ids"]);
 
     return {
       type,

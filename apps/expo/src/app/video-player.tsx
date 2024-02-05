@@ -1,5 +1,5 @@
-import type { VideoRef } from "react-native-video";
-import React, { useEffect, useRef, useState } from "react";
+import type { ReactVideoSource } from "react-native-video";
+import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Video from "react-native-video";
@@ -14,6 +14,7 @@ import {
 import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "./components/item/item";
+import { usePlayer } from "./hooks/usePlayer";
 
 export default function VideoPlayerWrapper() {
   const params = useLocalSearchParams();
@@ -28,11 +29,15 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
-  const [videoUrl, setVideoUrl] = useState("");
-  const [headers, setHeaders] = useState({} as Record<string, string>);
+  const [videoSrc, setVideoSrc] = useState<ReactVideoSource>();
   const [isLoading, setIsLoading] = useState(true);
-  const videoPlayer = useRef<VideoRef>(null);
   const router = useRouter();
+  const {
+    videoRef,
+    unlockOrientation,
+    presentFullscreenPlayer,
+    dismissFullscreenPlayer,
+  } = usePlayer();
 
   useEffect(() => {
     const initializePlayer = async () => {
@@ -84,13 +89,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             url = stream.playlist;
         }
 
-        const combinedHeaders = {
-          ...stream.headers,
-          ...stream.preferredHeaders,
-        };
-
-        setHeaders(combinedHeaders);
-        setVideoUrl(url);
+        setVideoSrc({
+          uri: url,
+          headers: {
+            ...stream.preferredHeaders,
+            ...stream.headers,
+          },
+        });
         setIsLoading(false);
       } else {
         await ScreenOrientation.lockAsync(
@@ -100,40 +105,21 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       }
     };
 
-    const lockOrientation = async () => {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE,
-      );
-    };
-
-    const unlockOrientation = async () => {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP,
-      );
-    };
-
-    const presentFullscreenPlayer = async () => {
-      if (videoPlayer.current) {
-        videoPlayer.current.presentFullscreenPlayer();
-        await lockOrientation();
-      }
-    };
-
-    const dismissFullscreenPlayer = async () => {
-      if (videoPlayer.current) {
-        videoPlayer.current.dismissFullscreenPlayer();
-        await unlockOrientation();
-      }
-    };
-
     setIsLoading(true);
     void presentFullscreenPlayer();
     void initializePlayer();
 
     return () => {
       void dismissFullscreenPlayer();
+      void unlockOrientation();
     };
-  }, [data, router]);
+  }, [
+    data,
+    dismissFullscreenPlayer,
+    presentFullscreenPlayer,
+    router,
+    unlockOrientation,
+  ]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
@@ -146,8 +132,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Video
-        ref={videoPlayer}
-        source={{ uri: videoUrl, headers }}
+        ref={videoRef}
+        source={videoSrc}
         style={styles.fullScreen}
         fullscreen={true}
         paused={false}

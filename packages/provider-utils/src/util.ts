@@ -1,4 +1,4 @@
-import type { MovieDetails, TvShowDetails } from "tmdb-ts";
+import type { AppendToResponse, MovieDetails, TvShowDetails } from "tmdb-ts";
 
 import type { ScrapeMedia } from "@movie-web/providers";
 
@@ -9,10 +9,15 @@ export function transformSearchResultToScrapeMedia(
   episode?: number,
 ): ScrapeMedia {
   if (type === "tv") {
-    const tvResult = result as TvShowDetails;
+    const tvResult = result as AppendToResponse<
+      TvShowDetails,
+      "external_ids"[],
+      "tvShow"
+    >;
     return {
       type: "show",
       tmdbId: tvResult.id.toString(),
+      imdbId: tvResult.external_ids.imdb_id,
       title: tvResult.name,
       releaseYear: new Date(tvResult.first_air_date).getFullYear(),
       season: {
@@ -30,10 +35,15 @@ export function transformSearchResultToScrapeMedia(
     };
   }
   if (type === "movie") {
-    const movieResult = result as MovieDetails;
+    const movieResult = result as AppendToResponse<
+      MovieDetails,
+      "external_ids"[],
+      "movie"
+    >;
     return {
       type: "movie",
       tmdbId: movieResult.id.toString(),
+      imdbId: movieResult.external_ids.imdb_id,
       title: movieResult.title,
       releaseYear: new Date(movieResult.release_date).getFullYear(),
     };
