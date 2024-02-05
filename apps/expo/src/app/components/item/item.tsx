@@ -1,12 +1,5 @@
 import { Image, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
-
-import {
-  getVideoUrl,
-  transformSearchResultToScrapeMedia,
-} from "@movie-web/provider-utils";
-import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import { Text } from "~/components/ui/Text";
 
@@ -20,41 +13,12 @@ export interface ItemData {
 
 export default function Item({ data }: { data: ItemData }) {
   const router = useRouter();
-  const { id, title, type, year, posterUrl } = data;
+  const { title, type, year, posterUrl } = data;
 
-  const handlePress = async () => {
-    router.push("/video-player");
-
-    const media = await fetchMediaDetails(id, type);
-    if (!media) return;
-
-    const { result } = media;
-    let season: number | undefined;
-    let episode: number | undefined;
-
-    if (type === "tv") {
-      // season = <chosen by user> ?? undefined;
-      // episode = <chosen by user> ?? undefined;
-    }
-
-    const scrapeMedia = transformSearchResultToScrapeMedia(
-      type,
-      result,
-      season,
-      episode,
-    );
-
-    const videoUrl = await getVideoUrl(scrapeMedia);
-    if (!videoUrl) {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP,
-      );
-      return router.push("/(tabs)");
-    }
-
+  const handlePress = () => {
     router.push({
       pathname: "/video-player",
-      params: { videoUrl },
+      params: { data: JSON.stringify(data) },
     });
   };
 
