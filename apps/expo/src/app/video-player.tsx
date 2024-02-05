@@ -93,7 +93,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         setVideoUrl(url);
         setIsLoading(false);
       } else {
-        router.push("/(tabs)");
+        await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP,
+        );
+        return router.push("/(tabs)");
       }
     };
 
