@@ -12,7 +12,7 @@ import {
 
 import Colors from "@movie-web/tailwind-config/colors";
 
-import "./styles/global.css";
+import "../styles/global.css";
 
 export {
   // Catch any errors thrown by the Layout component.

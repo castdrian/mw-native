@@ -13,8 +13,8 @@ import {
 } from "@movie-web/provider-utils";
 import { fetchMediaDetails } from "@movie-web/tmdb";
 
-import type { ItemData } from "./components/item/item";
-import { usePlayer } from "./hooks/usePlayer";
+import type { ItemData } from "~/components/item/item";
+import { usePlayer } from "../hooks/usePlayer";
 
 export default function VideoPlayerWrapper() {
   const params = useLocalSearchParams();

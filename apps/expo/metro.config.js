@@ -12,7 +12,7 @@ module.exports = withTurborepoManagedCache(
         isCSSEnabled: true,
       }),
       {
-        input: "./src/app/styles/global.css",
+        input: "./src/styles/global.css",
         configPath: "./tailwind.config.ts",
       },
     ),
