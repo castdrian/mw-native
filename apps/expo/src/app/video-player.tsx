@@ -48,12 +48,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         if (!media) return null;
 
         const { result } = media;
-        let season: number | undefined;
+        let season: number | undefined; // defaults to 1 when undefined
         let episode: number | undefined;
 
         if (type === "tv") {
-          // season = <chosen by user> ?? undefined;
-          // episode = <chosen by user> ?? undefined;
+          // season = <chosen by user / continue watching> ?? undefined;
+          // episode = <chosen by user / continue watching> ?? undefined;
         }
 
         const scrapeMedia = transformSearchResultToScrapeMedia(
