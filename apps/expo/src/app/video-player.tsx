@@ -1,8 +1,12 @@
-import type { ReactVideoSource } from "react-native-video";
+import type {
+  ISO639_1,
+  ReactVideoSource,
+  TextTracks,
+} from "react-native-video";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Video from "react-native-video";
+import Video, { TextTracksType } from "react-native-video";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 
@@ -30,6 +34,7 @@ interface VideoPlayerProps {
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [videoSrc, setVideoSrc] = useState<ReactVideoSource>();
+  const [_textTracks, setTextTracks] = useState<TextTracks>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const {
@@ -89,6 +94,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             url = stream.playlist;
         }
 
+        setTextTracks(
+          stream.captions && stream.captions.length > 0
+            ? convertCaptionsToTextTracks(stream.captions)
+            : [],
+        );
+
         setVideoSrc({
           uri: url,
           headers: {
@@ -96,6 +107,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             ...stream.headers,
           },
         });
+
         setIsLoading(false);
       } else {
         await ScreenOrientation.lockAsync(
@@ -134,6 +146,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       <Video
         ref={videoRef}
         source={videoSrc}
+        // textTracks={textTracks} // breaks playback
         style={styles.fullScreen}
         fullscreen={true}
         paused={false}
@@ -161,3 +174,25 @@ const styles = StyleSheet.create({
     right: 0,
   },
 });
+
+interface Caption {
+  type: "srt" | "vtt";
+  id: string;
+  url: string;
+  hasCorsRestrictions: boolean;
+  language: string;
+}
+
+const captionTypeToTextTracksType = {
+  srt: TextTracksType.SUBRIP,
+  vtt: TextTracksType.VTT,
+};
+
+function convertCaptionsToTextTracks(captions: Caption[]): TextTracks {
+  return captions.map((caption) => ({
+    title: caption.language,
+    language: caption.language as ISO639_1,
+    type: captionTypeToTextTracksType[caption.type] || TextTracksType.VTT,
+    uri: caption.url,
+  }));
+}
