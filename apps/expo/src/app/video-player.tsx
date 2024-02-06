@@ -4,8 +4,7 @@ import type {
   TextTracks,
 } from "react-native-video";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ActivityIndicator, View } from "react-native";
 import Video, { TextTracksType } from "react-native-video";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -142,12 +141,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View className="flex-1 items-center justify-center bg-black">
       <Video
         ref={videoRef}
         source={videoSrc}
         // textTracks={textTracks} // breaks playback
-        style={styles.fullScreen}
+        className="absolute inset-0"
         fullscreen={true}
         paused={false}
         controls={true}
@@ -155,25 +154,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         onReadyForDisplay={onReadyForDisplay}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-    </SafeAreaView>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  fullScreen: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-});
 
 interface Caption {
   type: "srt" | "vtt";
