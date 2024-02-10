@@ -144,7 +144,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  altstore-repo:
+  app-repo:
     environment:
        name: github-pages
        url: ${{ steps.deployment.outputs.page_url }}
