@@ -17,7 +17,7 @@ export default function Item({ data }: { data: ItemData }) {
 
   const handlePress = () => {
     router.push({
-      pathname: "/video-player",
+      pathname: "/videoPlayer",
       params: { data: JSON.stringify(data) },
     });
   };
