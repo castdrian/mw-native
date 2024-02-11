@@ -10,5 +10,9 @@ export default {
     300: "#32324F",
     700: "#131322",
   },
+  iconBackground: "#14141c",
+  icon: {
+    background: "#14141c",
+  },
   background: "#0a0a12",
 };

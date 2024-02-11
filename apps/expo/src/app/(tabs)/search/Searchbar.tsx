@@ -42,7 +42,7 @@ export default function Searchbar({
         ref={inputRef}
         placeholder="What are you looking for?"
         placeholderTextColor={Colors.secondary[200]}
-        className="w-full rounded-3xl py-3 pr-5 text-white focus-visible:outline-none"
+        className="w-full rounded-3xl py-3 pr-5 text-white"
       />
     </View>
   );

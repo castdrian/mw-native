@@ -17,14 +17,19 @@ import {
 import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
-import { usePlayer } from "../hooks/usePlayer";
+import { Header } from "~/components/player/Header";
+import { PlayerProvider, usePlayer } from "~/context/player.context";
 
 export default function VideoPlayerWrapper() {
   const params = useLocalSearchParams();
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
     : null;
-  return <VideoPlayer data={data} />;
+  return (
+    <PlayerProvider>
+      <VideoPlayer data={data} />
+    </PlayerProvider>
+  );
 }
 
 interface VideoPlayerProps {
@@ -37,7 +42,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const {
-    videoRef,
+    setVideoRef,
     unlockOrientation,
     presentFullscreenPlayer,
     dismissFullscreenPlayer,
@@ -99,6 +104,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             : [],
         );
 
+        console.log("stream", url);
+
         setVideoSrc({
           uri: url,
           headers: {
@@ -143,17 +150,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   return (
     <View className="flex-1 items-center justify-center bg-black">
       <Video
-        ref={videoRef}
+        ref={setVideoRef}
         source={videoSrc}
         // textTracks={textTracks} // breaks playback
         className="absolute inset-0"
-        fullscreen={true}
+        fullscreen
         paused={false}
-        controls={true}
+        controls
+        useSecureView
         onLoadStart={onVideoLoadStart}
         onReadyForDisplay={onReadyForDisplay}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+      {!isLoading && <Header title="S8 E11 Rocky 8" />}
     </View>
   );
 };
