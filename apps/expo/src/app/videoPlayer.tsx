@@ -145,7 +145,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       <Video
         ref={videoRef}
         source={videoSrc}
-        // textTracks={textTracks} // breaks playback
+        // textTracks={textTracks} // breaks playback on iOS, see pr body
         className="absolute inset-0"
         fullscreen={true}
         fullscreenOrientation="landscape"
