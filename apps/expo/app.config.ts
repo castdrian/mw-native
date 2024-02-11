@@ -49,6 +49,21 @@ const defineConfig = (): ExpoConfig => ({
         initialOrientation: "DEFAULT",
       },
     ],
+    [
+      "expo-build-properties",
+      {
+        android: {
+          packagingOptions: {
+            pickFirst: [
+              "lib/x86/libcrypto.so",
+              "lib/x86_64/libcrypto.so",
+              "lib/armeabi-v7a/libcrypto.so",
+              "lib/arm64-v8a/libcrypto.so",
+            ],
+          },
+        },
+      },
+    ],
   ],
 });
 
