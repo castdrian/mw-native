@@ -11,7 +11,9 @@ import {
   targets,
 } from "@movie-web/providers";
 
-export async function getVideoUrl(media: ScrapeMedia): Promise<Stream | null> {
+export async function getVideoStream(
+  media: ScrapeMedia,
+): Promise<Stream | null> {
   const providers = makeProviders({
     fetcher: makeStandardFetcher(fetch),
     target: targets.NATIVE,

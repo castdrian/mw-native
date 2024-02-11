@@ -11,7 +11,7 @@ import * as ScreenOrientation from "expo-screen-orientation";
 
 import {
   findHighestQuality,
-  getVideoUrl,
+  getVideoStream,
   transformSearchResultToScrapeMedia,
 } from "@movie-web/provider-utils";
 import { fetchMediaDetails } from "@movie-web/tmdb";
@@ -67,7 +67,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           episode,
         );
 
-        const stream = await getVideoUrl(scrapeMedia);
+        const stream = await getVideoStream(scrapeMedia);
         if (!stream) {
           await ScreenOrientation.lockAsync(
             ScreenOrientation.OrientationLock.PORTRAIT_UP,
