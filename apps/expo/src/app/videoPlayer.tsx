@@ -4,7 +4,7 @@ import type {
   TextTracks,
 } from "react-native-video";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import Video, { TextTracksType } from "react-native-video";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -152,9 +152,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       <Video
         ref={setVideoRef}
         source={videoSrc}
-        // textTracks={textTracks} // breaks playback
+        // textTracks={textTracks} // breaks playback on iOS, see pr body
         className="absolute inset-0"
         fullscreen
+        fullscreenOrientation="landscape"
         paused={false}
         controls
         useSecureView
@@ -181,10 +182,18 @@ const captionTypeToTextTracksType = {
 };
 
 function convertCaptionsToTextTracks(captions: Caption[]): TextTracks {
-  return captions.map((caption) => ({
-    title: caption.language,
-    language: caption.language as ISO639_1,
-    type: captionTypeToTextTracksType[caption.type] || TextTracksType.VTT,
-    uri: caption.url,
-  }));
+  return captions
+    .map((caption) => {
+      if (Platform.OS === "ios" && caption.type !== "vtt") {
+        return null;
+      }
+
+      return {
+        title: caption.language,
+        language: caption.language as ISO639_1,
+        type: captionTypeToTextTracksType[caption.type],
+        uri: caption.url,
+      };
+    })
+    .filter(Boolean) as TextTracks;
 }
