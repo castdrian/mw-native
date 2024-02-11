@@ -148,7 +148,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         // textTracks={textTracks} // breaks playback
         className="absolute inset-0"
         fullscreen={true}
-		fullscreenOrientation="landscape"
+        fullscreenOrientation="landscape"
         paused={false}
         controls={true}
         onLoadStart={onVideoLoadStart}
