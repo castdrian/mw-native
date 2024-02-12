@@ -3,7 +3,6 @@ import { default as toWebVTT } from "srt-webvtt";
 import type {
   FileBasedStream,
   Qualities,
-  RunnerOptions,
   ScrapeMedia,
   Stream,
 } from "@movie-web/providers";
@@ -26,11 +25,7 @@ export async function getVideoStream({
     consistentIpForRequests: true,
   });
 
-  const options: RunnerOptions = {
-    media,
-  };
-
-  const result = await providers.runAll(options);
+  const result = await providers.runAll({ media });
   if (!result) return null;
 
   if (forceVTT) {
