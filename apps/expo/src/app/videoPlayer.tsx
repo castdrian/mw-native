@@ -14,7 +14,7 @@ import { fetchMediaDetails } from "@movie-web/tmdb";
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
 import { Header } from "~/components/player/Header";
-import { MiddleControls } from "~/components/player/MiddleButtons";
+import { MiddleControls } from "~/components/player/MiddleControls";
 import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
