@@ -4,7 +4,7 @@ import type {
   TextTracks,
 } from "react-native-video";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Platform, View } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import Video, { TextTracksType } from "react-native-video";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -153,7 +153,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         ref={setVideoRef}
         source={videoSrc}
         // textTracks={textTracks} // breaks playback on iOS, see pr body
-        className="absolute inset-0"
         fullscreen
         fullscreenOrientation="landscape"
         paused={false}
@@ -161,6 +160,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         useSecureView
         onLoadStart={onVideoLoadStart}
         onReadyForDisplay={onReadyForDisplay}
+        style={styles.backgroundVideo}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       {!isLoading && <Header title="S8 E11 Rocky 8" />}
@@ -197,3 +197,13 @@ function convertCaptionsToTextTracks(captions: Caption[]): TextTracks {
     })
     .filter(Boolean) as TextTracks;
 }
+
+const styles = StyleSheet.create({
+  backgroundVideo: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
+});
