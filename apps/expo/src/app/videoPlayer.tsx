@@ -6,12 +6,12 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
 
+import type {
+	ScrapeMedia,
+	Stream} from "@movie-web/provider-utils";
 import {
   findHighestQuality,
-  getVideoStream,
-  transformSearchResultToScrapeMedia,
 } from "@movie-web/provider-utils";
-import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
@@ -22,13 +22,19 @@ import { usePlayerStore } from "~/stores/player/store";
 export default function VideoPlayerWrapper() {
   const params = useLocalSearchParams();
   const data = params.data
-    ? (JSON.parse(params.data as string) as ItemData)
+    ? (JSON.parse(params.data as string) as VideoPlayerData)
     : null;
   return <VideoPlayer data={data} />;
 }
 
+export interface VideoPlayerData {
+	item: ItemData;
+	stream: Stream;
+	media: ScrapeMedia;
+}
+
 interface VideoPlayerProps {
-  data: ItemData | null;
+  data: VideoPlayerData | null;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
@@ -48,56 +54,28 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
   useEffect(() => {
     const initializePlayer = async () => {
-      const fetchVideo = async () => {
-        if (!data) return null;
-        const { id, type } = data;
-        const media = await fetchMediaDetails(id, type).catch(() => null);
-        if (!media) return null;
-
-        const { result } = media;
-        let season: number | undefined; // defaults to 1 when undefined
-        let episode: number | undefined;
-
-        if (type === "tv") {
-          // season = <chosen by user / continue watching> ?? undefined;
-          // episode = <chosen by user / continue watching> ?? undefined;
-        }
-
-        const scrapeMedia = transformSearchResultToScrapeMedia(
-          type,
-          result,
-          season,
-          episode,
-        );
-
-        setHeaderData({
-          title: data.title,
-          year: data.year,
-          season:
-            scrapeMedia.type === "show" ? scrapeMedia.season.number : undefined,
-          episode:
-            scrapeMedia.type === "show"
-              ? scrapeMedia.episode.number
-              : undefined,
-        });
-
-        const stream = await getVideoStream({
-          media: scrapeMedia,
-          forceVTT: true,
-        }).catch(() => null);
-        if (!stream) {
-          await dismissFullscreenPlayer();
-          return router.push("/(tabs)");
-        }
-        return stream;
-      };
-
-      StatusBar.setStatusBarHidden(true);
+	  StatusBar.setStatusBarHidden(true);
       await NavigationBar.setVisibilityAsync("hidden");
       setIsLoading(true);
-      const stream = await fetchVideo();
+      
+	  if (!data) {
+		await dismissFullscreenPlayer();
+		return router.push("/(tabs)");
+	  }
 
-      if (stream) {
+	  const { item, stream, media } = data;
+
+	  setHeaderData({
+		title: item.title,
+		year: item.year,
+		season:
+		  media.type === "show" ? media.season.number : undefined,
+		episode:
+		  media.type === "show"
+			? media.episode.number
+			: undefined,
+	  });
+
         let highestQuality;
         let url;
 
@@ -125,11 +103,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         });
 
         setIsLoading(false);
-      } else {
-        await dismissFullscreenPlayer();
-        return router.push("/(tabs)");
-      }
-    };
+	};
 
     setIsLoading(true);
     void presentFullscreenPlayer();

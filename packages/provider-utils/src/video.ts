@@ -3,6 +3,7 @@ import { default as toWebVTT } from "srt-webvtt";
 import type {
   FileBasedStream,
   Qualities,
+  RunnerOptions,
   ScrapeMedia,
   Stream,
 } from "@movie-web/providers";
@@ -15,9 +16,11 @@ import {
 export async function getVideoStream({
   media,
   forceVTT,
+  onEvent,
 }: {
   media: ScrapeMedia;
   forceVTT?: boolean;
+  onEvent?: (event: unknown) => void;
 }): Promise<Stream | null> {
   const providers = makeProviders({
     fetcher: makeStandardFetcher(fetch),
@@ -25,7 +28,17 @@ export async function getVideoStream({
     consistentIpForRequests: true,
   });
 
-  const result = await providers.runAll({ media });
+  const options: RunnerOptions = { 
+		media, 
+		events: { 
+			init: onEvent,
+			update: onEvent,
+			discoverEmbeds: onEvent,
+			start: onEvent,
+		} 
+	};
+	
+  const result = await providers.runAll(options);
   if (!result) return null;
 
   if (forceVTT) {
