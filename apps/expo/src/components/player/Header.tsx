@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Image, View } from "react-native";
 
 import Icon from "../../../assets/images/icon-transparent.png";

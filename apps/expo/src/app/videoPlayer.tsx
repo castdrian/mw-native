@@ -104,8 +104,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             : [],
         );
 
-        console.log("stream", url);
-
         setVideoSrc({
           uri: url,
           headers: {
@@ -163,7 +161,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         style={styles.backgroundVideo}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      {!isLoading && <Header title="S8 E11 Rocky 8" />}
+      {!isLoading && <Header title={data!.title} />}
     </View>
   );
 };
