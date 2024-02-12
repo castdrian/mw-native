@@ -5,6 +5,7 @@ import type { MakeSlice } from "./types";
 export interface InterfaceSlice {
   interface: {
     isIdle: boolean;
+    idleTimeout: NodeJS.Timeout | null;
   };
   setIsIdle(state: boolean): void;
   lockOrientation: () => Promise<void>;
@@ -16,16 +17,20 @@ export interface InterfaceSlice {
 export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
   interface: {
     isIdle: true,
+    idleTimeout: null,
   },
   setIsIdle: (state) => {
     set((s) => {
-      setTimeout(() => {
+      if (s.interface.idleTimeout) clearTimeout(s.interface.idleTimeout);
+
+      s.interface.idleTimeout = setTimeout(() => {
         if (get().interface.isIdle === false) {
           set((s) => {
             s.interface.isIdle = true;
           });
         }
       }, 6000);
+
       s.interface.isIdle = state;
     });
   },
