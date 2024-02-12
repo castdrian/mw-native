@@ -12,6 +12,7 @@ import {
 import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
+import type { HeaderData } from "~/components/player/Header";
 import { Header } from "~/components/player/Header";
 import { MiddleControls } from "~/components/player/MiddleButtons";
 import { usePlayerStore } from "~/stores/player/store";
@@ -28,16 +29,10 @@ interface VideoPlayerProps {
   data: ItemData | null;
 }
 
-interface HeaderInfo {
-  title: string;
-  season?: number;
-  episode?: number;
-}
-
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
-  const [headerInfo, setHeaderInfo] = useState<HeaderInfo>({ title: "" });
+  const [headerData, setHeaderData] = useState<HeaderData>();
   const router = useRouter();
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
@@ -73,12 +68,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           episode,
         );
 
-        setHeaderInfo({
+        setHeaderData({
           title: data.title,
-          ...(scrapeMedia.type === "show" && {
-            season: scrapeMedia.season.number,
-            episode: scrapeMedia.episode.number,
-          }),
+          year: data.year,
+          season:
+            scrapeMedia.type === "show" ? scrapeMedia.season.number : undefined,
+          episode:
+            scrapeMedia.type === "show"
+              ? scrapeMedia.episode.number
+              : undefined,
         });
 
         const stream = await getVideoStream({
@@ -160,15 +158,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         onTouchStart={() => setIsIdle(false)}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      {!isLoading && data && (
-        <Header
-          title={
-            headerInfo.season && headerInfo.episode
-              ? `${headerInfo.title} S${headerInfo.season.toString().padStart(2, "0")}E${headerInfo.episode.toString().padStart(2, "0")}`
-              : headerInfo.title
-          }
-        />
-      )}
+      {!isLoading && data && <Header data={headerData!} />}
       {!isLoading && <MiddleControls />}
     </View>
   );
