@@ -28,16 +28,16 @@ export async function getVideoStream({
     consistentIpForRequests: true,
   });
 
-  const options: RunnerOptions = { 
-		media, 
-		events: { 
-			init: onEvent,
-			update: onEvent,
-			discoverEmbeds: onEvent,
-			start: onEvent,
-		} 
-	};
-	
+  const options: RunnerOptions = {
+    media,
+    events: {
+      init: onEvent,
+      update: onEvent,
+      discoverEmbeds: onEvent,
+      start: onEvent,
+    },
+  };
+
   const result = await providers.runAll(options);
   if (!result) return null;
 

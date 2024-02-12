@@ -6,12 +6,8 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
 
-import type {
-	ScrapeMedia,
-	Stream} from "@movie-web/provider-utils";
-import {
-  findHighestQuality,
-} from "@movie-web/provider-utils";
+import type { ScrapeMedia, Stream } from "@movie-web/provider-utils";
+import { findHighestQuality } from "@movie-web/provider-utils";
 
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
@@ -28,9 +24,9 @@ export default function VideoPlayerWrapper() {
 }
 
 export interface VideoPlayerData {
-	item: ItemData;
-	stream: Stream;
-	media: ScrapeMedia;
+  item: ItemData;
+  stream: Stream;
+  media: ScrapeMedia;
 }
 
 interface VideoPlayerProps {
@@ -54,56 +50,52 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
   useEffect(() => {
     const initializePlayer = async () => {
-	  StatusBar.setStatusBarHidden(true);
+      StatusBar.setStatusBarHidden(true);
       await NavigationBar.setVisibilityAsync("hidden");
       setIsLoading(true);
-      
-	  if (!data) {
-		await dismissFullscreenPlayer();
-		return router.push("/(tabs)");
-	  }
 
-	  const { item, stream, media } = data;
+      if (!data) {
+        await dismissFullscreenPlayer();
+        return router.push("/(tabs)");
+      }
 
-	  setHeaderData({
-		title: item.title,
-		year: item.year,
-		season:
-		  media.type === "show" ? media.season.number : undefined,
-		episode:
-		  media.type === "show"
-			? media.episode.number
-			: undefined,
-	  });
+      const { item, stream, media } = data;
 
-        let highestQuality;
-        let url;
+      setHeaderData({
+        title: item.title,
+        year: item.year,
+        season: media.type === "show" ? media.season.number : undefined,
+        episode: media.type === "show" ? media.episode.number : undefined,
+      });
 
-        switch (stream.type) {
-          case "file":
-            highestQuality = findHighestQuality(stream);
-            url = highestQuality ? stream.qualities[highestQuality]?.url : null;
-            return url ?? null;
-          case "hls":
-            url = stream.playlist;
-        }
+      let highestQuality;
+      let url;
 
-        // setTextTracks(
-        //   stream.captions && stream.captions.length > 0
-        //     ? convertCaptionsToTextTracks(stream.captions)
-        //     : [],
-        // );
+      switch (stream.type) {
+        case "file":
+          highestQuality = findHighestQuality(stream);
+          url = highestQuality ? stream.qualities[highestQuality]?.url : null;
+          return url ?? null;
+        case "hls":
+          url = stream.playlist;
+      }
 
-        setVideoSrc({
-          uri: url,
-          headers: {
-            ...stream.preferredHeaders,
-            ...stream.headers,
-          },
-        });
+      // setTextTracks(
+      //   stream.captions && stream.captions.length > 0
+      //     ? convertCaptionsToTextTracks(stream.captions)
+      //     : [],
+      // );
 
-        setIsLoading(false);
-	};
+      setVideoSrc({
+        uri: url,
+        headers: {
+          ...stream.preferredHeaders,
+          ...stream.headers,
+        },
+      });
+
+      setIsLoading(false);
+    };
 
     setIsLoading(true);
     void presentFullscreenPlayer();
