@@ -8,7 +8,7 @@ import {
 } from "@movie-web/provider-utils";
 import { fetchMediaDetails } from "@movie-web/tmdb";
 
-import type { VideoPlayerData } from "./videoPlayer";
+import type { VideoPlayerData } from ".";
 import type { ItemData } from "~/components/item/item";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 
