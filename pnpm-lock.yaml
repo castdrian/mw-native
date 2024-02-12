@@ -176,6 +176,9 @@ importers:
       '@movie-web/providers':
         specifier: ^2.2.0
         version: 2.2.0
+      srt-webvtt:
+        specifier: ^2.0.0
+        version: 2.0.0
       tmdb-ts:
         specifier: ^1.6.1
         version: 1.6.1
@@ -9743,6 +9746,10 @@ packages:
 
   /sprintf-js@1.0.3:
     resolution: {integrity: sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==}
+    dev: false
+
+  /srt-webvtt@2.0.0:
+    resolution: {integrity: sha512-G2Z7/Jf2NRKrmLYNSIhSYZZYE6OFlKXFp9Au2/zJBKgrioUzmrAys1x7GT01dwl6d2sEnqr5uahEIOd0JW/Rbw==}
     dev: false
 
   /ssri@8.0.1:

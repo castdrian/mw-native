@@ -47,7 +47,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       const fetchVideo = async () => {
         if (!data) return null;
         const { id, type } = data;
-        const media = await fetchMediaDetails(id, type);
+        const media = await fetchMediaDetails(id, type).catch(() => null);
         if (!media) return null;
 
         const { result } = media;
@@ -66,7 +66,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           episode,
         );
 
-        const stream = await getVideoStream(scrapeMedia);
+        const stream = await getVideoStream({
+          media: scrapeMedia,
+          forceVTT: true,
+        }).catch(() => null);
         if (!stream) {
           await ScreenOrientation.lockAsync(
             ScreenOrientation.OrientationLock.PORTRAIT_UP,
