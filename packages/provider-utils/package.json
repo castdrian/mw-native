@@ -30,6 +30,7 @@
   "prettier": "@movie-web/prettier-config",
   "dependencies": {
     "@movie-web/providers": "^2.2.0",
+    "srt-webvtt": "^2.0.0",
     "tmdb-ts": "^1.6.1"
   }
 }
