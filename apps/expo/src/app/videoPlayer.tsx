@@ -28,9 +28,16 @@ interface VideoPlayerProps {
   data: ItemData | null;
 }
 
+interface HeaderInfo {
+  title: string;
+  season?: number;
+  episode?: number;
+}
+
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
+  const [headerInfo, setHeaderInfo] = useState<HeaderInfo>({ title: "" });
   const router = useRouter();
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
@@ -65,6 +72,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           season,
           episode,
         );
+
+        setHeaderInfo({
+          title: data.title,
+          ...(scrapeMedia.type === "show" && {
+            season: scrapeMedia.season.number,
+            episode: scrapeMedia.episode.number,
+          }),
+        });
 
         const stream = await getVideoStream({
           media: scrapeMedia,
@@ -145,7 +160,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         onTouchStart={() => setIsIdle(false)}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      {!isLoading && data && <Header title={data.title} />}
+      {!isLoading && data && (
+        <Header
+          title={
+            headerInfo.season && headerInfo.episode
+              ? `${headerInfo.title} S${headerInfo.season.toString().padStart(2, '0')}E${headerInfo.episode.toString().padStart(2, '0')}`
+              : headerInfo.title
+          }
+        />
+      )}
       {!isLoading && <MiddleControls />}
     </View>
   );
