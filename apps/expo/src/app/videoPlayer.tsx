@@ -2,7 +2,9 @@ import type { AVPlaybackSource } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ResizeMode, Video } from "expo-av";
+import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import * as StatusBar from "expo-status-bar";
 
 import {
   findHighestQuality,
@@ -90,6 +92,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         return stream;
       };
 
+      StatusBar.setStatusBarHidden(true);
+      await NavigationBar.setVisibilityAsync("hidden");
       setIsLoading(true);
       const stream = await fetchVideo();
 
@@ -133,6 +137,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
     return () => {
       void dismissFullscreenPlayer();
+      StatusBar.setStatusBarHidden(false);
+      void NavigationBar.setVisibilityAsync("visible");
     };
   }, [data, dismissFullscreenPlayer, presentFullscreenPlayer, router]);
 
