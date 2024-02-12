@@ -13,6 +13,7 @@ import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import { Header } from "~/components/player/Header";
+import { MiddleControls } from "~/components/player/MiddleButtons";
 import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
@@ -145,6 +146,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
       {!isLoading && data && <Header title={data.title} />}
+      {!isLoading && <MiddleControls />}
     </View>
   );
 };
