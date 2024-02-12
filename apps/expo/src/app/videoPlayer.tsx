@@ -164,7 +164,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         <Header
           title={
             headerInfo.season && headerInfo.episode
-              ? `${headerInfo.title} S${headerInfo.season.toString().padStart(2, '0')}E${headerInfo.episode.toString().padStart(2, '0')}`
+              ? `${headerInfo.title} S${headerInfo.season.toString().padStart(2, "0")}E${headerInfo.episode.toString().padStart(2, "0")}`
               : headerInfo.title
           }
         />
