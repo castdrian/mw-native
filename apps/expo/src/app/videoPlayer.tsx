@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ResizeMode, Video } from "expo-av";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 import {
   findHighestQuality,
@@ -71,9 +70,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           forceVTT: true,
         }).catch(() => null);
         if (!stream) {
-          await ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.PORTRAIT_UP,
-          );
+          await dismissFullscreenPlayer();
           return router.push("/(tabs)");
         }
         return stream;
@@ -111,9 +108,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
         setIsLoading(false);
       } else {
-        await ScreenOrientation.lockAsync(
-          ScreenOrientation.OrientationLock.PORTRAIT_UP,
-        );
+        await dismissFullscreenPlayer();
         return router.push("/(tabs)");
       }
     };
