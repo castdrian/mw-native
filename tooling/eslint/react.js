@@ -7,6 +7,7 @@ const config = {
   ],
   rules: {
     "react/prop-types": "off",
+    "@typescript-eslint/unbound-method": "off",
   },
   globals: {
     React: "writable",

@@ -1,11 +1,7 @@
-import type {
-  ISO639_1,
-  ReactVideoSource,
-  TextTracks,
-} from "react-native-video";
+import type { AVPlaybackSource } from "expo-av";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
-import Video, { TextTracksType } from "react-native-video";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ResizeMode, Video } from "expo-av";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 
@@ -18,18 +14,14 @@ import { fetchMediaDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import { Header } from "~/components/player/Header";
-import { PlayerProvider, usePlayer } from "~/context/player.context";
+import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
   const params = useLocalSearchParams();
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
     : null;
-  return (
-    <PlayerProvider>
-      <VideoPlayer data={data} />
-    </PlayerProvider>
-  );
+  return <VideoPlayer data={data} />;
 }
 
 interface VideoPlayerProps {
@@ -37,16 +29,18 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
-  const [videoSrc, setVideoSrc] = useState<ReactVideoSource>();
-  const [_textTracks, setTextTracks] = useState<TextTracks>([]);
+  const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const {
-    setVideoRef,
-    unlockOrientation,
-    presentFullscreenPlayer,
-    dismissFullscreenPlayer,
-  } = usePlayer();
+  const setVideoRef = usePlayerStore((state) => state.setVideoRef);
+  const setStatus = usePlayerStore((state) => state.setStatus);
+  const setIsIdle = usePlayerStore((state) => state.setIsIdle);
+  const presentFullscreenPlayer = usePlayerStore(
+    (state) => state.presentFullscreenPlayer,
+  );
+  const dismissFullscreenPlayer = usePlayerStore(
+    (state) => state.dismissFullscreenPlayer,
+  );
 
   useEffect(() => {
     const initializePlayer = async () => {
@@ -98,11 +92,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             url = stream.playlist;
         }
 
-        setTextTracks(
-          stream.captions && stream.captions.length > 0
-            ? convertCaptionsToTextTracks(stream.captions)
-            : [],
-        );
+        // setTextTracks(
+        //   stream.captions && stream.captions.length > 0
+        //     ? convertCaptionsToTextTracks(stream.captions)
+        //     : [],
+        // );
 
         setVideoSrc({
           uri: url,
@@ -127,15 +121,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
     return () => {
       void dismissFullscreenPlayer();
-      void unlockOrientation();
     };
-  }, [
-    data,
-    dismissFullscreenPlayer,
-    presentFullscreenPlayer,
-    router,
-    unlockOrientation,
-  ]);
+  }, [data, dismissFullscreenPlayer, presentFullscreenPlayer, router]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
@@ -150,58 +137,56 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       <Video
         ref={setVideoRef}
         source={videoSrc}
-        // textTracks={textTracks} // breaks playback on iOS, see pr body
-        fullscreen
-        fullscreenOrientation="landscape"
-        paused={false}
-        controls
-        useSecureView
+        shouldPlay
+        resizeMode={ResizeMode.CONTAIN}
         onLoadStart={onVideoLoadStart}
         onReadyForDisplay={onReadyForDisplay}
-        style={styles.backgroundVideo}
+        onPlaybackStatusUpdate={setStatus}
+        style={styles.video}
+        onTouchStart={() => setIsIdle(false)}
       />
       {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      {!isLoading && <Header title={data!.title} />}
+      {!isLoading && data && <Header title={data.title} />}
     </View>
   );
 };
 
-interface Caption {
-  type: "srt" | "vtt";
-  id: string;
-  url: string;
-  hasCorsRestrictions: boolean;
-  language: string;
-}
+// interface Caption {
+//   type: "srt" | "vtt";
+//   id: string;
+//   url: string;
+//   hasCorsRestrictions: boolean;
+//   language: string;
+// }
 
-const captionTypeToTextTracksType = {
-  srt: TextTracksType.SUBRIP,
-  vtt: TextTracksType.VTT,
-};
+// const captionTypeToTextTracksType = {
+//   srt: TextTracksType.SUBRIP,
+//   vtt: TextTracksType.VTT,
+// };
 
-function convertCaptionsToTextTracks(captions: Caption[]): TextTracks {
-  return captions
-    .map((caption) => {
-      if (Platform.OS === "ios" && caption.type !== "vtt") {
-        return null;
-      }
+// function convertCaptionsToTextTracks(captions: Caption[]): TextTracks {
+//   return captions
+//     .map((caption) => {
+//       if (Platform.OS === "ios" && caption.type !== "vtt") {
+//         return null;
+//       }
 
-      return {
-        title: caption.language,
-        language: caption.language as ISO639_1,
-        type: captionTypeToTextTracksType[caption.type],
-        uri: caption.url,
-      };
-    })
-    .filter(Boolean) as TextTracks;
-}
+//       return {
+//         title: caption.language,
+//         language: caption.language as ISO639_1,
+//         type: captionTypeToTextTracksType[caption.type],
+//         uri: caption.url,
+//       };
+//     })
+//     .filter(Boolean) as TextTracks;
+// }
 
 const styles = StyleSheet.create({
-  backgroundVideo: {
+  video: {
     position: "absolute",
     top: 0,
-    left: 0,
     bottom: 0,
+    left: 0,
     right: 0,
   },
 });
