@@ -1,6 +1,6 @@
 import type { AVPlaybackSource } from "expo-av";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
 import { ResizeMode, Video } from "expo-av";
 import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -51,7 +51,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   useEffect(() => {
     const initializePlayer = async () => {
       StatusBar.setStatusBarHidden(true);
-      await NavigationBar.setVisibilityAsync("hidden");
+
+      if (Platform.OS === "android") {
+        await NavigationBar.setVisibilityAsync("hidden");
+      }
       setIsLoading(true);
 
       if (!data) {
@@ -104,7 +107,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
     return () => {
       void dismissFullscreenPlayer();
       StatusBar.setStatusBarHidden(false);
-      void NavigationBar.setVisibilityAsync("visible");
+      if (Platform.OS === "android") {
+        void NavigationBar.setVisibilityAsync("visible");
+      }
     };
   }, [data, dismissFullscreenPlayer, presentFullscreenPlayer, router]);
 
