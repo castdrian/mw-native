@@ -13,8 +13,7 @@ import { findHighestQuality } from "@movie-web/provider-utils";
 
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
-import { Header } from "~/components/player/Header";
-import { MiddleControls } from "~/components/player/MiddleControls";
+import { ControlsOverlay } from "~/components/player/ControlsOverlay";
 import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
@@ -44,6 +43,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const scale = useSharedValue(1);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
+  const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const presentFullscreenPlayer = usePlayerStore(
     (state) => state.presentFullscreenPlayer,
@@ -67,17 +67,17 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
   useEffect(() => {
     const initializePlayer = async () => {
+      if (!data) {
+        await dismissFullscreenPlayer();
+        return router.push("/(tabs)");
+      }
+
       StatusBar.setStatusBarHidden(true);
 
       if (Platform.OS === "android") {
         await NavigationBar.setVisibilityAsync("hidden");
       }
       setIsLoading(true);
-
-      if (!data) {
-        await dismissFullscreenPlayer();
-        return router.push("/(tabs)");
-      }
 
       const { item, stream, media } = data;
 
@@ -145,16 +145,17 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           ref={setVideoRef}
           source={videoSrc}
           shouldPlay
-          resizeMode={resizeMode}
+          resizeMode={ResizeMode.CONTAIN}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}
           style={styles.video}
-          onTouchStart={() => setIsIdle(false)}
+          onTouchStart={() => setIsIdle(!isIdle)}
         />
         {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-        {!isLoading && data && <Header data={headerData!} />}
-        {!isLoading && <MiddleControls />}
+        {!isLoading && headerData && (
+          <ControlsOverlay headerData={headerData} />
+        )}
       </View>
     </GestureDetector>
   );
