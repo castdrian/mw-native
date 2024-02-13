@@ -1,6 +1,8 @@
 import type { AVPlaybackSource } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { runOnJS, useSharedValue } from "react-native-reanimated";
 import { ResizeMode, Video } from "expo-av";
 import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -37,7 +39,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
   const [headerData, setHeaderData] = useState<HeaderData>();
+  const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const router = useRouter();
+  const scale = useSharedValue(1);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -47,6 +51,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const dismissFullscreenPlayer = usePlayerStore(
     (state) => state.dismissFullscreenPlayer,
   );
+
+  const updateResizeMode = (newMode: ResizeMode) => {
+    setResizeMode(newMode);
+  };
+
+  const pinchGesture = Gesture.Pinch().onUpdate((e) => {
+    scale.value = e.scale;
+    if (scale.value > 1 && resizeMode !== ResizeMode.COVER) {
+      runOnJS(updateResizeMode)(ResizeMode.COVER);
+    } else if (scale.value <= 1 && resizeMode !== ResizeMode.CONTAIN) {
+      runOnJS(updateResizeMode)(ResizeMode.CONTAIN);
+    }
+  });
 
   useEffect(() => {
     const initializePlayer = async () => {
@@ -122,22 +139,24 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-black">
-      <Video
-        ref={setVideoRef}
-        source={videoSrc}
-        shouldPlay
-        resizeMode={ResizeMode.CONTAIN}
-        onLoadStart={onVideoLoadStart}
-        onReadyForDisplay={onReadyForDisplay}
-        onPlaybackStatusUpdate={setStatus}
-        style={styles.video}
-        onTouchStart={() => setIsIdle(false)}
-      />
-      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      {!isLoading && data && <Header data={headerData!} />}
-      {!isLoading && <MiddleControls />}
-    </View>
+    <GestureDetector gesture={pinchGesture}>
+      <View className="flex-1 items-center justify-center bg-black">
+        <Video
+          ref={setVideoRef}
+          source={videoSrc}
+          shouldPlay
+          resizeMode={resizeMode}
+          onLoadStart={onVideoLoadStart}
+          onReadyForDisplay={onReadyForDisplay}
+          onPlaybackStatusUpdate={setStatus}
+          style={styles.video}
+          onTouchStart={() => setIsIdle(false)}
+        />
+        {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+        {!isLoading && data && <Header data={headerData!} />}
+        {!isLoading && <MiddleControls />}
+      </View>
+    </GestureDetector>
   );
 };
 
