@@ -39,6 +39,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [headerData, setHeaderData] = useState<HeaderData>();
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
+  const [shouldPlay, setShouldPlay] = useState(true);
   const router = useRouter();
   const scale = useSharedValue(1);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
@@ -64,6 +65,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       runOnJS(updateResizeMode)(ResizeMode.CONTAIN);
     }
   });
+
+  const togglePlayback = () => {
+    setShouldPlay(!shouldPlay);
+  };
+
+  const doubleTapGesture = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(() => {
+      runOnJS(togglePlayback)();
+    });
+
+  const composedGesture = Gesture.Exclusive(pinchGesture, doubleTapGesture);
 
   useEffect(() => {
     const initializePlayer = async () => {
@@ -139,13 +152,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   };
 
   return (
-    <GestureDetector gesture={pinchGesture}>
+    <GestureDetector gesture={composedGesture}>
       <View className="flex-1 items-center justify-center bg-black">
         <Video
           ref={setVideoRef}
           source={videoSrc}
-          shouldPlay
-          resizeMode={ResizeMode.CONTAIN}
+          shouldPlay={shouldPlay}
+          resizeMode={resizeMode}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}
