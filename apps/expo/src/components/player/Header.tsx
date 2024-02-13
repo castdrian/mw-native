@@ -21,7 +21,7 @@ export const Header = ({ data }: HeaderProps) => {
     <Controls className="absolute top-0 flex w-full flex-row items-center justify-between px-6 pt-6">
       <BackButton className="w-36" />
       <Text className="font-bold">
-        {data.season && data.episode
+        {data.season !== undefined && data.episode !== undefined
           ? `${data.title} (${data.year}) S${data.season.toString().padStart(2, "0")}E${data.episode.toString().padStart(2, "0")}`
           : `${data.title} (${data.year})`}
       </Text>
