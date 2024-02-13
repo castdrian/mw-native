@@ -1,4 +1,4 @@
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, Keyboard, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { Text } from "~/components/ui/Text";
@@ -16,6 +16,7 @@ export default function Item({ data }: { data: ItemData }) {
   const { title, type, year, posterUrl } = data;
 
   const handlePress = () => {
+    Keyboard.dismiss();
     router.push({
       pathname: "/videoPlayer/loading",
       params: { data: JSON.stringify(data) },

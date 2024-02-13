@@ -22,7 +22,10 @@ export default function SearchScreen() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+    >
       <ScreenLayout
         title={
           <View className="flex-row items-center">
