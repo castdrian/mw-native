@@ -130,7 +130,25 @@ function formatEvent(event: RunnerEvent): { message: string; style: object } {
                 : "❓ Unknown Status";
 
       message = `Update: ${evt.percentage}% - Status: ${statusMessage}`;
-      style = { color: evt.status === "success" ? "green" : "red" };
+      let color = "";
+      switch (evt.status) {
+        case "success":
+          color = "green";
+          break;
+        case "failure":
+          color = "red";
+          break;
+        case "notfound":
+          color = "blue";
+          break;
+        case "pending":
+          color = "yellow";
+          break;
+        default:
+          color = "grey";
+          break;
+      }
+      style = { color };
     } else if ("sourceIds" in event) {
       const evt = event;
       message = `🔍 Initialization: Source IDs - ${evt.sourceIds.join(" ")}`;
