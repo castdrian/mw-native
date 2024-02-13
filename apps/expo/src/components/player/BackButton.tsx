@@ -1,3 +1,4 @@
+import { Keyboard } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -15,10 +16,16 @@ export const BackButton = ({
       onPress={() => {
         unlockOrientation()
           .then(() => {
-            return router.back();
+            router.back();
+            return setTimeout(() => {
+              Keyboard.dismiss();
+            }, 100);
           })
           .catch(() => {
-            return router.back();
+            router.back();
+            return setTimeout(() => {
+              Keyboard.dismiss();
+            }, 100);
           });
       }}
       size={36}
