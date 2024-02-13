@@ -9,15 +9,9 @@ interface ControlsProps extends React.ComponentProps<typeof TouchableOpacity> {
 
 export const Controls = ({ children, className }: ControlsProps) => {
   const idle = usePlayerStore((state) => state.interface.isIdle);
-  const setIsIdle = usePlayerStore((state) => state.setIsIdle);
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        setIsIdle(false);
-      }}
-      className={className}
-    >
+    <TouchableOpacity className={className}>
       {!idle && children}
     </TouchableOpacity>
   );
