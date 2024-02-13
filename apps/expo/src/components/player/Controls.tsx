@@ -1,5 +1,6 @@
 import type { TouchableOpacity } from "react-native";
 import React from "react";
+import { View } from "react-native";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 import { usePlayerStore } from "~/stores/player/store";
@@ -17,7 +18,7 @@ export const Controls = ({ children, className }: ControlsProps) => {
       className={className}
       onPress={() => setIsIdle(false)}
     >
-      {!idle && children}
+      <View>{!idle && children}</View>
     </TouchableWithoutFeedback>
   );
 };
