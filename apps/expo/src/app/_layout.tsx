@@ -67,6 +67,7 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack
         screenOptions={{
+          autoHideHomeIndicator: true,
           gestureEnabled: true,
           headerShown: false,
           contentStyle: {
@@ -74,7 +75,10 @@ function RootLayoutNav() {
           },
         }}
       >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(tabs)"
+          options={{ headerShown: false, autoHideHomeIndicator: true }}
+        />
       </Stack>
     </ThemeProvider>
   );
