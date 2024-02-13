@@ -18,7 +18,7 @@ interface HeaderProps {
 
 export const Header = ({ data }: HeaderProps) => {
   return (
-    <Controls className="absolute top-0 flex w-full flex-row items-center justify-between px-6 pt-6">
+    <Controls className="absolute top-0 z-10 flex w-full flex-row items-center justify-between px-6 pt-6">
       <BackButton className="w-36" />
       <Text className="font-bold">
         {data.season && data.episode
