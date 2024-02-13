@@ -15,7 +15,7 @@ export const MiddleControls = () => {
 
   return (
     <TouchableWithoutFeedback onPress={handleTouch}>
-      <View className="absolute inset-x-0 top-1/3 bottom-1/3 flex flex-row items-center justify-center gap-24">
+      <View className="absolute inset-x-0 bottom-1/3 top-1/3 flex flex-row items-center justify-center gap-24">
         <Controls>
           <SeekButton type="backward" />
         </Controls>
