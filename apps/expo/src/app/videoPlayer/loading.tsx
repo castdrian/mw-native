@@ -13,6 +13,12 @@ import type { VideoPlayerData } from ".";
 import type { ItemData } from "~/components/item/item";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 
+interface Event {
+  originalEvent: RunnerEvent;
+  formattedMessage: string;
+  style: object;
+}
+
 export default function LoadingScreenWrapper() {
   const params = useLocalSearchParams();
   const data = params.data
@@ -23,10 +29,15 @@ export default function LoadingScreenWrapper() {
 
 function LoadingScreen({ data }: { data: ItemData | null }) {
   const router = useRouter();
-  const [eventLog, setEventLog] = useState<string[]>([]);
+  const [eventLog, setEventLog] = useState<Event[]>([]);
 
   const handleEvent = (event: RunnerEvent) => {
-    const formattedEvent = formatEvent(event);
+    const { message, style } = formatEvent(event);
+    const formattedEvent: Event = {
+      originalEvent: event,
+      formattedMessage: message,
+      style: style,
+    };
     setEventLog((prevLog) => [...prevLog, formattedEvent]);
   };
 
@@ -89,41 +100,54 @@ function LoadingScreen({ data }: { data: ItemData | null }) {
       subtitle="Fetching sources for the requested content."
     >
       {eventLog.map((event, index) => (
-        <Text key={index} style={{ color: "white", marginVertical: 5 }}>
-          {event}
+        <Text key={index} style={{ ...event.style, marginVertical: 5 }}>
+          {event.formattedMessage}
         </Text>
       ))}
     </ScreenLayout>
   );
 }
 
-function formatEvent(event: RunnerEvent): string {
+function formatEvent(event: RunnerEvent): { message: string; style: object } {
+  let message = "";
+  let style = {};
+
   if (typeof event === "string") {
-    return `Start: ID - ${event}`;
+    message = `🚀 Start: ID - ${event}`;
+    style = { color: "lime" };
   } else if (typeof event === "object" && event !== null) {
     if ("percentage" in event) {
       const evt = event;
       const statusMessage =
         evt.status === "success"
-          ? "Completed"
+          ? "✅ Completed"
           : evt.status === "failure"
-            ? "Failed - " + (evt.reason ?? "Unknown Error")
+            ? "❌ Failed - " + (evt.reason ?? "Unknown Error")
             : evt.status === "notfound"
-              ? "Not Found"
+              ? "🔍 Not Found"
               : evt.status === "pending"
-                ? "In Progress"
-                : "Unknown Status";
-      return `Update: ${evt.percentage}% - Status: ${statusMessage}`;
+                ? "⏳ In Progress"
+                : "❓ Unknown Status";
+
+      message = `Update: ${evt.percentage}% - Status: ${statusMessage}`;
+      style = { color: evt.status === "success" ? "green" : "red" };
     } else if ("sourceIds" in event) {
       const evt = event;
-      return `Initialization: Source IDs - ${evt.sourceIds.join(" ")}`;
+      message = `🔍 Initialization: Source IDs - ${evt.sourceIds.join(" ")}`;
+      style = { color: "skyblue" };
     } else if ("sourceId" in event) {
       const evt = event;
       const embedsInfo = evt.embeds
         .map((embed) => `ID: ${embed.id}, Scraper: ${embed.embedScraperId}`)
         .join("; ");
-      return `Discovered Embeds: Source ID - ${evt.sourceId} [${embedsInfo}]`;
+
+      message = `🔗 Discovered Embeds: Source ID - ${evt.sourceId} [${embedsInfo}]`;
+      style = { color: "orange" };
     }
+  } else {
+    message = JSON.stringify(event);
+    style = { color: "grey" };
   }
-  return JSON.stringify(event);
+
+  return { message, style };
 }
