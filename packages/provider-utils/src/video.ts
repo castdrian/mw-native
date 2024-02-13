@@ -13,6 +13,34 @@ import {
   targets,
 } from "@movie-web/providers";
 
+export interface InitEvent {
+  sourceIds: string[];
+}
+
+export interface UpdateEvent {
+  id: string;
+  percentage: number;
+  status: UpdateEventStatus;
+  error?: unknown;
+  reason?: string;
+}
+
+export type UpdateEventStatus = "success" | "failure" | "notfound" | "pending";
+
+export interface DiscoverEmbedsEvent {
+  sourceId: string;
+  embeds: {
+    id: string;
+    embedScraperId: string;
+  }[];
+}
+
+export type RunnerEvent =
+  | string
+  | InitEvent
+  | UpdateEvent
+  | DiscoverEmbedsEvent;
+
 export async function getVideoStream({
   media,
   forceVTT,
@@ -20,7 +48,7 @@ export async function getVideoStream({
 }: {
   media: ScrapeMedia;
   forceVTT?: boolean;
-  onEvent?: (event: unknown) => void;
+  onEvent?: (event: RunnerEvent) => void;
 }): Promise<Stream | null> {
   const providers = makeProviders({
     fetcher: makeStandardFetcher(fetch),

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
+import type { RunnerEvent } from "@movie-web/provider-utils";
 import {
   getVideoStream,
   transformSearchResultToScrapeMedia,
@@ -24,7 +25,7 @@ function LoadingScreen({ data }: { data: ItemData | null }) {
   const router = useRouter();
   const [eventLog, setEventLog] = useState<string[]>([]);
 
-  const handleEvent = (event: unknown) => {
+  const handleEvent = (event: RunnerEvent) => {
     const formattedEvent = formatEvent(event);
     setEventLog((prevLog) => [...prevLog, formattedEvent]);
   };
@@ -96,17 +97,32 @@ function LoadingScreen({ data }: { data: ItemData | null }) {
   );
 }
 
-function formatEvent(event: unknown): string {
+function formatEvent(event: RunnerEvent): string {
   if (typeof event === "string") {
     return `Start: ID - ${event}`;
   } else if (typeof event === "object" && event !== null) {
-    const evt = event as Record<string, unknown>;
-    if ("percentage" in evt) {
-      return `Update: ${String(evt.percentage)}% - Status: ${String(evt.status)}`;
-    } else if ("sourceIds" in evt) {
-      return `Initialization: Source IDs - ${String(evt.sourceIds)}`;
-    } else if ("sourceId" in evt) {
-      return `Discovered Embeds: Source ID - ${String(evt.sourceId)}`;
+    if ("percentage" in event) {
+      const evt = event;
+      const statusMessage =
+        evt.status === "success"
+          ? "Completed"
+          : evt.status === "failure"
+            ? "Failed - " + (evt.reason ?? "Unknown Error")
+            : evt.status === "notfound"
+              ? "Not Found"
+              : evt.status === "pending"
+                ? "In Progress"
+                : "Unknown Status";
+      return `Update: ${evt.percentage}% - Status: ${statusMessage}`;
+    } else if ("sourceIds" in event) {
+      const evt = event;
+      return `Initialization: Source IDs - ${evt.sourceIds.join(" ")}`;
+    } else if ("sourceId" in event) {
+      const evt = event;
+      const embedsInfo = evt.embeds
+        .map((embed) => `ID: ${embed.id}, Scraper: ${embed.embedScraperId}`)
+        .join("; ");
+      return `Discovered Embeds: Source ID - ${evt.sourceId} [${embedsInfo}]`;
     }
   }
   return JSON.stringify(event);
