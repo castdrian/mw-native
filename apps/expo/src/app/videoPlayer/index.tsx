@@ -108,15 +108,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       const dragIsInHeaderOrFooter = event.y < 100 || event.y > 400;
       if (dragIsInHeaderOrFooter) return;
 
+      const directionMultiplier = event.velocityY < 0 ? 1 : -1;
+
       if (event.x > screenHalfWidth) {
-        const change = -event.translationY / divisor;
+        const change =
+          directionMultiplier * Math.abs(event.velocityY / divisor);
         const newVolume = Math.max(
           0,
           Math.min(1, currentVolume.value + change),
         );
         runOnJS(handleVolumeChange)(newVolume);
       } else {
-        const change = -event.translationY / divisor;
+        const change =
+          directionMultiplier * Math.abs(event.velocityY / divisor);
         const newBrightness = Math.max(
           0,
           Math.min(1, brightness.value + change),
