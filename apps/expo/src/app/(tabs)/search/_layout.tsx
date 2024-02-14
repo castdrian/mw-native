@@ -32,7 +32,6 @@ export default function SearchScreen() {
             <Text className="text-2xl font-bold">Search</Text>
           </View>
         }
-        subtitle="Looking for something?"
       >
         <Searchbar onSearchChange={handleSearchChange} />
         <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
