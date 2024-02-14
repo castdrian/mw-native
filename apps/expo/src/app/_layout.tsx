@@ -74,6 +74,9 @@ function RootLayoutNav() {
         screenOptions={{
           autoHideHomeIndicator: true,
           gestureEnabled: true,
+          animation: "default",
+          animationTypeForReplace: "push",
+          presentation: "card",
           headerShown: false,
           contentStyle: {
             backgroundColor: Colors.background,
@@ -82,7 +85,14 @@ function RootLayoutNav() {
       >
         <Stack.Screen
           name="(tabs)"
-          options={{ headerShown: false, autoHideHomeIndicator: true }}
+          options={{
+            headerShown: false,
+            autoHideHomeIndicator: true,
+            gestureEnabled: true,
+            animation: "default",
+            animationTypeForReplace: "push",
+            presentation: "card",
+          }}
         />
       </Stack>
     </ThemeProvider>
