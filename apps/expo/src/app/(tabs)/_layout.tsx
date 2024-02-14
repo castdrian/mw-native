@@ -43,11 +43,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="about"
+        name="downloads"
         options={{
-          title: "About",
+          title: "Downloads",
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon name="info-circle" focused={focused} />
+            <TabBarIcon name="download" focused={focused} />
           ),
         }}
       />
