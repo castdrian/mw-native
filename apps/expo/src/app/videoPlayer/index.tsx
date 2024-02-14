@@ -5,13 +5,11 @@ import {
   Dimensions,
   Platform,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS, useSharedValue } from "react-native-reanimated";
 import { ResizeMode, Video } from "expo-av";
-import * as Brightness from "expo-brightness";
 import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
@@ -22,6 +20,8 @@ import { findHighestQuality } from "@movie-web/provider-utils";
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
 import { ControlsOverlay } from "~/components/player/ControlsOverlay";
+import { Text } from "~/components/ui/Text";
+import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
@@ -43,16 +43,23 @@ interface VideoPlayerProps {
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
+  const {
+    brightness,
+    debouncedBrightness,
+    showBrightnessOverlay,
+    setShowBrightnessOverlay,
+    handleBrightnessChange,
+  } = useBrightness();
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
   const [headerData, setHeaderData] = useState<HeaderData>();
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [shouldPlay, setShouldPlay] = useState(true);
   const [showVolumeOverlay, setShowVolumeOverlay] = useState(false);
-  const [showBrightnessOverlay, setShowBrightnessOverlay] = useState(false);
   const [currentVolume, setCurrentVolume] = useState(0.5);
   const router = useRouter();
   const scale = useSharedValue(1);
+
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
@@ -87,35 +94,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       runOnJS(togglePlayback)();
     });
 
-  const brightness = useSharedValue(0.5);
-
   const handleVolumeChange = (newValue: number) => {
     setCurrentVolume(newValue);
     setShowVolumeOverlay(true);
     setTimeout(() => setShowVolumeOverlay(false), 2000);
   };
 
-  const handleBrightnessChange = async (newValue: number) => {
-    try {
-      await Brightness.setBrightnessAsync(newValue);
-      setShowBrightnessOverlay(true);
-      setTimeout(() => setShowBrightnessOverlay(false), 2000);
-    } catch (error) {
-      console.error("Failed to set brightness:", error);
-    }
-  };
-
   const screenHalfWidth = Dimensions.get("window").width / 2;
 
   const panGesture = Gesture.Pan()
-    .onStart((event) => {
-      const isRightHalf = event.x > screenHalfWidth;
-      if (isRightHalf) {
-        runOnJS(setCurrentVolume)(0.5);
-      } else {
-        brightness.value = 0.5;
-      }
-    })
     .onUpdate((event) => {
       const divisor = 5000;
       if (event.x > screenHalfWidth) {
@@ -131,6 +118,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         brightness.value = newBrightness;
         runOnJS(handleBrightnessChange)(newBrightness);
       }
+    })
+    .onEnd(() => {
+      runOnJS(setShowBrightnessOverlay)(false);
     });
 
   const composedGesture = Gesture.Exclusive(
@@ -150,18 +140,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
       if (Platform.OS === "android") {
         await NavigationBar.setVisibilityAsync("hidden");
-      }
-
-      const { status } = await Brightness.requestPermissionsAsync();
-      if (status !== Brightness.PermissionStatus.GRANTED) {
-        console.warn("Brightness permissions not granted");
-      }
-
-      try {
-        const currentBrightness = await Brightness.getBrightnessAsync();
-        brightness.value = currentBrightness;
-      } catch (error) {
-        console.error("Failed to get initial brightness:", error);
       }
 
       setIsLoading(true);
@@ -215,13 +193,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         void NavigationBar.setVisibilityAsync("visible");
       }
     };
-  }, [
-    brightness,
-    data,
-    dismissFullscreenPlayer,
-    presentFullscreenPlayer,
-    router,
-  ]);
+  }, [data, dismissFullscreenPlayer, presentFullscreenPlayer, router]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
@@ -251,17 +223,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           <ControlsOverlay headerData={headerData} />
         )}
         {showVolumeOverlay && (
-          <View style={styles.overlay}>
-            <Text style={styles.overlayText}>
+          <View className="absolute bottom-12 self-center rounded-xl bg-black p-3 opacity-50">
+            <Text className="text-bold">
               Volume: {Math.round(currentVolume * 100)}%
             </Text>
           </View>
         )}
         {showBrightnessOverlay && (
-          <View style={styles.overlay}>
-            <Text style={styles.overlayText}>
-              Brightness: {Math.round(brightness.value * 100)}%
-            </Text>
+          <View className="bottom-12 self-center rounded-xl bg-black p-3 opacity-50">
+            <Text className="font-bold">Brightness: {debouncedBrightness}</Text>
           </View>
         )}
       </View>
@@ -306,17 +276,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-  },
-  overlay: {
-    position: "absolute",
-    bottom: 50,
-    alignSelf: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    padding: 10,
-    borderRadius: 5,
-  },
-  overlayText: {
-    color: "#fff",
-    fontSize: 16,
   },
 });
