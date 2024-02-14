@@ -19,6 +19,7 @@ export default function TabLayout() {
           borderTopColor: "transparent",
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
+          paddingBottom: 100,
           height: 80,
         },
         tabBarItemStyle: {
