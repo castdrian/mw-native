@@ -33,7 +33,7 @@ interface VideoSliderProps {
 const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   const status = usePlayerStore((state) => state.status);
 
-  const width = Dimensions.get("screen").width - 160;
+  const width = Dimensions.get("screen").width - 200;
   const knobSize_ = 20;
   const trackSize_ = 8;
   const minimumValue = 0;
@@ -124,9 +124,10 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
           ]}
         >
           <Animated.View
-            className="absolute bottom-0 left-0 right-0 top-0"
             style={[
               {
+                position: "absolute",
+                height: trackSize_,
                 backgroundColor: colors.primary[300],
                 borderRadius: trackSize_ / 2,
               },
