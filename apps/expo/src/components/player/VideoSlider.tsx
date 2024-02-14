@@ -34,6 +34,7 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   const tapRef = useRef<TapGestureHandler>(null);
   const panRef = useRef<PanGestureHandler>(null);
   const status = usePlayerStore((state) => state.status);
+  const setIsIdle = usePlayerStore((state) => state.setIsIdle);
 
   const width = Dimensions.get("screen").width - 200;
   const knobSize_ = 20;
@@ -66,6 +67,7 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   const _onActive = (value: number) => {
     "worklet";
     translateX.value = clamp(value, 0, width - knobSize_);
+    runOnJS(setIsIdle)(false);
   };
 
   const onGestureEvent = useAnimatedGestureHandler<
