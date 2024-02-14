@@ -105,8 +105,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       const divisor = 5000;
-      const dragIsNotInHeaderOrFooter = event.y < 100 || event.y > 400;
-      if (dragIsNotInHeaderOrFooter) return;
+      const dragIsInHeaderOrFooter = event.y < 100 || event.y > 400;
+      if (dragIsInHeaderOrFooter) return;
 
       if (event.x > screenHalfWidth) {
         const change = -event.translationY / divisor;
@@ -130,7 +130,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       runOnJS(setShowBrightnessOverlay)(false);
     });
 
-  const composedGesture = Gesture.Exclusive(
+  const composedGesture = Gesture.Race(
     panGesture,
     pinchGesture,
     doubleTapGesture,
