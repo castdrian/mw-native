@@ -54,10 +54,13 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   };
   const valueX = valueToX(value);
   const translateX = useSharedValue(valueToX(value));
+  const isDragging = useSharedValue(false);
 
   useEffect(() => {
-    translateX.value = clamp(valueX, 0, width - knobSize_);
-  }, [valueX]);
+    if (!isDragging.value) {
+      translateX.value = clamp(valueX, 0, width - knobSize_);
+    }
+  }, [valueX, isDragging.value]);
 
   const _onSlidingComplete = (xValue: number) => {
     "worklet";
@@ -66,8 +69,15 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
 
   const _onActive = (value: number) => {
     "worklet";
+    isDragging.value = true;
     translateX.value = clamp(value, 0, width - knobSize_);
     runOnJS(setIsIdle)(false);
+  };
+
+  const _onEnd = () => {
+    "worklet";
+    isDragging.value = false;
+    _onSlidingComplete(translateX.value);
   };
 
   const onGestureEvent = useAnimatedGestureHandler<
@@ -76,6 +86,9 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   >({
     onStart: (_, ctx) => (ctx.offsetX = translateX.value),
     onActive: (event, ctx) => _onActive(event.translationX + ctx.offsetX),
+    onEnd: _onEnd,
+    onCancel: _onEnd,
+    onFinish: _onEnd,
   });
 
   const onTapEvent = (
