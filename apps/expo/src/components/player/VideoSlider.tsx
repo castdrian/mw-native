@@ -33,7 +33,7 @@ interface VideoSliderProps {
 const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   const status = usePlayerStore((state) => state.status);
 
-  const width = Dimensions.get("screen").width - 140;
+  const width = Dimensions.get("screen").width - 160;
   const knobSize_ = 20;
   const trackSize_ = 8;
   const minimumValue = 0;
