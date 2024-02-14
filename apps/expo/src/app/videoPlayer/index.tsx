@@ -5,6 +5,7 @@ import {
   Dimensions,
   Platform,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -47,6 +48,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [headerData, setHeaderData] = useState<HeaderData>();
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [shouldPlay, setShouldPlay] = useState(true);
+  const [showVolumeOverlay, setShowVolumeOverlay] = useState(false);
+  const [showBrightnessOverlay, setShowBrightnessOverlay] = useState(false);
   const [currentVolume, setCurrentVolume] = useState(0.5);
   const router = useRouter();
   const scale = useSharedValue(1);
@@ -88,11 +91,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
   const handleVolumeChange = (newValue: number) => {
     setCurrentVolume(newValue);
+    setShowVolumeOverlay(true);
+    setTimeout(() => setShowVolumeOverlay(false), 2000);
   };
 
   const handleBrightnessChange = async (newValue: number) => {
     try {
       await Brightness.setBrightnessAsync(newValue);
+      setShowBrightnessOverlay(true);
+      setTimeout(() => setShowBrightnessOverlay(false), 2000);
     } catch (error) {
       console.error("Failed to set brightness:", error);
     }
@@ -243,6 +250,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         {!isLoading && headerData && (
           <ControlsOverlay headerData={headerData} />
         )}
+        {showVolumeOverlay && (
+          <View style={styles.overlay}>
+            <Text style={styles.overlayText}>
+              Volume: {Math.round(currentVolume * 100)}%
+            </Text>
+          </View>
+        )}
+        {showBrightnessOverlay && (
+          <View style={styles.overlay}>
+            <Text style={styles.overlayText}>
+              Brightness: {Math.round(brightness.value * 100)}%
+            </Text>
+          </View>
+        )}
       </View>
     </GestureDetector>
   );
@@ -285,5 +306,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  overlay: {
+    position: "absolute",
+    bottom: 50,
+    alignSelf: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    padding: 10,
+    borderRadius: 5,
+  },
+  overlayText: {
+    color: "#fff",
+    fontSize: 16,
   },
 });
