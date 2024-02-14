@@ -235,7 +235,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           </View>
         )}
         {showBrightnessOverlay && (
-          <View className="bottom-12 self-center rounded-xl bg-black p-3 opacity-50">
+          <View className="absolute bottom-12 self-center rounded-xl bg-black p-3 opacity-50">
             <Text className="font-bold">Brightness: {debouncedBrightness}</Text>
           </View>
         )}
