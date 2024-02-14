@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { Tabs } from "expo-router";
 
 import Colors from "@movie-web/tailwind-config/colors";
@@ -19,7 +19,7 @@ export default function TabLayout() {
           borderTopColor: "transparent",
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
-          paddingBottom: 100,
+          paddingBottom: Platform.OS === "ios" ? 100 : 0,
           height: 80,
         },
         tabBarItemStyle: {
