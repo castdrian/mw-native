@@ -256,28 +256,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 //   language: string;
 // }
 
-// const captionTypeToTextTracksType = {
-//   srt: TextTracksType.SUBRIP,
-//   vtt: TextTracksType.VTT,
-// };
-
-// function convertCaptionsToTextTracks(captions: Caption[]): TextTracks {
-//   return captions
-//     .map((caption) => {
-//       if (Platform.OS === "ios" && caption.type !== "vtt") {
-//         return null;
-//       }
-
-//       return {
-//         title: caption.language,
-//         language: caption.language as ISO639_1,
-//         type: captionTypeToTextTracksType[caption.type],
-//         uri: caption.url,
-//       };
-//     })
-//     .filter(Boolean) as TextTracks;
-// }
-
 const styles = StyleSheet.create({
   video: {
     position: "absolute",
