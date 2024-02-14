@@ -27,6 +27,7 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: "./assets/images/adaptive-icon.png",
       backgroundColor: "#FFFFFF",
     },
+    permissions: ["WRITE_SETTINGS"],
   },
   web: {
     favicon: "./assets/images/favicon.png",

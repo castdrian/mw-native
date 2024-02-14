@@ -58,6 +58,9 @@ importers:
       expo-av:
         specifier: ~13.10.5
         version: 13.10.5(expo@50.0.5)
+      expo-brightness:
+        specifier: ~11.8.0
+        version: 11.8.0(expo@50.0.5)
       expo-build-properties:
         specifier: ~0.11.1
         version: 0.11.1(expo@50.0.5)
@@ -5511,6 +5514,14 @@ packages:
 
   /expo-av@13.10.5(expo@50.0.5):
     resolution: {integrity: sha512-w45oCoe+8PunDeM0rh/Ut6UaGh7OjEJOCjAiQy3nCxpA8FaXB17KaqpsvkAXIMvceHYWndH8+D29esUTS6wEsA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 50.0.5(@babel/core@7.23.9)(@react-native/babel-preset@0.73.20)
+    dev: false
+
+  /expo-brightness@11.8.0(expo@50.0.5):
+    resolution: {integrity: sha512-ipQA7s8PvJVhy+Ls6Dsql0veXXV5CdMcbXNPwQuXTbUofRE+8FHO0vasShMZlKYcD9KNgFygjx0U+THi80dtAw==}
     peerDependencies:
       expo: '*'
     dependencies:

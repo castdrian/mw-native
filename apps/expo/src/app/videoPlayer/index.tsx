@@ -1,9 +1,16 @@
 import type { AVPlaybackSource } from "expo-av";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Platform, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS, useSharedValue } from "react-native-reanimated";
 import { ResizeMode, Video } from "expo-av";
+import * as Brightness from "expo-brightness";
 import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
@@ -40,6 +47,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const [headerData, setHeaderData] = useState<HeaderData>();
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [shouldPlay, setShouldPlay] = useState(true);
+  const [currentVolume, setCurrentVolume] = useState(0.5);
   const router = useRouter();
   const scale = useSharedValue(1);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
@@ -76,7 +84,53 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       runOnJS(togglePlayback)();
     });
 
-  const composedGesture = Gesture.Exclusive(pinchGesture, doubleTapGesture);
+  const brightness = useSharedValue(0.5);
+
+  const handleVolumeChange = (newValue: number) => {
+    setCurrentVolume(newValue);
+  };
+
+  const handleBrightnessChange = async (newValue: number) => {
+    try {
+      await Brightness.setBrightnessAsync(newValue);
+    } catch (error) {
+      console.error("Failed to set brightness:", error);
+    }
+  };
+
+  const screenHalfWidth = Dimensions.get("window").width / 2;
+
+  const panGesture = Gesture.Pan()
+    .onStart((event) => {
+      const isRightHalf = event.x > screenHalfWidth;
+      if (isRightHalf) {
+        runOnJS(setCurrentVolume)(0.5);
+      } else {
+        brightness.value = 0.5;
+      }
+    })
+    .onUpdate((event) => {
+      const divisor = 5000;
+      if (event.x > screenHalfWidth) {
+        const change = -event.translationY / divisor;
+        const newVolume = Math.max(0, Math.min(1, currentVolume + change));
+        runOnJS(handleVolumeChange)(newVolume);
+      } else {
+        const change = -event.translationY / divisor;
+        const newBrightness = Math.max(
+          0,
+          Math.min(1, brightness.value + change),
+        );
+        brightness.value = newBrightness;
+        runOnJS(handleBrightnessChange)(newBrightness);
+      }
+    });
+
+  const composedGesture = Gesture.Exclusive(
+    panGesture,
+    pinchGesture,
+    doubleTapGesture,
+  );
 
   useEffect(() => {
     const initializePlayer = async () => {
@@ -90,6 +144,19 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       if (Platform.OS === "android") {
         await NavigationBar.setVisibilityAsync("hidden");
       }
+
+      const { status } = await Brightness.requestPermissionsAsync();
+      if (status !== Brightness.PermissionStatus.GRANTED) {
+        console.warn("Brightness permissions not granted");
+      }
+
+      try {
+        const currentBrightness = await Brightness.getBrightnessAsync();
+        brightness.value = currentBrightness;
+      } catch (error) {
+        console.error("Failed to get initial brightness:", error);
+      }
+
       setIsLoading(true);
 
       const { item, stream, media } = data;
@@ -141,7 +208,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         void NavigationBar.setVisibilityAsync("visible");
       }
     };
-  }, [data, dismissFullscreenPlayer, presentFullscreenPlayer, router]);
+  }, [
+    brightness,
+    data,
+    dismissFullscreenPlayer,
+    presentFullscreenPlayer,
+    router,
+  ]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
@@ -159,6 +232,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           source={videoSrc}
           shouldPlay={shouldPlay}
           resizeMode={resizeMode}
+          volume={currentVolume}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}
