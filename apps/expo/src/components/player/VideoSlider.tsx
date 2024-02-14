@@ -31,6 +31,8 @@ interface VideoSliderProps {
 }
 
 const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
+  const tapRef = useRef<TapGestureHandler>(null);
+  const panRef = useRef<PanGestureHandler>(null);
   const status = usePlayerStore((state) => state.status);
 
   const width = Dimensions.get("screen").width - 200;
@@ -51,9 +53,6 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   };
   const valueX = valueToX(value);
   const translateX = useSharedValue(valueToX(value));
-
-  const tapRef = useRef<TapGestureHandler>(null);
-  const panRef = useRef<PanGestureHandler>(null);
 
   useEffect(() => {
     translateX.value = clamp(valueX, 0, width - knobSize_);

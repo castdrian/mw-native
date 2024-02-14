@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { View } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 import { usePlayerStore } from "~/stores/player/store";
 import VideoSlider from "./VideoSlider";
@@ -7,6 +7,7 @@ import VideoSlider from "./VideoSlider";
 export const ProgressBar = () => {
   const status = usePlayerStore((state) => state.status);
   const videoRef = usePlayerStore((state) => state.videoRef);
+  const setIsIdle = usePlayerStore((state) => state.setIsIdle);
 
   const updateProgress = useCallback(
     (newProgress: number) => {
@@ -19,9 +20,12 @@ export const ProgressBar = () => {
 
   if (status?.isLoaded) {
     return (
-      <View className="flex h-10 flex-1 items-center justify-center p-8">
+      <TouchableOpacity
+        className="flex h-10 flex-1 items-center justify-center p-8"
+        onPress={() => setIsIdle(false)}
+      >
         <VideoSlider onSlidingComplete={updateProgress} />
-      </View>
+      </TouchableOpacity>
     );
   }
 };

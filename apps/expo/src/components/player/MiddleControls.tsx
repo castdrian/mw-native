@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { Controls } from "./Controls";
 import { PlayButton } from "./PlayButton";
@@ -6,8 +6,8 @@ import { SeekButton } from "./SeekButton";
 
 export const MiddleControls = () => {
   return (
-    <View className="flex flex-1 flex-row items-center justify-center gap-24">
-      <Controls>
+    <View style={styles.container}>
+      <Controls className="mr-24">
         <SeekButton type="backward" />
       </Controls>
       <Controls>
@@ -19,3 +19,13 @@ export const MiddleControls = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 82,
+  },
+});

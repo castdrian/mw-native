@@ -22,6 +22,7 @@ import type { HeaderData } from "~/components/player/Header";
 import { ControlsOverlay } from "~/components/player/ControlsOverlay";
 import { Text } from "~/components/ui/Text";
 import { useBrightness } from "~/hooks/player/useBrightness";
+import { useVolume } from "~/hooks/player/useVolume";
 import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
@@ -50,13 +51,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
     setShowBrightnessOverlay,
     handleBrightnessChange,
   } = useBrightness();
+  const {
+    currentVolume,
+    debouncedVolume,
+    showVolumeOverlay,
+    setShowVolumeOverlay,
+    handleVolumeChange,
+  } = useVolume();
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
   const [headerData, setHeaderData] = useState<HeaderData>();
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [shouldPlay, setShouldPlay] = useState(true);
-  const [showVolumeOverlay, setShowVolumeOverlay] = useState(false);
-  const [currentVolume, setCurrentVolume] = useState(0.5);
   const router = useRouter();
   const scale = useSharedValue(1);
 
@@ -94,20 +100,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       runOnJS(togglePlayback)();
     });
 
-  const handleVolumeChange = (newValue: number) => {
-    setCurrentVolume(newValue);
-    setShowVolumeOverlay(true);
-    setTimeout(() => setShowVolumeOverlay(false), 2000);
-  };
-
   const screenHalfWidth = Dimensions.get("window").width / 2;
 
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       const divisor = 5000;
+      const dragIsNotInHeaderOrFooter = event.y < 100 || event.y > 400;
+      if (dragIsNotInHeaderOrFooter) return;
+
       if (event.x > screenHalfWidth) {
         const change = -event.translationY / divisor;
-        const newVolume = Math.max(0, Math.min(1, currentVolume + change));
+        const newVolume = Math.max(
+          0,
+          Math.min(1, currentVolume.value + change),
+        );
         runOnJS(handleVolumeChange)(newVolume);
       } else {
         const change = -event.translationY / divisor;
@@ -120,6 +126,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       }
     })
     .onEnd(() => {
+      runOnJS(setShowVolumeOverlay)(false);
       runOnJS(setShowBrightnessOverlay)(false);
     });
 
@@ -211,7 +218,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           source={videoSrc}
           shouldPlay={shouldPlay}
           resizeMode={resizeMode}
-          volume={currentVolume}
+          volume={currentVolume.value}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}
@@ -224,9 +231,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         )}
         {showVolumeOverlay && (
           <View className="absolute bottom-12 self-center rounded-xl bg-black p-3 opacity-50">
-            <Text className="text-bold">
-              Volume: {Math.round(currentVolume * 100)}%
-            </Text>
+            <Text className="font-bold">Volume: {debouncedVolume}</Text>
           </View>
         )}
         {showBrightnessOverlay && (
