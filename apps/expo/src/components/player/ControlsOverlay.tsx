@@ -18,12 +18,12 @@ export const ControlsOverlay = ({ headerData }: ControlsOverlayProps) => {
     setIsIdle(!idle);
   };
   return (
-    <View className="absolute left-0 top-0 flex h-full w-full flex-1">
-      <Header data={headerData} />
-      <TouchableWithoutFeedback onPress={handleTouch}>
+    <TouchableWithoutFeedback onPress={handleTouch}>
+      <View className="absolute left-0 top-0 flex h-full w-full flex-1">
+        <Header data={headerData} />
         <MiddleControls />
-      </TouchableWithoutFeedback>
-      <BottomControls />
-    </View>
+        <BottomControls />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
