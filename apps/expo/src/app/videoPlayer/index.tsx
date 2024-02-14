@@ -105,8 +105,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       const divisor = 5000;
-      const dragIsInHeaderOrFooter = event.y < 100 || event.y > 400;
-      if (dragIsInHeaderOrFooter) return;
+      const panIsInHeaderOrFooter = event.y < 100 || event.y > 400;
+      if (panIsInHeaderOrFooter) return;
 
       const directionMultiplier = event.velocityY < 0 ? 1 : -1;
 
