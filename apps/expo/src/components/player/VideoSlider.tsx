@@ -60,7 +60,7 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
     if (!isDragging.value) {
       translateX.value = clamp(valueX, 0, width - knobSize_);
     }
-  }, [valueX, isDragging.value]);
+  }, [valueX, isDragging.value, translateX, width]);
 
   const _onSlidingComplete = (xValue: number) => {
     "worklet";
