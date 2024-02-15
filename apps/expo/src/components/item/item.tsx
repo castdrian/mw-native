@@ -1,3 +1,5 @@
+import type { NativeSyntheticEvent } from "react-native";
+import type { ContextMenuOnPressNativeEvent } from "react-native-context-menu-view";
 import { Image, Keyboard, TouchableOpacity, View } from "react-native";
 import ContextMenu from "react-native-context-menu-view";
 import { useRouter } from "expo-router";
@@ -29,7 +31,9 @@ export default function Item({ data }: { data: ItemData }) {
     ...(type === "movie" ? [{ title: "Download" }] : []),
   ];
 
-  const onContextMenuPress = (_e: unknown) => {
+  const onContextMenuPress = (
+    _e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
+  ) => {
     // do stuff
   };
 
