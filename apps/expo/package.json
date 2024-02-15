@@ -42,6 +42,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.2",
+    "react-native-context-menu-view": "^1.14.1",
     "react-native-css-interop": "~0.0.22",
     "react-native-gesture-handler": "~2.14.1",
     "react-native-quick-base64": "^2.0.8",
