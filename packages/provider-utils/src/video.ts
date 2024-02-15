@@ -1,3 +1,5 @@
+import { parse } from "hls-parser";
+import { MasterPlaylist } from "hls-parser/types";
 import { default as toWebVTT } from "srt-webvtt";
 
 import type {
@@ -102,4 +104,29 @@ export function findHighestQuality(
     }
   }
   return undefined;
+}
+
+export async function extractTracksFromHLS(
+  playlistUrl: string,
+  headers: Record<string, string>,
+) {
+  try {
+    const response = await fetch(playlistUrl, { headers }).then((res) =>
+      res.text(),
+    );
+    const playlist = parse(response);
+    if (!playlist.isMasterPlaylist) return null;
+    if (!(playlist instanceof MasterPlaylist)) return null;
+
+    const tracks = playlist.variants.map((variant) => {
+      return {
+        video: variant.video,
+        audio: variant.audio,
+        subtitles: variant.subtitles,
+      };
+    });
+    return tracks;
+  } catch (e) {
+    return null;
+  }
 }

@@ -182,6 +182,9 @@ importers:
       '@movie-web/providers':
         specifier: ^2.2.0
         version: 2.2.0
+      hls-parser:
+        specifier: ^0.10.8
+        version: 0.10.8
       srt-webvtt:
         specifier: ^2.0.0
         version: 2.0.0
@@ -198,6 +201,9 @@ importers:
       '@movie-web/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@types/hls-parser':
+        specifier: ^0.8.7
+        version: 0.8.7
       eslint:
         specifier: ^8.56.0
         version: 8.56.0
@@ -3162,6 +3168,12 @@ packages:
   /@types/hammerjs@2.0.45:
     resolution: {integrity: sha512-qkcUlZmX6c4J8q45taBKTL3p+LbITgyx7qhlPYOdOHZB7B31K0mXbP5YA7i7SgDeEGuI9MnumiKPEMrxg8j3KQ==}
     dev: false
+
+  /@types/hls-parser@0.8.7:
+    resolution: {integrity: sha512-3ry9V6i/uhSbNdvBUENAqt2p5g+xKIbjkr5Qv4EaXe7eIJnaGQntFZalRLQlKoEop381a0LwUr2qNKKlxQC4TQ==}
+    dependencies:
+      '@types/node': 20.11.16
+    dev: true
 
   /@types/inquirer@6.5.0:
     resolution: {integrity: sha512-rjaYQ9b9y/VFGOpqBEXRavc3jh0a+e6evAbI31tMda8VlPaSy0AZJfXsvmIe3wklc7W6C3zCSfleuMXR7NOyXw==}
@@ -6336,6 +6348,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       source-map: 0.7.4
+    dev: false
+
+  /hls-parser@0.10.8:
+    resolution: {integrity: sha512-7FSqn7HYqXEW7I3qcgHJbtpNzi2nLKlBblPvHV6Uc6esVZ8JGfN3xUV7739gfaOh+w/O6TFxysLyW3GeLlAJTA==}
     dev: false
 
   /hmac-drbg@1.0.1:
