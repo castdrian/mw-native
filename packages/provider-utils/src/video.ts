@@ -1,3 +1,4 @@
+import type { Item } from "parse-hls";
 import hls from "parse-hls";
 import { default as toWebVTT } from "srt-webvtt";
 
@@ -105,10 +106,16 @@ export function findHighestQuality(
   return undefined;
 }
 
+export interface HLSPlaylist {
+  video: Item[];
+  audio: Item[];
+  subtitles: Item[];
+}
+
 export async function extractTracksFromHLS(
   playlistUrl: string,
   headers: Record<string, string>,
-) {
+): Promise<HLSPlaylist | null> {
   try {
     const response = await fetch(playlistUrl, { headers }).then((res) =>
       res.text(),

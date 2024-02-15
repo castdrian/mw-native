@@ -169,7 +169,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
       let highestQuality;
       let url;
-      let tracks;
+      let _tracks;
 
       switch (stream.type) {
         case "file":
@@ -178,14 +178,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           return url ?? null;
         case "hls":
           url = stream.playlist;
-          tracks = await extractTracksFromHLS(url, {
+          _tracks = await extractTracksFromHLS(url, {
             ...stream.preferredHeaders,
             ...stream.headers,
           });
-      }
-
-      if (tracks) {
-        console.log(tracks);
       }
 
       setVideoSrc({
