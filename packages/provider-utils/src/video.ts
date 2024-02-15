@@ -1,4 +1,4 @@
-import { parse, types } from "hls-parser";
+import hls from "parse-hls";
 import { default as toWebVTT } from "srt-webvtt";
 
 import type {
@@ -113,18 +113,12 @@ export async function extractTracksFromHLS(
     const response = await fetch(playlistUrl, { headers }).then((res) =>
       res.text(),
     );
-    const playlist = parse(response);
-    if (!playlist.isMasterPlaylist) return null;
-    if (!(playlist instanceof types.MasterPlaylist)) return null;
-
-    const tracks = playlist.variants.map((variant) => {
-      return {
-        video: variant.video,
-        audio: variant.audio,
-        subtitles: variant.subtitles,
-      };
-    });
-    return tracks;
+    const playlist = hls.parse(response);
+    return {
+      video: playlist.streamRenditions,
+      audio: playlist.audioRenditions,
+      subtitles: playlist.subtitlesRenditions,
+    };
   } catch (e) {
     return null;
   }
