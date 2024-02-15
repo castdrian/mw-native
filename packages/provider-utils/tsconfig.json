@@ -2,7 +2,7 @@
   "extends": "@movie-web/tsconfig/base.json",
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
-	"typeRoots": ["node_modules/@types"],
+    "typeRoots": ["../node_modules/@types"],
   },
   "include": ["*.ts", "src"],
   "exclude": ["node_modules"],
