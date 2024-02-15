@@ -1,5 +1,4 @@
-import { parse } from "hls-parser";
-import { MasterPlaylist } from "hls-parser/types";
+import { parse, types } from "hls-parser";
 import { default as toWebVTT } from "srt-webvtt";
 
 import type {
@@ -116,7 +115,7 @@ export async function extractTracksFromHLS(
     );
     const playlist = parse(response);
     if (!playlist.isMasterPlaylist) return null;
-    if (!(playlist instanceof MasterPlaylist)) return null;
+    if (!(playlist instanceof types.MasterPlaylist)) return null;
 
     const tracks = playlist.variants.map((variant) => {
       return {
