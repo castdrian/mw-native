@@ -15,7 +15,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
 
 import type { ScrapeMedia, Stream } from "@movie-web/provider-utils";
-import { findHighestQuality } from "@movie-web/provider-utils";
+import { extractTracksFromHLS, findHighestQuality } from "@movie-web/provider-utils";
 
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
@@ -166,6 +166,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
       let highestQuality;
       let url;
+	  let tracks;
 
       switch (stream.type) {
         case "file":
@@ -174,13 +175,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           return url ?? null;
         case "hls":
           url = stream.playlist;
+		  tracks = await extractTracksFromHLS(url, { ...stream.preferredHeaders, ...stream.headers });
       }
 
-      // setTextTracks(
-      //   stream.captions && stream.captions.length > 0
-      //     ? convertCaptionsToTextTracks(stream.captions)
-      //     : [],
-      // );
+	  if (tracks) {
+		console.log(tracks);
+	  }
 
       setVideoSrc({
         uri: url,
