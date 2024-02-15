@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, Keyboard, ScrollView, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  Keyboard,
+  Platform,
+  ScrollView,
+  View,
+} from "react-native";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -38,7 +45,9 @@ export default function SearchScreen() {
             useNativeDriver: true,
           }),
           Animated.timing(translateYAnim, {
-            toValue: -translateY + 100,
+            toValue:
+              -translateY +
+              Platform.select({ ios: 100, android: 300, default: 0 }),
             duration: 200,
             useNativeDriver: true,
           }),
