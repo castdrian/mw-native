@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Animated, ScrollView, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Dimensions, Keyboard, ScrollView, View } from "react-native";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -12,6 +12,7 @@ import Searchbar from "./Searchbar";
 export default function SearchScreen() {
   const [searchResults, setSearchResults] = useState<ItemData[]>([]);
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const translateYAnim = useRef(new Animated.Value(0)).current;
 
   const handleSearchChange = async (query: string) => {
     if (query.length > 0) {
@@ -22,10 +23,56 @@ export default function SearchScreen() {
     }
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (e) => {
+        const screenHeight = Dimensions.get("window").height;
+        const endY = e.endCoordinates.screenY;
+        const translateY = screenHeight - endY;
+
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateYAnim, {
+            toValue: -translateY + 100,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        Animated.parallel([
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateYAnim, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start();
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, [fadeAnim, translateYAnim]);
+
   const handleScrollBegin = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 300,
+      duration: 100,
       useNativeDriver: true,
     }).start();
   };
@@ -33,7 +80,7 @@ export default function SearchScreen() {
   const handleScrollEnd = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 300,
+      duration: 100,
       useNativeDriver: true,
     }).start();
   };
@@ -65,9 +112,10 @@ export default function SearchScreen() {
       <Animated.View
         style={{
           position: "absolute",
-          bottom: 0,
           left: 0,
           right: 0,
+          bottom: 0,
+          transform: [{ translateY: translateYAnim }],
           opacity: fadeAnim,
         }}
       >
