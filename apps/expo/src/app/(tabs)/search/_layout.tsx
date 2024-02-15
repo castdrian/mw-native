@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ScrollView, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { Animated, ScrollView, View } from "react-native";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -11,6 +11,7 @@ import Searchbar from "./Searchbar";
 
 export default function SearchScreen() {
   const [searchResults, setSearchResults] = useState<ItemData[]>([]);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const handleSearchChange = async (query: string) => {
     if (query.length > 0) {
@@ -21,28 +22,58 @@ export default function SearchScreen() {
     }
   };
 
+  const handleScrollBegin = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleScrollEnd = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
-    <ScrollView
-      keyboardDismissMode="on-drag"
-      keyboardShouldPersistTaps="handled"
-    >
-      <ScreenLayout
-        title={
-          <View className="flex-row items-center">
-            <Text className="text-2xl font-bold">Search</Text>
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        onScrollBeginDrag={handleScrollBegin}
+        onMomentumScrollEnd={handleScrollEnd}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+      >
+        <ScreenLayout
+          title={
+            <View className="flex-row items-center">
+              <Text className="text-2xl font-bold">Search</Text>
+            </View>
+          }
+        >
+          <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
+            {searchResults.map((item, index) => (
+              <View key={index} className="basis-1/2 px-3 pb-3">
+                <Item data={item} />
+              </View>
+            ))}
           </View>
-        }
+        </ScreenLayout>
+      </ScrollView>
+      <Animated.View
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          opacity: fadeAnim,
+        }}
       >
         <Searchbar onSearchChange={handleSearchChange} />
-        <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
-          {searchResults.map((item, index) => (
-            <View key={index} className="basis-1/2 px-3 pb-3">
-              <Item data={item} />
-            </View>
-          ))}
-        </View>
-      </ScreenLayout>
-    </ScrollView>
+      </Animated.View>
+    </View>
   );
 }
 
