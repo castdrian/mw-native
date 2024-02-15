@@ -228,7 +228,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}
-          style={styles.video}
+          style={[
+            styles.video,
+            {
+              ...(!isIdle && {
+                opacity: 0.7,
+              }),
+            },
+          ]}
           onTouchStart={() => setIsIdle(!isIdle)}
         />
         {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
