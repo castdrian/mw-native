@@ -106,7 +106,7 @@ export function findHighestQuality(
   return undefined;
 }
 
-export interface HLSPlaylist {
+export interface HLSTracks {
   video: Item[];
   audio: Item[];
   subtitles: Item[];
@@ -115,7 +115,7 @@ export interface HLSPlaylist {
 export async function extractTracksFromHLS(
   playlistUrl: string,
   headers: Record<string, string>,
-): Promise<HLSPlaylist | null> {
+): Promise<HLSTracks | null> {
   try {
     const response = await fetch(playlistUrl, { headers }).then((res) =>
       res.text(),

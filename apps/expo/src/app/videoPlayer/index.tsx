@@ -14,7 +14,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
 
-import type { ScrapeMedia, Stream } from "@movie-web/provider-utils";
+import type { HLSTracks, ScrapeMedia, Stream } from "@movie-web/provider-utils";
 import {
   extractTracksFromHLS,
   findHighestQuality,
@@ -169,7 +169,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
       let highestQuality;
       let url;
-      let _tracks;
+      let _tracks: HLSTracks | null;
 
       switch (stream.type) {
         case "file":
