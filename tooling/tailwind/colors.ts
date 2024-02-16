@@ -10,5 +10,8 @@ export default {
     300: "#32324F",
     700: "#131322",
   },
+  playerSettings: {
+    captionBackground: "#161b23",
+  },
   background: "#0a0a12",
 };

@@ -11,7 +11,7 @@ interface ControlsOverlayProps {
 
 export const ControlsOverlay = ({ headerData }: ControlsOverlayProps) => {
   return (
-    <View className="absolute left-0 top-0 flex h-full w-full flex-1">
+    <View className="absolute left-0 top-0 flex h-full w-full flex-1 flex-col justify-between">
       <Header data={headerData} />
       <MiddleControls />
       <BottomControls />

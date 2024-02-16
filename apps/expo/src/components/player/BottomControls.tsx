@@ -3,15 +3,18 @@ import { TouchableOpacity, View } from "react-native";
 
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
+import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
 import { ProgressBar } from "./ProgressBar";
 import { mapMillisecondsToTime } from "./utils";
 
 export const BottomControls = () => {
   const status = usePlayerStore((state) => state.status);
+  const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const [showRemaining, setShowRemaining] = useState(false);
 
   const toggleTimeDisplay = () => {
+    setIsIdle(false);
     setShowRemaining(!showRemaining);
   };
 
@@ -32,9 +35,9 @@ export const BottomControls = () => {
   if (status?.isLoaded) {
     return (
       <Controls>
-        <View className="flex h-16 w-full flex-col items-center justify-center">
-          <View className="w-full px-4">
-            <View className="ml-10 flex flex-row items-center">
+        <View className="flex h-40 w-full flex-col items-center justify-center p-6">
+          <View className="w-full">
+            <View className="flex flex-row items-center">
               <Text className="font-bold">{getCurrentTime()}</Text>
               <Text className="mx-1 font-bold">/</Text>
               <TouchableOpacity onPress={toggleTimeDisplay}>
@@ -46,8 +49,11 @@ export const BottomControls = () => {
               </TouchableOpacity>
             </View>
 
-            <View className="py-2">
+            <View>
               <ProgressBar />
+            </View>
+            <View className="flex w-full flex-row items-center justify-between">
+              <CaptionsSelector />
             </View>
           </View>
         </View>

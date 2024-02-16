@@ -1,13 +1,18 @@
 import * as ScreenOrientation from "expo-screen-orientation";
 
+import type { Stream } from "@movie-web/provider-utils";
+
 import type { MakeSlice } from "./types";
 
 export interface InterfaceSlice {
   interface: {
     isIdle: boolean;
     idleTimeout: NodeJS.Timeout | null;
+    stream: Stream | null;
+    selectedCaption: Stream["captions"][0] | null;
   };
   setIsIdle(state: boolean): void;
+  setStream(stream: Stream): void;
   lockOrientation: () => Promise<void>;
   unlockOrientation: () => Promise<void>;
   presentFullscreenPlayer: () => Promise<void>;
@@ -18,6 +23,8 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
   interface: {
     isIdle: true,
     idleTimeout: null,
+    stream: null,
+    selectedCaption: null,
   },
   setIsIdle: (state) => {
     set((s) => {
@@ -32,6 +39,11 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
       }, 6000);
 
       s.interface.isIdle = state;
+    });
+  },
+  setStream: (stream) => {
+    set((s) => {
+      s.interface.stream = stream;
     });
   },
   lockOrientation: async () => {

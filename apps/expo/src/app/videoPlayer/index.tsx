@@ -22,6 +22,7 @@ import {
 
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
+import { CaptionRenderer } from "~/components/player/CaptionRenderer";
 import { ControlsOverlay } from "~/components/player/ControlsOverlay";
 import { Text } from "~/components/ui/Text";
 import { useBrightness } from "~/hooks/player/useBrightness";
@@ -69,9 +70,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const router = useRouter();
   const scale = useSharedValue(1);
 
+  const isIdle = usePlayerStore((state) => state.interface.isIdle);
+  const setStream = usePlayerStore((state) => state.setStream);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
-  const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const presentFullscreenPlayer = usePlayerStore(
     (state) => state.presentFullscreenPlayer,
@@ -159,6 +161,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       setIsLoading(true);
 
       const { item, stream, media } = data;
+
+      setStream(stream);
 
       setHeaderData({
         title: item.title,
@@ -252,6 +256,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
             <Text className="font-bold">Brightness: {debouncedBrightness}</Text>
           </View>
         )}
+        <CaptionRenderer />
       </View>
     </GestureDetector>
   );
