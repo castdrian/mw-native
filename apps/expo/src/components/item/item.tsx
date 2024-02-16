@@ -38,7 +38,12 @@ export default function Item({ data }: { data: ItemData }) {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={{ width: "100%" }}>
+    <TouchableOpacity
+      onPress={handlePress}
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      onLongPress={() => {}}
+      style={{ width: "100%" }}
+    >
       <View className="w-full">
         <ContextMenu actions={contextMenuActions} onPress={onContextMenuPress}>
           <View className="mb-2 aspect-[9/14] w-full overflow-hidden rounded-2xl">
