@@ -40,7 +40,7 @@ export const BottomControls = () => {
               <TouchableOpacity onPress={toggleTimeDisplay}>
                 <Text className="font-bold">
                   {showRemaining
-                    ? "-" + getRemainingTime()
+                    ? getRemainingTime()
                     : mapMillisecondsToTime(status.durationMillis ?? 0)}
                 </Text>
               </TouchableOpacity>
