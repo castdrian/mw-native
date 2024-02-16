@@ -15,29 +15,40 @@ export const BottomControls = () => {
     setShowRemaining(!showRemaining);
   };
 
-  const getTimeDisplay = () => {
+  const getCurrentTime = () => {
     if (status?.isLoaded) {
-      if (showRemaining) {
-        const remainingTime =
-          (status.durationMillis ?? 0) - (status.positionMillis ?? 0);
-        return "-" + mapMillisecondsToTime(remainingTime);
-      }
-      return mapMillisecondsToTime(status.durationMillis ?? 0);
+      return mapMillisecondsToTime(status.positionMillis ?? 0);
+    }
+  };
+
+  const getRemainingTime = () => {
+    if (status?.isLoaded) {
+      const remainingTime =
+        (status.durationMillis ?? 0) - (status.positionMillis ?? 0);
+      return "-" + mapMillisecondsToTime(remainingTime);
     }
   };
 
   if (status?.isLoaded) {
     return (
       <Controls>
-        <View className="flex h-16 w-full flex-row items-center justify-center">
-          <View className="flex flex-row items-center justify-center px-4 py-2">
-            <Text className="font-bold">
-              {mapMillisecondsToTime(status.positionMillis ?? 0)}
-            </Text>
-            <ProgressBar />
-            <TouchableOpacity onPress={toggleTimeDisplay}>
-              <Text className="font-bold">{getTimeDisplay()}</Text>
-            </TouchableOpacity>
+        <View className="flex h-16 w-full flex-col items-center justify-center">
+          <View className="w-full px-4">
+            <View className="flex flex-row items-center">
+              <Text className="font-bold">{getCurrentTime()}</Text>
+              <Text className="mx-1 font-bold">/</Text>
+              <TouchableOpacity onPress={toggleTimeDisplay}>
+                <Text className="font-bold">
+                  {showRemaining
+                    ? "-" + getRemainingTime()
+                    : mapMillisecondsToTime(status.durationMillis ?? 0)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View className="py-2">
+              <ProgressBar />
+            </View>
           </View>
         </View>
       </Controls>
