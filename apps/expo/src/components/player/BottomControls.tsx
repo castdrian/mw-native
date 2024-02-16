@@ -34,7 +34,7 @@ export const BottomControls = () => {
       <Controls>
         <View className="flex h-16 w-full flex-col items-center justify-center">
           <View className="w-full px-4">
-            <View className="flex flex-row items-center">
+            <View className="ml-10 flex flex-row items-center">
               <Text className="font-bold">{getCurrentTime()}</Text>
               <Text className="mx-1 font-bold">/</Text>
               <TouchableOpacity onPress={toggleTimeDisplay}>
