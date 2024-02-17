@@ -210,7 +210,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
         void NavigationBar.setVisibilityAsync("visible");
       }
     };
-  }, [data, dismissFullscreenPlayer, presentFullscreenPlayer, router]);
+  }, [
+    data,
+    dismissFullscreenPlayer,
+    presentFullscreenPlayer,
+    router,
+    setStream,
+  ]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
