@@ -22,7 +22,7 @@ export const Header = ({ data }: HeaderProps) => {
 
   if (!isIdle) {
     return (
-      <View className="flex h-16 w-full flex-row justify-between px-6 pt-6">
+      <View className="z-50 flex h-16 w-full flex-row justify-between px-6 pt-6">
         <Controls>
           <BackButton className="w-36" />
         </Controls>
