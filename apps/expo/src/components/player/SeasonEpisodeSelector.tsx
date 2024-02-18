@@ -14,7 +14,7 @@ export const SeasonEpisodeSelector = () => {
   const data = usePlayerStore((state) => state.interface.data);
   const seasonData = usePlayerStore((state) => state.interface.seasonData);
   const { isTrue, on, off } = useBoolean();
-  const _router = useRouter();
+  const router = useRouter();
 
   return data?.type === "movie" || !seasonData ? null : (
     <View className="max-w-36 flex-1">
@@ -44,10 +44,16 @@ export const SeasonEpisodeSelector = () => {
               title={episode.name}
               onPress={() => {
                 off();
-                // router.push({
-                //   pathname: "/videoPlayer/loading",
-                //   params: { sourceID: source.id, data: JSON.stringify(data) },
-                // });
+                router.push({
+                  pathname: "/videoPlayer/loading",
+                  params: {
+                    data: JSON.stringify(data),
+                    seasonData: JSON.stringify({
+                      season: seasonData.season_number,
+                      episode: episode.episode_number,
+                    }),
+                  },
+                });
               }}
               className="max-w-16"
             />

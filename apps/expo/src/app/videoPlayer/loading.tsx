@@ -25,15 +25,25 @@ export default function LoadingScreenWrapper() {
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
     : null;
-  return <LoadingScreen sourceId={sourceId} data={data} />;
+  const seasonData = params.seasonData
+    ? (JSON.parse(params.seasonData as string) as {
+        season: number;
+        episode: number;
+      })
+    : null;
+  return (
+    <LoadingScreen sourceId={sourceId} data={data} seasonData={seasonData} />
+  );
 }
 
 function LoadingScreen({
   sourceId,
   data,
+  seasonData,
 }: {
   sourceId: string | undefined;
   data: ItemData | null;
+  seasonData: { season: number; episode: number } | null;
 }) {
   const router = useRouter();
   const [eventLog, setEventLog] = useState<Event[]>([]);
@@ -60,8 +70,8 @@ function LoadingScreen({
       let episode: number | undefined;
 
       if (type === "tv") {
-        // season = <chosen by user / continue watching> ?? undefined;
-        // episode = <chosen by user / continue watching> ?? undefined;
+        season = seasonData?.season ?? undefined;
+        episode = seasonData?.episode ?? undefined;
       }
 
       const scrapeMedia = transformSearchResultToScrapeMedia(
@@ -100,7 +110,7 @@ function LoadingScreen({
     };
 
     void initialize();
-  }, [data, router, sourceId]);
+  }, [data, router, seasonData?.episode, seasonData?.season, sourceId]);
 
   return (
     <ScreenLayout
