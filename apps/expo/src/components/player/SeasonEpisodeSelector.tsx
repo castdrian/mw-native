@@ -45,6 +45,7 @@ export const SeasonEpisodeSelector = () => {
               onPress={() => {
                 off();
                 router.push({
+                  // replace throws exception
                   pathname: "/videoPlayer/loading",
                   params: {
                     data: JSON.stringify(data),

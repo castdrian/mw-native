@@ -45,6 +45,7 @@ export const SourceSelector = () => {
               onPress={() => {
                 off();
                 router.push({
+                  // replace throws exception
                   pathname: "/videoPlayer/loading",
                   params: { sourceID: source.id, data: JSON.stringify(data) },
                 });
