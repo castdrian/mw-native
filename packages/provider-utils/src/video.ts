@@ -3,6 +3,7 @@ import hls from "parse-hls";
 import { default as toWebVTT } from "srt-webvtt";
 
 import type {
+  EmbedOutput,
   FileBasedStream,
   Qualities,
   RunnerOptions,
@@ -44,10 +45,12 @@ export type RunnerEvent =
   | DiscoverEmbedsEvent;
 
 export async function getVideoStream({
+  sourceId,
   media,
   forceVTT,
   onEvent,
 }: {
+  sourceId?: string;
   media: ScrapeMedia;
   forceVTT?: boolean;
   onEvent?: (event: RunnerEvent) => void;
@@ -68,12 +71,49 @@ export async function getVideoStream({
     },
   };
 
-  const result = await providers.runAll(options);
-  if (!result) return null;
+  let stream: Stream | null = null;
+
+  if (sourceId) {
+    let embedOutput: EmbedOutput | undefined;
+
+    const sourceResult = await providers
+      .runSourceScraper({
+        id: sourceId,
+        media,
+      })
+      .catch(() => undefined);
+
+    if (sourceResult) {
+      for (const embed of sourceResult.embeds) {
+        const embedResult = await providers
+          .runEmbedScraper({
+            id: embed.embedId,
+            url: embed.url,
+          })
+          .catch(() => undefined);
+
+        if (embedResult) {
+          embedOutput = embedResult;
+        }
+      }
+    }
+
+    if (embedOutput) {
+      stream = embedOutput.stream[0] ?? null;
+    } else if (sourceResult) {
+      stream = sourceResult.stream?.[0] ?? null;
+    }
+  } else {
+    stream = await providers
+      .runAll(options)
+      .then((result) => result?.stream ?? null);
+  }
+
+  if (!stream) return null;
 
   if (forceVTT) {
-    if (result.stream.captions && result.stream.captions.length > 0) {
-      for (const caption of result.stream.captions) {
+    if (stream.captions && stream.captions.length > 0) {
+      for (const caption of stream.captions) {
         if (caption.type === "srt") {
           const response = await fetch(caption.url);
           const srtSubtitle = await response.blob();
@@ -84,7 +124,7 @@ export async function getVideoStream({
       }
     }
   }
-  return result.stream;
+  return stream;
 }
 
 export function findHighestQuality(
