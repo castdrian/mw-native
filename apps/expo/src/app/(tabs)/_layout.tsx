@@ -56,8 +56,10 @@ export default function TabLayout() {
         options={{
           title: "Search",
           tabBarLabel: "",
-          tabBarIcon: () => (
-            <View className="android:top-2 ios:top-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-primary-400 text-center align-middle text-2xl text-white">
+          tabBarIcon: ({ focused }) => (
+            <View
+              className={`android:top-2 ios:top-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full ${focused ? "bg-primary-300" : "bg-primary-400"} text-center align-middle text-2xl text-white`}
+            >
               <TabBarIcon name="search" color="#FFF" />
             </View>
           ),
