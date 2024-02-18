@@ -1,4 +1,4 @@
-import type { MovieDetails, TvShowDetails } from "tmdb-ts";
+import type { MovieDetails, SeasonDetails, TvShowDetails } from "tmdb-ts";
 
 import { tmdb } from "./util";
 
@@ -18,6 +18,21 @@ export async function fetchMediaDetails(
       type,
       result,
     };
+  } catch (ex) {
+    return undefined;
+  }
+}
+
+export async function fetchSeasonDetails(
+  id: string,
+  season: number,
+): Promise<SeasonDetails | undefined> {
+  try {
+    const result = await tmdb.tvSeasons.details(
+      { tvShowID: parseInt(id, 10), seasonNumber: season },
+      ["external_ids"],
+    );
+    return result;
   } catch (ex) {
     return undefined;
   }
