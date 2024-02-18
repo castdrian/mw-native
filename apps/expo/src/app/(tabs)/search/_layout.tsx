@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Dimensions,
-  Keyboard,
-  Platform,
-  ScrollView,
-  View,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Keyboard, ScrollView, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -18,8 +17,8 @@ import Searchbar from "./Searchbar";
 
 export default function SearchScreen() {
   const [searchResults, setSearchResults] = useState<ItemData[]>([]);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const translateYAnim = useRef(new Animated.Value(0)).current;
+  const translateY = useSharedValue(0);
+  const fadeAnim = useSharedValue(1);
 
   const handleSearchChange = async (query: string) => {
     if (query.length > 0) {
@@ -31,67 +30,52 @@ export default function SearchScreen() {
   };
 
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
+    const keyboardWillShowListener = Keyboard.addListener(
+      "keyboardWillShow",
       (e) => {
-        const screenHeight = Dimensions.get("window").height;
-        const endY = e.endCoordinates.screenY;
-        const translateY = screenHeight - endY;
-
-        Animated.parallel([
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(translateYAnim, {
-            toValue:
-              -translateY +
-              Platform.select({ ios: 100, android: 300, default: 0 }),
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]).start();
+        translateY.value = withTiming(
+          -(e.endCoordinates.height - 110), // determines the height of the Searchbar above keyboard, use Platform.select to adjust value if needed
+          {
+            duration: e.duration ?? 250, // duration always returns 0 on Android, adjust value if needed
+            easing: Easing.out(Easing.ease),
+          },
+        );
       },
     );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
+
+    const keyboardWillHideListener = Keyboard.addListener(
+      "keyboardWillHide",
       () => {
-        Animated.parallel([
-          Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(translateYAnim, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]).start();
+        translateY.value = withTiming(0, {
+          duration: 250,
+          easing: Easing.out(Easing.ease),
+        });
       },
     );
 
     return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
+      keyboardWillShowListener.remove();
+      keyboardWillHideListener.remove();
     };
-  }, [fadeAnim, translateYAnim]);
+  }, [translateY]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: translateY.value }],
+      opacity: fadeAnim.value,
+    };
+  });
 
   const handleScrollBegin = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
+    fadeAnim.value = withTiming(0, {
       duration: 100,
-      useNativeDriver: true,
-    }).start();
+    });
   };
 
   const handleScrollEnd = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
+    fadeAnim.value = withTiming(1, {
       duration: 100,
-      useNativeDriver: true,
-    }).start();
+    });
   };
 
   return (
@@ -120,14 +104,10 @@ export default function SearchScreen() {
         </ScreenLayout>
       </ScrollView>
       <Animated.View
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          transform: [{ translateY: translateYAnim }],
-          opacity: fadeAnim,
-        }}
+        style={[
+          { position: "absolute", left: 0, right: 0, bottom: 0 },
+          animatedStyle,
+        ]}
       >
         <Searchbar onSearchChange={handleSearchChange} />
       </Animated.View>
