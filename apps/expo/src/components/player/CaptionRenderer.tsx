@@ -80,13 +80,14 @@ export const CaptionRenderer = () => {
       // className="rounded px-4 py-1 text-center leading-normal [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
       style={[
         {
+          position: "absolute",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
           paddingLeft: 16,
           paddingRight: 16,
           paddingTop: 4,
           paddingBottom: 4,
           borderRadius: 10,
-          marginTop: 32,
+          bottom: 100,
         },
         animatedStyles,
       ]}
