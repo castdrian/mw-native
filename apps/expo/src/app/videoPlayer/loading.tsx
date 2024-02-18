@@ -21,7 +21,7 @@ interface Event {
 
 export default function LoadingScreenWrapper() {
   const params = useLocalSearchParams();
-  const sourceId = params.sourceID?.[0];
+  const sourceId = params.sourceID as string | undefined;
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
     : null;
