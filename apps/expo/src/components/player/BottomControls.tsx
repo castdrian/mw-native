@@ -6,6 +6,7 @@ import { Text } from "../ui/Text";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
 import { ProgressBar } from "./ProgressBar";
+import { SeasonEpisodeSelector } from "./SeasonEpisodeSelector";
 import { SourceSelector } from "./SourceSelector";
 import { mapMillisecondsToTime } from "./utils";
 
@@ -53,9 +54,10 @@ export const BottomControls = () => {
             <View>
               <ProgressBar />
             </View>
-            <View className="flex w-full flex-row items-center justify-between">
-              <SourceSelector />
+            <View className="flex w-full flex-row items-center justify-start">
+              <SeasonEpisodeSelector />
               <CaptionsSelector />
+              <SourceSelector />
             </View>
           </View>
         </View>
