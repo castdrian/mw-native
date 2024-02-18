@@ -84,7 +84,7 @@ function LoadingScreen({
     const initialize = async () => {
       const video = await fetchVideo();
       if (!video || !data) {
-        return router.push({ pathname: "/(tabs)" });
+        return router.back();
       }
 
       const videoPlayerData: VideoPlayerData = {

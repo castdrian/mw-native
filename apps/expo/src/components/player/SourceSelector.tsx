@@ -44,7 +44,7 @@ export const SourceSelector = () => {
               title={source.name}
               onPress={() => {
                 off();
-                router.replace({
+                router.push({
                   pathname: "/videoPlayer/loading",
                   params: { sourceID: source.id, data: JSON.stringify(data) },
                 });
