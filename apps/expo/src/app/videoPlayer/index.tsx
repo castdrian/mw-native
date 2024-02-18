@@ -19,6 +19,7 @@ import {
   extractTracksFromHLS,
   findHighestQuality,
 } from "@movie-web/provider-utils";
+import { fetchSeasonDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import type { HeaderData } from "~/components/player/Header";
@@ -78,6 +79,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const _setSourceId = usePlayerStore((state) => state.setSourceId);
   const setData = usePlayerStore((state) => state.setData);
+  const setSeasonData = usePlayerStore((state) => state.setSeasonData);
   const presentFullscreenPlayer = usePlayerStore(
     (state) => state.presentFullscreenPlayer,
   );
@@ -165,6 +167,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
 
       const { item, stream, media } = data;
 
+      if (media.type === "show") {
+        const seasonData = await fetchSeasonDetails(
+          media.tmdbId,
+          media.season.number,
+        );
+        if (seasonData) {
+          setSeasonData(seasonData);
+        }
+      }
+
       setStream(stream);
 
       setHeaderData({
@@ -219,6 +231,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
     presentFullscreenPlayer,
     router,
     setData,
+    setSeasonData,
     setStream,
   ]);
 

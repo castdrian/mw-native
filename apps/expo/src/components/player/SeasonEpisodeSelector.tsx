@@ -12,10 +12,11 @@ import { Text } from "../ui/Text";
 
 export const SeasonEpisodeSelector = () => {
   const data = usePlayerStore((state) => state.interface.data);
+  const seasonData = usePlayerStore((state) => state.interface.seasonData);
   const { isTrue, on, off } = useBoolean();
   const _router = useRouter();
 
-  return data?.type === "movie" ? null : (
+  return data?.type === "movie" || !seasonData ? null : (
     <View className="max-w-36 flex-1">
       <Button
         title="Episode"
@@ -36,21 +37,21 @@ export const SeasonEpisodeSelector = () => {
         supportedOrientations={["portrait", "landscape"]}
       >
         <ScrollView className="flex-1 bg-gray-900">
-          <Text className="text-center font-bold">Select source</Text>
-          {/* {getBuiltinSources().map((source) => (
+          <Text className="text-center font-bold">Select episode</Text>
+          {seasonData.episodes.map((episode) => (
             <Button
-              key={source.id}
-              title={source.name}
+              key={episode.id}
+              title={episode.name}
               onPress={() => {
                 off();
-                router.push({
-                  pathname: "/videoPlayer/loading",
-                  params: { sourceID: source.id, data: JSON.stringify(data) },
-                });
+                // router.push({
+                //   pathname: "/videoPlayer/loading",
+                //   params: { sourceID: source.id, data: JSON.stringify(data) },
+                // });
               }}
               className="max-w-16"
             />
-          ))} */}
+          ))}
         </ScrollView>
       </Modal>
     </View>

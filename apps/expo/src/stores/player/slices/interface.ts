@@ -1,6 +1,7 @@
 import * as ScreenOrientation from "expo-screen-orientation";
 
 import type { Stream } from "@movie-web/provider-utils";
+import type { SeasonDetails } from "@movie-web/tmdb";
 
 import type { MakeSlice } from "./types";
 import type { ItemData } from "~/components/item/item";
@@ -12,12 +13,14 @@ export interface InterfaceSlice {
     stream: Stream | null;
     sourceId: string | null;
     data: ItemData | null;
+    seasonData: SeasonDetails | null;
     selectedCaption: Stream["captions"][0] | null;
   };
   setIsIdle(state: boolean): void;
   setStream(stream: Stream): void;
   setSourceId(sourceId: string): void;
   setData(data: ItemData): void;
+  setSeasonData(data: SeasonDetails): void;
   lockOrientation: () => Promise<void>;
   unlockOrientation: () => Promise<void>;
   presentFullscreenPlayer: () => Promise<void>;
@@ -31,6 +34,7 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
     stream: null,
     sourceId: null,
     data: null,
+    seasonData: null,
     selectedCaption: null,
   },
   setIsIdle: (state) => {
@@ -61,6 +65,11 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
   setData: (data: ItemData) => {
     set((s) => {
       s.interface.data = data;
+    });
+  },
+  setSeasonData: (data: SeasonDetails) => {
+    set((s) => {
+      s.interface.seasonData = data;
     });
   },
   lockOrientation: async () => {
