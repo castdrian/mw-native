@@ -21,13 +21,20 @@ interface Event {
 
 export default function LoadingScreenWrapper() {
   const params = useLocalSearchParams();
+  const sourceId = params.sourceID?.[0];
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
     : null;
-  return <LoadingScreen data={data} />;
+  return <LoadingScreen sourceId={sourceId} data={data} />;
 }
 
-function LoadingScreen({ data }: { data: ItemData | null }) {
+function LoadingScreen({
+  sourceId,
+  data,
+}: {
+  sourceId: string | undefined;
+  data: ItemData | null;
+}) {
   const router = useRouter();
   const [eventLog, setEventLog] = useState<Event[]>([]);
 
@@ -65,6 +72,7 @@ function LoadingScreen({ data }: { data: ItemData | null }) {
       );
 
       const stream = await getVideoStream({
+        sourceId,
         media: scrapeMedia,
         onEvent: handleEvent,
       }).catch(() => null);
@@ -92,7 +100,7 @@ function LoadingScreen({ data }: { data: ItemData | null }) {
     };
 
     void initialize();
-  }, [data, router]);
+  }, [data, router, sourceId]);
 
   return (
     <ScreenLayout

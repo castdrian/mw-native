@@ -74,6 +74,8 @@ export async function getVideoStream({
   let stream: Stream | null = null;
 
   if (sourceId) {
+    onEvent && onEvent({ sourceIds: [sourceId] });
+
     let embedOutput: EmbedOutput | undefined;
 
     const sourceResult = await providers
@@ -81,9 +83,15 @@ export async function getVideoStream({
         id: sourceId,
         media,
       })
-      .catch(() => undefined);
+      .catch((error: Error) => {
+        onEvent &&
+          onEvent({ id: sourceId, percentage: 0, status: "failure", error });
+        return undefined;
+      });
 
     if (sourceResult) {
+      onEvent && onEvent({ id: sourceId, percentage: 50, status: "pending" });
+
       for (const embed of sourceResult.embeds) {
         const embedResult = await providers
           .runEmbedScraper({
@@ -94,6 +102,8 @@ export async function getVideoStream({
 
         if (embedResult) {
           embedOutput = embedResult;
+          onEvent &&
+            onEvent({ id: embed.embedId, percentage: 100, status: "success" });
         }
       }
     }
@@ -102,6 +112,12 @@ export async function getVideoStream({
       stream = embedOutput.stream[0] ?? null;
     } else if (sourceResult) {
       stream = sourceResult.stream?.[0] ?? null;
+    }
+
+    if (stream) {
+      onEvent && onEvent({ id: sourceId, percentage: 100, status: "success" });
+    } else {
+      onEvent && onEvent({ id: sourceId, percentage: 100, status: "notfound" });
     }
   } else {
     stream = await providers

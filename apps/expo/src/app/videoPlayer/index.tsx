@@ -38,6 +38,7 @@ export default function VideoPlayerWrapper() {
 }
 
 export interface VideoPlayerData {
+  sourceId?: string;
   item: ItemData;
   stream: Stream;
   media: ScrapeMedia;
@@ -75,6 +76,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
+  const _setSourceId = usePlayerStore((state) => state.setSourceId);
+  const setData = usePlayerStore((state) => state.setData);
   const presentFullscreenPlayer = usePlayerStore(
     (state) => state.presentFullscreenPlayer,
   );
@@ -157,7 +160,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
       if (Platform.OS === "android") {
         await NavigationBar.setVisibilityAsync("hidden");
       }
-
+      setData(data.item);
       setIsLoading(true);
 
       const { item, stream, media } = data;
@@ -215,6 +218,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ data }) => {
     dismissFullscreenPlayer,
     presentFullscreenPlayer,
     router,
+    setData,
     setStream,
   ]);
 
