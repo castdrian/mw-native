@@ -3,6 +3,8 @@ import { Tabs } from "expo-router";
 
 import Colors from "@movie-web/tailwind-config/colors";
 
+import { MovieWebSvg } from "~/components/Icon";
+import SvgTabBarIcon from "~/components/SvgTabBarIcon";
 import TabBarIcon from "~/components/TabBarIcon";
 
 export default function TabLayout() {
@@ -66,20 +68,22 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="movie-web"
+        options={{
+          title: "movie-web",
+          tabBarIcon: ({ focused }) => (
+            <SvgTabBarIcon focused={focused}>
+              <MovieWebSvg />
+            </SvgTabBarIcon>
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon name="cog" focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="account"
-        options={{
-          title: "Account",
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon name="user" focused={focused} />
           ),
         }}
       />
