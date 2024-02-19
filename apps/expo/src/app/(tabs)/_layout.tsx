@@ -21,7 +21,7 @@ export default function TabLayout() {
           borderTopColor: "transparent",
           borderTopRightRadius: 20,
           borderTopLeftRadius: 20,
-          paddingBottom: Platform.select({ ios: 100, android: 0 }),
+          paddingBottom: Platform.select({ ios: 100 }),
           height: 80,
         },
         tabBarItemStyle: {
