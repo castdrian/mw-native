@@ -13,6 +13,7 @@ import { useCaptionsStore } from "~/stores/captions";
 import { usePlayerStore } from "~/stores/player/store";
 import { Button } from "../ui/Button";
 import { Text } from "../ui/Text";
+import { Controls } from "./Controls";
 
 const parseCaption = async (
   caption: Stream["captions"][0],
@@ -25,7 +26,9 @@ const parseCaption = async (
 };
 
 export const CaptionsSelector = () => {
-  const captions = usePlayerStore((state) => state.interface.stream?.captions);
+  const captions = usePlayerStore(
+    (state) => state.interface.currentStream?.captions,
+  );
   const setSelectedCaption = useCaptionsStore(
     (state) => state.setSelectedCaption,
   );
@@ -46,18 +49,20 @@ export const CaptionsSelector = () => {
 
   return (
     <View className="max-w-36 flex-1">
-      <Button
-        title="Subtitles"
-        variant="outline"
-        onPress={on}
-        iconLeft={
-          <MaterialCommunityIcons
-            name="subtitles"
-            size={24}
-            color={colors.primary[300]}
-          />
-        }
-      />
+      <Controls>
+        <Button
+          title="Subtitles"
+          variant="outline"
+          onPress={on}
+          iconLeft={
+            <MaterialCommunityIcons
+              name="subtitles"
+              size={24}
+              color={colors.primary[300]}
+            />
+          }
+        />
+      </Controls>
 
       <Modal
         isVisible={isTrue}

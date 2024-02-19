@@ -1,26 +1,34 @@
-import type { MovieDetails, SeasonDetails, TvShowDetails } from "tmdb-ts";
+import type {
+  AppendToResponse,
+  MovieDetails,
+  SeasonDetails,
+  TvShowDetails,
+} from "tmdb-ts";
 
 import { tmdb } from "./util";
 
-export async function fetchMediaDetails(
-  id: string,
-  type: "movie" | "tv",
-): Promise<
-  { type: "movie" | "tv"; result: TvShowDetails | MovieDetails } | undefined
-> {
-  try {
-    const result =
-      type === "movie"
-        ? await tmdb.movies.details(parseInt(id, 10), ["external_ids"])
-        : await tmdb.tvShows.details(parseInt(id, 10), ["external_ids"]);
-
-    return {
-      type,
-      result,
-    };
-  } catch (ex) {
-    return undefined;
+export async function fetchMediaDetails<
+  T extends "movie" | "tv",
+  R = T extends "movie"
+    ? {
+        type: "movie";
+        result: AppendToResponse<MovieDetails, "external_ids"[], "movie">;
+      }
+    : {
+        type: "tv";
+        result: AppendToResponse<TvShowDetails, "external_ids"[], "tvShow">;
+      },
+>(id: string, type: T): Promise<R | undefined> {
+  if (type === "movie") {
+    const movieResult = await tmdb.movies.details(parseInt(id, 10), [
+      "external_ids",
+    ]);
+    return { type: "movie", result: movieResult } as R;
   }
+  const tvResult = await tmdb.tvShows.details(parseInt(id, 10), [
+    "external_ids",
+  ]);
+  return { type: "tv", result: tvResult } as R;
 }
 
 export async function fetchSeasonDetails(

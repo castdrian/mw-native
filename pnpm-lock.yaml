@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  nativewind@4.0.23:
-    hash: 42qwizvrnoqgalbele35lpnaqi
-    path: patches/nativewind@4.0.23.patch
-
 importers:
 
   .:
@@ -46,6 +41,9 @@ importers:
       '@react-navigation/native':
         specifier: ^6.1.9
         version: 6.1.9(react-native@0.73.2)(react@18.2.0)
+      '@tanstack/react-query':
+        specifier: ^5.22.2
+        version: 5.22.2(react@18.2.0)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -92,8 +90,8 @@ importers:
         specifier: ^10.0.3
         version: 10.0.3
       nativewind:
-        specifier: ~4.0.23
-        version: 4.0.23(patch_hash=42qwizvrnoqgalbele35lpnaqi)(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1)
+        specifier: ^4.0.35
+        version: 4.0.35(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -107,8 +105,8 @@ importers:
         specifier: ^1.14.1
         version: 1.14.1(react-native@0.73.2)(react@18.2.0)
       react-native-css-interop:
-        specifier: ~0.0.22
-        version: 0.0.22(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1)
+        specifier: ^0.0.35
+        version: 0.0.35(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1)
       react-native-gesture-handler:
         specifier: ~2.14.1
         version: 2.14.1(react-native@0.73.2)(react@18.2.0)
@@ -167,6 +165,9 @@ importers:
       '@movie-web/tsconfig':
         specifier: workspace:^0.1.0
         version: link:../../tooling/typescript
+      '@tanstack/eslint-plugin-query':
+        specifier: ^5.20.1
+        version: 5.20.1(eslint@8.56.0)(typescript@5.3.3)
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
@@ -3062,6 +3063,31 @@ packages:
       '@sinonjs/commons': 3.0.1
     dev: false
 
+  /@tanstack/eslint-plugin-query@5.20.1(eslint@8.56.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-oIp7Wh90KHOm1FKCvcv87fiD2H96xo/crFrlhbvqBzR2f0tMEGOK/ANKMGNFQprd6BT6lyZhQPlOEkFdezsjIg==}
+    peerDependencies:
+      eslint: ^8.0.0
+    dependencies:
+      '@typescript-eslint/utils': 6.20.0(eslint@8.56.0)(typescript@5.3.3)
+      eslint: 8.56.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: true
+
+  /@tanstack/query-core@5.22.2:
+    resolution: {integrity: sha512-z3PwKFUFACMUqe1eyesCIKg3Jv1mysSrYfrEW5ww5DCDUD4zlpTKBvUDaEjsfZzL3ULrFLDM9yVUxI/fega1Qg==}
+    dev: false
+
+  /@tanstack/react-query@5.22.2(react@18.2.0):
+    resolution: {integrity: sha512-TaxJDRzJ8/NWRT4lY2jguKCrNI6MRN+67dELzPjNUlvqzTxGANlMp68l7aC7hG8Bd1uHNxHl7ihv7MT50i/43A==}
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-core': 5.22.2
+      react: 18.2.0
+    dev: false
+
   /@tootallnate/quickjs-emscripten@0.23.0:
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
     dev: true
@@ -3236,7 +3262,6 @@ packages:
 
   /@types/semver@7.5.6:
     resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
-    dev: false
 
   /@types/stack-utils@2.0.3:
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -3324,7 +3349,6 @@ packages:
     dependencies:
       '@typescript-eslint/types': 6.20.0
       '@typescript-eslint/visitor-keys': 6.20.0
-    dev: false
 
   /@typescript-eslint/type-utils@6.20.0(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-qnSobiJQb1F5JjN0YDRPHruQTrX7ICsmltXhkV536mp4idGAYrIyr47zF/JmkJtEcAVnIz4gUYJ7gOZa6SmN4g==}
@@ -3349,7 +3373,6 @@ packages:
   /@typescript-eslint/types@6.20.0:
     resolution: {integrity: sha512-MM9mfZMAhiN4cOEcUOEx+0HmuaW3WBfukBZPCfwSqFnQy0grXYtngKCqpQN339X3RrwtzspWJrpbrupKYUSBXQ==}
     engines: {node: ^16.0.0 || >=18.0.0}
-    dev: false
 
   /@typescript-eslint/typescript-estree@6.20.0(typescript@5.3.3):
     resolution: {integrity: sha512-RnRya9q5m6YYSpBN7IzKu9FmLcYtErkDkc8/dKv81I9QiLLtVBHrjz+Ev/crAqgMNW2FCsoZF4g2QUylMnJz+g==}
@@ -3371,7 +3394,6 @@ packages:
       typescript: 5.3.3
     transitivePeerDependencies:
       - supports-color
-    dev: false
 
   /@typescript-eslint/utils@6.20.0(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-/EKuw+kRu2vAqCoDwDCBtDRU6CTKbUmwwI7SH7AashZ+W+7o8eiyy6V2cdOqN49KsTcASWsC5QeghYuRDTyOOg==}
@@ -3390,7 +3412,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
-    dev: false
 
   /@typescript-eslint/visitor-keys@6.20.0:
     resolution: {integrity: sha512-E8Cp98kRe4gKHjJD4NExXKz/zOJ1A2hhZc+IMVD6i7w4yjIvh6VyuRI0gRtxAsXtoC35uGMaQ9rjI2zJaXDEAw==}
@@ -3398,7 +3419,6 @@ packages:
     dependencies:
       '@typescript-eslint/types': 6.20.0
       eslint-visitor-keys: 3.4.3
-    dev: false
 
   /@ungap/structured-clone@1.2.0:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
@@ -6220,7 +6240,6 @@ packages:
       ignore: 5.3.1
       merge2: 1.4.1
       slash: 3.0.0
-    dev: false
 
   /gopd@1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
@@ -7966,13 +7985,13 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nativewind@4.0.23(patch_hash=42qwizvrnoqgalbele35lpnaqi)(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1):
-    resolution: {integrity: sha512-7eKMjcdoZMqxmPwJhLwe5VbuwCNTdIXChxV9n4FwdzKTpZX3kNGj95J7fpqpefFPRT6yYp6SqK2n6TG/BSzA+w==}
+  /nativewind@4.0.35(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-Sc7n6gwgrs/8t5u/PcBFdRyyCnSuLzJ/nfKQy8fRxgjiiAyrl3ExZvexQy+dEAcdK38vU++UYdRyHMf/mf6fWg==}
     engines: {node: '>=16'}
     peerDependencies:
       tailwindcss: '>3.3.0'
     dependencies:
-      react-native-css-interop: 0.0.22(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1)
+      react-native-css-interop: 0.0.35(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1)
       tailwindcss: 3.4.1
     transitivePeerDependencies:
       - '@babel/core'
@@ -7983,7 +8002,6 @@ packages:
       - react-native-svg
       - supports-color
     dev: false
-    patched: true
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -8989,13 +9007,13 @@ packages:
       react-native: 0.73.2(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
     dev: false
 
-  /react-native-css-interop@0.0.22(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1):
-    resolution: {integrity: sha512-JHLYHlLEqM13dy0XSxIPOWvqmQkPrqUt+KHPkbLV0sIiw/4aN6B5TPsNKZFX9bJJaZ//dAECn782R0MqDrTBWQ==}
-    engines: {node: '>=16'}
+  /react-native-css-interop@0.0.35(@babel/core@7.23.9)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-svg@14.1.0)(react-native@0.73.2)(react@18.2.0)(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-renqiX1UGsOIWUrDBzEaYQ1zapyTg69W7eIFvIYRZyEWPQ/16A+6pM8SkybOMu9pp7qInpUy888xmYhTQhg1UA==}
+    engines: {node: '>=18'}
     peerDependencies:
       react: '>=18'
       react-native: '*'
-      react-native-reanimated: '>=3.3.0'
+      react-native-reanimated: '>=3.6.2'
       react-native-safe-area-context: '*'
       react-native-svg: '*'
       tailwindcss: ~3
@@ -10326,7 +10344,6 @@ packages:
       typescript: '>=4.2.0'
     dependencies:
       typescript: 5.3.3
-    dev: false
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}

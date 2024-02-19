@@ -26,9 +26,5 @@
     "typescript": "^5.3.3"
   },
   "prettier": "@movie-web/prettier-config",
-  "pnpm": {
-    "patchedDependencies": {
-      "nativewind@4.0.23": "patches/nativewind@4.0.23.patch"
-    }
-  }
+  "pnpm": {}
 }

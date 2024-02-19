@@ -69,28 +69,13 @@ export const CaptionRenderer = () => {
     [selectedCaption, delay, status],
   );
 
-  console.log(visibleCaptions);
-
   if (!status?.isLoaded || !selectedCaption || !visibleCaptions?.length)
     return null;
 
   return (
-    // https://github.com/marklawlor/nativewind/issues/790
     <Animated.View
-      // className="rounded px-4 py-1 text-center leading-normal [text-shadow:0_2px_4px_rgba(0,0,0,0.5)]"
-      style={[
-        {
-          position: "absolute",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          paddingLeft: 16,
-          paddingRight: 16,
-          paddingTop: 4,
-          paddingBottom: 4,
-          borderRadius: 10,
-          bottom: 100,
-        },
-        animatedStyles,
-      ]}
+      className="absolute bottom-24 rounded bg-black/50 px-4 py-1 text-center leading-normal"
+      style={animatedStyles}
     >
       {visibleCaptions?.map((caption) => (
         <View key={caption.index}>

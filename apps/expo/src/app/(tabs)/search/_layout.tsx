@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useQuery } from "@tanstack/react-query";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -16,18 +17,14 @@ import { Text } from "~/components/ui/Text";
 import Searchbar from "./Searchbar";
 
 export default function SearchScreen() {
-  const [searchResults, setSearchResults] = useState<ItemData[]>([]);
+  const [query, setQuery] = useState("");
   const translateY = useSharedValue(0);
   const fadeAnim = useSharedValue(1);
 
-  const handleSearchChange = async (query: string) => {
-    if (query.length > 0) {
-      const results = await fetchSearchResults(query).catch(() => []);
-      setSearchResults(results);
-    } else {
-      setSearchResults([]);
-    }
-  };
+  const { data } = useQuery({
+    queryKey: ["searchResults", query],
+    queryFn: () => fetchSearchResults(query),
+  });
 
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener(
@@ -83,7 +80,7 @@ export default function SearchScreen() {
       <ScrollView
         onScrollBeginDrag={handleScrollBegin}
         onMomentumScrollEnd={handleScrollEnd}
-        scrollEnabled={searchResults.length > 0}
+        scrollEnabled={data && data.length > 0}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
       >
@@ -95,7 +92,7 @@ export default function SearchScreen() {
           }
         >
           <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
-            {searchResults.map((item, index) => (
+            {data?.map((item, index) => (
               <View key={index} className="basis-1/2 px-3 pb-3">
                 <Item data={item} />
               </View>
@@ -109,7 +106,7 @@ export default function SearchScreen() {
           animatedStyle,
         ]}
       >
-        <Searchbar onSearchChange={handleSearchChange} />
+        <Searchbar onSearchChange={setQuery} />
       </Animated.View>
     </View>
   );

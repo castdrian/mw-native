@@ -4,6 +4,7 @@ const config = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
   ],
   rules: {
     "react/prop-types": "off",

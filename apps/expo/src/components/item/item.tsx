@@ -5,6 +5,7 @@ import ContextMenu from "react-native-context-menu-view";
 import { useRouter } from "expo-router";
 
 import { Text } from "~/components/ui/Text";
+import { usePlayerStore } from "~/stores/player/store";
 
 export interface ItemData {
   id: string;
@@ -15,13 +16,15 @@ export interface ItemData {
 }
 
 export default function Item({ data }: { data: ItemData }) {
+  const resetVideo = usePlayerStore((state) => state.resetVideo);
   const router = useRouter();
   const { title, type, year, posterUrl } = data;
 
   const handlePress = () => {
+    resetVideo();
     Keyboard.dismiss();
     router.push({
-      pathname: "/videoPlayer/loading",
+      pathname: "/videoPlayer",
       params: { data: JSON.stringify(data) },
     });
   };

@@ -6,7 +6,7 @@ import { Text } from "../ui/Text";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
 import { ProgressBar } from "./ProgressBar";
-import { SeasonEpisodeSelector } from "./SeasonEpisodeSelector";
+import { SeasonSelector } from "./SeasonEpisodeSelector";
 import { SourceSelector } from "./SourceSelector";
 import { mapMillisecondsToTime } from "./utils";
 
@@ -36,32 +36,28 @@ export const BottomControls = () => {
 
   if (status?.isLoaded) {
     return (
-      <Controls>
-        <View className="flex h-40 w-full flex-col items-center justify-center p-6">
-          <View className="w-full">
-            <View className="flex flex-row items-center">
-              <Text className="font-bold">{getCurrentTime()}</Text>
-              <Text className="mx-1 font-bold">/</Text>
-              <TouchableOpacity onPress={toggleTimeDisplay}>
-                <Text className="font-bold">
-                  {showRemaining
-                    ? getRemainingTime()
-                    : mapMillisecondsToTime(status.durationMillis ?? 0)}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View>
-              <ProgressBar />
-            </View>
-            <View className="flex w-full flex-row items-center justify-start">
-              <SeasonEpisodeSelector />
-              <CaptionsSelector />
-              <SourceSelector />
-            </View>
+      <View className="flex h-32 w-full flex-col items-center justify-center p-6">
+        <Controls>
+          <View className="flex w-full flex-row items-center">
+            <Text className="font-bold">{getCurrentTime()}</Text>
+            <Text className="mx-1 font-bold">/</Text>
+            <TouchableOpacity onPress={toggleTimeDisplay}>
+              <Text className="font-bold">
+                {showRemaining
+                  ? getRemainingTime()
+                  : mapMillisecondsToTime(status.durationMillis ?? 0)}
+              </Text>
+            </TouchableOpacity>
           </View>
+
+          <ProgressBar />
+        </Controls>
+        <View className="flex w-full flex-row items-center justify-center gap-4 pb-10">
+          <SeasonSelector />
+          <CaptionsSelector />
+          <SourceSelector />
         </View>
-      </Controls>
+      </View>
     );
   }
 };

@@ -1,18 +1,13 @@
 import { View } from "react-native";
 
-import type { HeaderData } from "./Header";
 import { BottomControls } from "./BottomControls";
 import { Header } from "./Header";
 import { MiddleControls } from "./MiddleControls";
 
-interface ControlsOverlayProps {
-  headerData: HeaderData;
-}
-
-export const ControlsOverlay = ({ headerData }: ControlsOverlayProps) => {
+export const ControlsOverlay = () => {
   return (
-    <View className="absolute left-0 top-0 flex h-full w-full flex-1 flex-col justify-between">
-      <Header data={headerData} />
+    <View className="flex w-full flex-1 flex-col justify-between">
+      <Header />
       <MiddleControls />
       <BottomControls />
     </View>

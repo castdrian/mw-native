@@ -4,10 +4,15 @@ import { default as toWebVTT } from "srt-webvtt";
 
 import type {
   EmbedOutput,
+  EmbedRunnerOptions,
   FileBasedStream,
+  FullScraperEvents,
   Qualities,
   RunnerOptions,
+  RunOutput,
   ScrapeMedia,
+  SourcererOutput,
+  SourceRunnerOptions,
   Stream,
 } from "@movie-web/providers";
 import {
@@ -44,104 +49,172 @@ export type RunnerEvent =
   | UpdateEvent
   | DiscoverEmbedsEvent;
 
+export const providers = makeProviders({
+  fetcher: makeStandardFetcher(fetch),
+  target: targets.NATIVE,
+  consistentIpForRequests: true,
+});
+
 export async function getVideoStream({
-  sourceId,
   media,
   forceVTT,
-  onEvent,
+  events,
 }: {
-  sourceId?: string;
   media: ScrapeMedia;
   forceVTT?: boolean;
-  onEvent?: (event: RunnerEvent) => void;
-}): Promise<Stream | null> {
-  const providers = makeProviders({
-    fetcher: makeStandardFetcher(fetch),
-    target: targets.NATIVE,
-    consistentIpForRequests: true,
-  });
-
+  events?: FullScraperEvents;
+}): Promise<RunOutput | null> {
   const options: RunnerOptions = {
     media,
-    events: {
-      init: onEvent,
-      update: onEvent,
-      discoverEmbeds: onEvent,
-      start: onEvent,
-    },
+    events,
   };
 
-  let stream: Stream | null = null;
-
-  if (sourceId) {
-    onEvent && onEvent({ sourceIds: [sourceId] });
-
-    let embedOutput: EmbedOutput | undefined;
-
-    const sourceResult = await providers
-      .runSourceScraper({
-        id: sourceId,
-        media,
-      })
-      .catch((error: Error) => {
-        onEvent &&
-          onEvent({ id: sourceId, percentage: 0, status: "failure", error });
-        return undefined;
-      });
-
-    if (sourceResult) {
-      onEvent && onEvent({ id: sourceId, percentage: 50, status: "pending" });
-
-      for (const embed of sourceResult.embeds) {
-        const embedResult = await providers
-          .runEmbedScraper({
-            id: embed.embedId,
-            url: embed.url,
-          })
-          .catch(() => undefined);
-
-        if (embedResult) {
-          embedOutput = embedResult;
-          onEvent &&
-            onEvent({ id: embed.embedId, percentage: 100, status: "success" });
-        }
-      }
-    }
-
-    if (embedOutput) {
-      stream = embedOutput.stream[0] ?? null;
-    } else if (sourceResult) {
-      stream = sourceResult.stream?.[0] ?? null;
-    }
-
-    if (stream) {
-      onEvent && onEvent({ id: sourceId, percentage: 100, status: "success" });
-    } else {
-      onEvent && onEvent({ id: sourceId, percentage: 100, status: "notfound" });
-    }
-  } else {
-    stream = await providers
-      .runAll(options)
-      .then((result) => result?.stream ?? null);
-  }
+  const stream = await providers.runAll(options);
 
   if (!stream) return null;
 
   if (forceVTT) {
-    if (stream.captions && stream.captions.length > 0) {
-      for (const caption of stream.captions) {
-        if (caption.type === "srt") {
-          const response = await fetch(caption.url);
-          const srtSubtitle = await response.blob();
-          const vttSubtitleUrl = await toWebVTT(srtSubtitle);
-          caption.url = vttSubtitleUrl;
-          caption.type = "vtt";
-        }
-      }
-    }
+    const streamResult = await convertStreamCaptionsToWebVTT(stream.stream);
+    return { ...stream, stream: streamResult };
   }
   return stream;
 }
+
+export async function getVideoStreamFromSource({
+  sourceId,
+  media,
+  events,
+}: {
+  sourceId: string;
+  media: ScrapeMedia;
+  events?: SourceRunnerOptions["events"];
+}): Promise<SourcererOutput> {
+  const sourceResult = await providers.runSourceScraper({
+    id: sourceId,
+    media,
+    events,
+  });
+
+  return sourceResult;
+}
+
+export async function getVideoStreamFromEmbed({
+  embedId,
+  url,
+  events,
+}: {
+  embedId: string;
+  url: string;
+  events?: EmbedRunnerOptions["events"];
+}): Promise<EmbedOutput> {
+  const embedResult = await providers.runEmbedScraper({
+    id: embedId,
+    url,
+    events,
+  });
+
+  return embedResult;
+}
+
+// export async function getVideoStream({
+//   sourceId,
+//   media,
+//   forceVTT,
+//   onEvent,
+// }: {
+//   sourceId?: string;
+//   media: ScrapeMedia;
+//   forceVTT?: boolean;
+//   onEvent?: (event: RunnerEvent) => void;
+// }): Promise<Stream | null> {
+//   const providers = makeProviders({
+//     fetcher: makeStandardFetcher(fetch),
+//     target: targets.NATIVE,
+//     consistentIpForRequests: true,
+//   });
+
+//   const options: RunnerOptions = {
+//     media,
+//     events: {
+//       init: onEvent,
+//       update: onEvent,
+//       discoverEmbeds: onEvent,
+//       start: onEvent,
+//     },
+//   };
+
+//   let stream: Stream | null = null;
+
+//   if (sourceId) {
+//     onEvent && onEvent({ sourceIds: [sourceId] });
+
+//     let embedOutput: EmbedOutput | undefined;
+
+//     const sourceResult = await providers
+//       .runSourceScraper({
+//         id: sourceId,
+//         media,
+//         events: {},
+//       })
+//       .catch((error: Error) => {
+//         onEvent &&
+//           onEvent({ id: sourceId, percentage: 0, status: "failure", error });
+//         return undefined;
+//       });
+
+//     if (sourceResult) {
+//       onEvent && onEvent({ id: sourceId, percentage: 50, status: "pending" });
+
+//       for (const embed of sourceResult.embeds) {
+//         const embedResult = await providers
+//           .runEmbedScraper({
+//             id: embed.embedId,
+//             url: embed.url,
+//           })
+//           .catch(() => undefined);
+
+//         if (embedResult) {
+//           embedOutput = embedResult;
+//           onEvent &&
+//             onEvent({ id: embed.embedId, percentage: 100, status: "success" });
+//         }
+//       }
+//     }
+
+//     if (embedOutput) {
+//       stream = embedOutput.stream[0] ?? null;
+//     } else if (sourceResult) {
+//       stream = sourceResult.stream?.[0] ?? null;
+//     }
+
+//     if (stream) {
+//       onEvent && onEvent({ id: sourceId, percentage: 100, status: "success" });
+//     } else {
+//       onEvent && onEvent({ id: sourceId, percentage: 100, status: "notfound" });
+//     }
+//   } else {
+//     stream = await providers
+//       .runAll(options)
+//       .then((result) => result?.stream ?? null);
+//   }
+
+//   if (!stream) return null;
+
+//   if (forceVTT) {
+//     if (stream.captions && stream.captions.length > 0) {
+//       for (const caption of stream.captions) {
+//         if (caption.type === "srt") {
+//           const response = await fetch(caption.url);
+//           const srtSubtitle = await response.blob();
+//           const vttSubtitleUrl = await toWebVTT(srtSubtitle);
+//           caption.url = vttSubtitleUrl;
+//           caption.type = "vtt";
+//         }
+//       }
+//     }
+//   }
+//   return stream;
+// }
 
 export function findHighestQuality(
   stream: FileBasedStream,
@@ -185,4 +258,19 @@ export async function extractTracksFromHLS(
   } catch (e) {
     return null;
   }
+}
+
+export async function convertStreamCaptionsToWebVTT(
+  stream: Stream,
+): Promise<Stream> {
+  if (!stream.captions) return stream;
+  for (const caption of stream.captions) {
+    if (caption.type === "srt") {
+      const response = await fetch(caption.url);
+      const srt = await response.blob();
+      caption.url = await toWebVTT(srt);
+      caption.type = "vtt";
+    }
+  }
+  return stream;
 }

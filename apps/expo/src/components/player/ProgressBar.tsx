@@ -21,7 +21,7 @@ export const ProgressBar = () => {
   if (status?.isLoaded) {
     return (
       <TouchableOpacity
-        className="flex flex-1 items-center justify-center pb-12 pt-6"
+        className="flex flex-1 items-center justify-center pb-8 pt-6"
         onPress={() => setIsIdle(false)}
       >
         <VideoSlider onSlidingComplete={updateProgress} />

@@ -10,6 +10,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Colors from "@movie-web/tailwind-config/colors";
 
@@ -29,6 +30,8 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync().catch(() => {
   /* reloading the app might trigger this, so it's safe to ignore */
 });
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -69,32 +72,34 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack
-        screenOptions={{
-          autoHideHomeIndicator: true,
-          gestureEnabled: true,
-          animation: "default",
-          animationTypeForReplace: "push",
-          presentation: "card",
-          headerShown: false,
-          contentStyle: {
-            backgroundColor: Colors.background,
-          },
-        }}
-      >
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerShown: false,
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack
+          screenOptions={{
             autoHideHomeIndicator: true,
             gestureEnabled: true,
             animation: "default",
             animationTypeForReplace: "push",
             presentation: "card",
+            headerShown: false,
+            contentStyle: {
+              backgroundColor: Colors.background,
+            },
           }}
-        />
-      </Stack>
-    </ThemeProvider>
+        >
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              headerShown: false,
+              autoHideHomeIndicator: true,
+              gestureEnabled: true,
+              animation: "default",
+              animationTypeForReplace: "push",
+              presentation: "card",
+            }}
+          />
+        </Stack>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

@@ -2,9 +2,11 @@ import type { AppendToResponse, MovieDetails, TvShowDetails } from "tmdb-ts";
 
 import type { ScrapeMedia } from "@movie-web/providers";
 
-export function transformSearchResultToScrapeMedia(
-  type: "tv" | "movie",
-  result: TvShowDetails | MovieDetails,
+export function transformSearchResultToScrapeMedia<T extends "tv" | "movie">(
+  type: T,
+  result: T extends "tv"
+    ? AppendToResponse<TvShowDetails, "external_ids"[], "tvShow">
+    : AppendToResponse<MovieDetails, "external_ids"[], "movie">,
   season?: number,
   episode?: number,
 ): ScrapeMedia {

@@ -1,41 +1,47 @@
-import * as ScreenOrientation from "expo-screen-orientation";
-
-import type { Stream } from "@movie-web/provider-utils";
+import type { HLSTracks, Stream } from "@movie-web/provider-utils";
 import type { SeasonDetails } from "@movie-web/tmdb";
 
 import type { MakeSlice } from "./types";
 import type { ItemData } from "~/components/item/item";
 
+export type PlayerStatus = "scraping" | "ready";
+
 export interface InterfaceSlice {
   interface: {
     isIdle: boolean;
     idleTimeout: NodeJS.Timeout | null;
-    stream: Stream | null;
+    currentStream: Stream | null;
+    availableStreams: Stream[] | null;
     sourceId: string | null;
     data: ItemData | null;
     seasonData: SeasonDetails | null;
     selectedCaption: Stream["captions"][0] | null;
+    hlsTracks: HLSTracks | null;
+    playerStatus: PlayerStatus;
   };
   setIsIdle(state: boolean): void;
-  setStream(stream: Stream): void;
+  setCurrentStream(stream: Stream): void;
+  setAvailableStreams(streams: Stream[]): void;
   setSourceId(sourceId: string): void;
   setData(data: ItemData): void;
   setSeasonData(data: SeasonDetails): void;
-  lockOrientation: () => Promise<void>;
-  unlockOrientation: () => Promise<void>;
-  presentFullscreenPlayer: () => Promise<void>;
-  dismissFullscreenPlayer: () => Promise<void>;
+  setHlsTracks(tracks: HLSTracks): void;
+  setPlayerStatus(status: PlayerStatus): void;
+  reset: () => void;
 }
 
 export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
   interface: {
     isIdle: true,
     idleTimeout: null,
-    stream: null,
+    currentStream: null,
+    availableStreams: null,
     sourceId: null,
     data: null,
     seasonData: null,
     selectedCaption: null,
+    hlsTracks: null,
+    playerStatus: "scraping",
   },
   setIsIdle: (state) => {
     set((s) => {
@@ -52,9 +58,14 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
       s.interface.isIdle = state;
     });
   },
-  setStream: (stream) => {
+  setCurrentStream: (stream) => {
     set((s) => {
-      s.interface.stream = stream;
+      s.interface.currentStream = stream;
+    });
+  },
+  setAvailableStreams: (streams) => {
+    set((s) => {
+      s.interface.availableStreams = streams;
     });
   },
   setSourceId: (sourceId: string) => {
@@ -72,20 +83,30 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
       s.interface.seasonData = data;
     });
   },
-  lockOrientation: async () => {
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.LANDSCAPE,
-    );
+  setHlsTracks: (tracks) => {
+    set((s) => {
+      s.interface.hlsTracks = tracks;
+    });
   },
-  unlockOrientation: async () => {
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.PORTRAIT_UP,
-    );
+  setPlayerStatus: (status) => {
+    set((s) => {
+      s.interface.playerStatus = status;
+    });
   },
-  presentFullscreenPlayer: async () => {
-    await get().lockOrientation();
-  },
-  dismissFullscreenPlayer: async () => {
-    await get().unlockOrientation();
+  reset: () => {
+    set(() => ({
+      interface: {
+        isIdle: true,
+        idleTimeout: null,
+        currentStream: null,
+        availableStreams: null,
+        sourceId: null,
+        data: null,
+        seasonData: null,
+        selectedCaption: null,
+        hlsTracks: null,
+        playerStatus: "scraping",
+      },
+    }));
   },
 });
