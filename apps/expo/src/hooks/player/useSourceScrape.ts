@@ -27,12 +27,12 @@ export const useEmbedScrape = (closeModal?: () => void) => {
         url,
         embedId,
       });
-      if (result.stream) {
+      if (result?.stream) {
         closeModal?.();
         setCurrentStream(result.stream[0]!);
         return result.stream;
       }
-      return result.stream;
+      return result?.stream;
     },
     onSuccess: async () => {
       await queryClient.resetQueries({
@@ -66,22 +66,22 @@ export const useSourceScrape = (
         },
       });
 
-      if (result.stream) {
+      if (result?.stream) {
         closeModal();
         setCurrentStream(result.stream[0]!);
         setSourceId(sourceId);
         return [];
       }
-      if (result.embeds.length === 1) {
+      if (result?.embeds.length === 1) {
         const embedResult = await getVideoStreamFromEmbed(result.embeds[0]!);
-        if (embedResult.stream) {
+        if (embedResult?.stream) {
           closeModal();
           setCurrentStream(embedResult.stream[0]!);
           setSourceId(sourceId);
           return [];
         }
       }
-      return result.embeds;
+      return result?.embeds;
     },
   });
 
