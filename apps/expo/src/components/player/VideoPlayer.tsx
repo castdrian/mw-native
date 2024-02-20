@@ -193,8 +193,16 @@ export const VideoPlayer = () => {
           ]}
           onTouchStart={() => setIsIdle(!isIdle)}
         />
-        {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
-        {!isLoading && <ControlsOverlay />}
+        <View className="flex-1 items-center justify-center">
+          {isLoading && (
+            <ActivityIndicator
+              size="large"
+              color="#0000ff"
+              className="absolute"
+            />
+          )}
+          <ControlsOverlay isLoading={isLoading} />
+        </View>
         {showVolumeOverlay && (
           <View className="absolute bottom-12 self-center rounded-xl bg-black p-3 opacity-50">
             <Text className="font-bold">Volume: {debouncedVolume}</Text>

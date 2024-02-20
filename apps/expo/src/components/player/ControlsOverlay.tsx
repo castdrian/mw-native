@@ -4,11 +4,11 @@ import { BottomControls } from "./BottomControls";
 import { Header } from "./Header";
 import { MiddleControls } from "./MiddleControls";
 
-export const ControlsOverlay = () => {
+export const ControlsOverlay = ({ isLoading }: { isLoading: boolean }) => {
   return (
     <View className="flex w-full flex-1 flex-col justify-between">
       <Header />
-      <MiddleControls />
+      {!isLoading && <MiddleControls />}
       <BottomControls />
     </View>
   );
