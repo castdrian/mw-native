@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 import { usePlayerStore } from "~/stores/player/store";
@@ -15,37 +15,41 @@ export const BottomControls = () => {
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const [showRemaining, setShowRemaining] = useState(false);
 
-  const toggleTimeDisplay = () => {
+  const toggleTimeDisplay = useCallback(() => {
     setIsIdle(false);
     setShowRemaining(!showRemaining);
-  };
+  }, [showRemaining, setIsIdle]);
 
-  const getCurrentTime = () => {
+  const { currentTime, remainingTime } = useMemo(() => {
     if (status?.isLoaded) {
-      return mapMillisecondsToTime(status.positionMillis ?? 0);
+      const current = mapMillisecondsToTime(status.positionMillis ?? 0);
+      const remaining =
+        "-" +
+        mapMillisecondsToTime(
+          (status.durationMillis ?? 0) - (status.positionMillis ?? 0),
+        );
+      return { currentTime: current, remainingTime: remaining };
+    } else {
+      return { currentTime: "", remainingTime: "" };
     }
-  };
+  }, [status]);
 
-  const getRemainingTime = () => {
+  const durationTime = useMemo(() => {
     if (status?.isLoaded) {
-      const remainingTime =
-        (status.durationMillis ?? 0) - (status.positionMillis ?? 0);
-      return "-" + mapMillisecondsToTime(remainingTime);
+      return mapMillisecondsToTime(status.durationMillis ?? 0);
     }
-  };
+  }, [status]);
 
   if (status?.isLoaded) {
     return (
       <View className="flex h-32 w-full flex-col items-center justify-center p-6">
         <Controls>
           <View className="flex w-full flex-row items-center">
-            <Text className="font-bold">{getCurrentTime()}</Text>
+            <Text className="font-bold">{currentTime}</Text>
             <Text className="mx-1 font-bold">/</Text>
             <TouchableOpacity onPress={toggleTimeDisplay}>
               <Text className="font-bold">
-                {showRemaining
-                  ? getRemainingTime()
-                  : mapMillisecondsToTime(status.durationMillis ?? 0)}
+                {showRemaining ? remainingTime : durationTime}
               </Text>
             </TouchableOpacity>
           </View>
