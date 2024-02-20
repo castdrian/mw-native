@@ -12,6 +12,7 @@ import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
 import type { ItemData } from "../item/item";
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
+import { PlayerStatus } from "~/stores/player/slices/interface";
 
 interface ScraperProcessProps {
   data: ItemData;
@@ -85,7 +86,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
         );
         if (tracks) setHlsTracks(tracks);
       }
-      setPlayerStatus("ready");
+      setPlayerStatus(PlayerStatus.READY);
       setSourceId(streamResult.sourceId);
     };
     void fetchData();
