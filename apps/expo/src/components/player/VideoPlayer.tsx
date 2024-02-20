@@ -44,6 +44,7 @@ export const VideoPlayer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [shouldPlay, setShouldPlay] = useState(true);
+  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
   const router = useRouter();
   const scale = useSharedValue(1);
 
@@ -159,7 +160,17 @@ export const VideoPlayer = () => {
 
     setIsLoading(true);
     void initializePlayer();
-  }, [dismissFullscreenPlayer, router, stream]);
+
+    const timeout = setTimeout(() => {
+      if (!hasStartedPlaying) {
+        router.back();
+      }
+    }, 60000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [dismissFullscreenPlayer, hasStartedPlaying, router, stream]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
@@ -167,6 +178,7 @@ export const VideoPlayer = () => {
 
   const onReadyForDisplay = () => {
     setIsLoading(false);
+    setHasStartedPlaying(true);
   };
 
   console.log(videoSrc, isLoading);
