@@ -80,7 +80,7 @@ export default function SearchScreen() {
       <ScrollView
         onScrollBeginDrag={handleScrollBegin}
         onMomentumScrollEnd={handleScrollEnd}
-        scrollEnabled={data && data.length > 0}
+        scrollEnabled={data && data.length > 0 ? true : false}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
       >
