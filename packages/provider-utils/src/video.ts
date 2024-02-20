@@ -55,6 +55,20 @@ export const providers = makeProviders({
   consistentIpForRequests: true,
 });
 
+async function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+): Promise<T> {
+  let timeoutHandle: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutHandle = setTimeout(() => reject(new Error("Timeout")), timeoutMs);
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() =>
+    clearTimeout(timeoutHandle),
+  );
+}
+
 export async function getVideoStream({
   media,
   forceVTT,
@@ -64,20 +78,25 @@ export async function getVideoStream({
   forceVTT?: boolean;
   events?: FullScraperEvents;
 }): Promise<RunOutput | null> {
-  const options: RunnerOptions = {
-    media,
-    events,
-  };
+  try {
+    const options: RunnerOptions = {
+      media,
+      events,
+    };
 
-  const stream = await providers.runAll(options);
+    const stream = await withTimeout(providers.runAll(options), 10000);
 
-  if (!stream) return null;
+    if (!stream) return null;
 
-  if (forceVTT) {
-    const streamResult = await convertStreamCaptionsToWebVTT(stream.stream);
-    return { ...stream, stream: streamResult };
+    if (forceVTT) {
+      const streamResult = await convertStreamCaptionsToWebVTT(stream.stream);
+      return { ...stream, stream: streamResult };
+    }
+
+    return stream;
+  } catch (error) {
+    return null;
   }
-  return stream;
 }
 
 export async function getVideoStreamFromSource({
@@ -88,14 +107,21 @@ export async function getVideoStreamFromSource({
   sourceId: string;
   media: ScrapeMedia;
   events?: SourceRunnerOptions["events"];
-}): Promise<SourcererOutput> {
-  const sourceResult = await providers.runSourceScraper({
-    id: sourceId,
-    media,
-    events,
-  });
+}): Promise<SourcererOutput | null> {
+  try {
+    const sourceResult = await withTimeout(
+      providers.runSourceScraper({
+        id: sourceId,
+        media,
+        events,
+      }),
+      10000,
+    );
 
-  return sourceResult;
+    return sourceResult;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function getVideoStreamFromEmbed({
@@ -106,14 +132,21 @@ export async function getVideoStreamFromEmbed({
   embedId: string;
   url: string;
   events?: EmbedRunnerOptions["events"];
-}): Promise<EmbedOutput> {
-  const embedResult = await providers.runEmbedScraper({
-    id: embedId,
-    url,
-    events,
-  });
+}): Promise<EmbedOutput | null> {
+  try {
+    const embedResult = await withTimeout(
+      providers.runEmbedScraper({
+        id: embedId,
+        url,
+        events,
+      }),
+      10000,
+    );
 
-  return embedResult;
+    return embedResult;
+  } catch (error) {
+    return null;
+  }
 }
 
 export function findHighestQuality(
