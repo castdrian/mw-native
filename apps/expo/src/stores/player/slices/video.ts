@@ -3,6 +3,7 @@ import type { AVPlaybackStatus, Video } from "expo-av";
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 
 import type { MakeSlice } from "./types";
+import { PlayerStatus } from "./interface";
 
 export interface PlayerMetaEpisode {
   number: number;
@@ -76,14 +77,14 @@ export const createVideoSlice: MakeSlice<VideoSlice> = (set) => ({
   },
   setMeta: (meta) => {
     set((s) => {
-      s.interface.playerStatus = "scraping";
+      s.interface.playerStatus = PlayerStatus.SCRAPING;
       s.meta = meta;
     });
   },
   resetVideo() {
     set({ videoRef: null, status: null, meta: null });
     set((s) => {
-      s.interface.playerStatus = "scraping";
+      s.interface.playerStatus = PlayerStatus.SCRAPING;
     });
   },
 });
