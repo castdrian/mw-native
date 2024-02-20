@@ -24,17 +24,20 @@ export const useBrightness = () => {
     }
 
     void init();
-  }, []);
+  }, [brightness]);
 
-  const handleBrightnessChange = useCallback(async (newValue: number) => {
-    try {
-      setShowBrightnessOverlay(true);
-      brightness.value = newValue;
-      await Brightness.setBrightnessAsync(newValue);
-    } catch (error) {
-      console.error("Failed to set brightness:", error);
-    }
-  }, []);
+  const handleBrightnessChange = useCallback(
+    async (newValue: number) => {
+      try {
+        setShowBrightnessOverlay(true);
+        brightness.value = newValue;
+        await Brightness.setBrightnessAsync(newValue);
+      } catch (error) {
+        console.error("Failed to set brightness:", error);
+      }
+    },
+    [brightness],
+  );
 
   return {
     showBrightnessOverlay: debouncedShowBrightnessOverlay,

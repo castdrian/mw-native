@@ -47,6 +47,7 @@ export const VideoPlayer = () => {
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
   const router = useRouter();
   const scale = useSharedValue(1);
+  const [lastVelocityY, setLastVelocityY] = useState(0);
 
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
@@ -87,26 +88,34 @@ export const VideoPlayer = () => {
 
       const directionMultiplier = event.velocityY < 0 ? 1 : -1;
 
+      const change = directionMultiplier * Math.abs(event.velocityY / divisor);
+      const newVolume = Math.max(0, Math.min(1, currentVolume.value + change));
+      const newBrightness = Math.max(0, Math.min(1, brightness.value + change));
+
       if (event.x > screenHalfWidth) {
-        const change =
-          directionMultiplier * Math.abs(event.velocityY / divisor);
-        const newVolume = Math.max(
-          0,
-          Math.min(1, currentVolume.value + change),
-        );
         runOnJS(handleVolumeChange)(newVolume);
       } else {
-        const change =
-          directionMultiplier * Math.abs(event.velocityY / divisor);
-        const newBrightness = Math.max(
-          0,
-          Math.min(1, brightness.value + change),
-        );
         brightness.value = newBrightness;
         runOnJS(handleBrightnessChange)(newBrightness);
       }
+
+      if (
+        (event.velocityY < 0 && lastVelocityY >= 0) ||
+        (event.velocityY >= 0 && lastVelocityY < 0)
+      ) {
+        runOnJS(setLastVelocityY)(event.velocityY);
+      }
+
+      if (event.x > screenHalfWidth) {
+        runOnJS(handleVolumeChange)(newVolume);
+        runOnJS(setShowVolumeOverlay)(true);
+      } else {
+        runOnJS(handleBrightnessChange)(newBrightness);
+        runOnJS(setShowBrightnessOverlay)(true);
+      }
     })
     .onEnd(() => {
+      runOnJS(setLastVelocityY)(0);
       runOnJS(setShowVolumeOverlay)(false);
       runOnJS(setShowBrightnessOverlay)(false);
     });
