@@ -205,7 +205,7 @@ export const VideoPlayer = () => {
           ]}
           onTouchStart={() => setIsIdle(!isIdle)}
         />
-        <View className="flex-1 items-center justify-center">
+        <View className="h-full w-full flex-1 items-center justify-center">
           {isLoading && (
             <ActivityIndicator
               size="large"
