@@ -74,7 +74,7 @@ export const CaptionRenderer = () => {
 
   return (
     <Animated.View
-      className="absolute bottom-24 rounded bg-black/50 px-4 py-1 text-center leading-normal"
+      className="absolute bottom-[95px] rounded bg-black/60 px-4 py-1 text-center leading-normal"
       style={animatedStyles}
     >
       {visibleCaptions?.map((caption) => (

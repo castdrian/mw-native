@@ -1,6 +1,6 @@
 import type { ContentCaption } from "subsrt-ts/dist/types/handler";
 import { useCallback } from "react";
-import { ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import Modal from "react-native-modal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { parse } from "subsrt-ts";
@@ -14,6 +14,7 @@ import { usePlayerStore } from "~/stores/player/store";
 import { Button } from "../ui/Button";
 import { Text } from "../ui/Text";
 import { Controls } from "./Controls";
+import { getPrettyLanguageNameFromLocale } from "./utils";
 
 const parseCaption = async (
   caption: Stream["captions"][0],
@@ -68,19 +69,30 @@ export const CaptionsSelector = () => {
         isVisible={isTrue}
         onBackdropPress={off}
         supportedOrientations={["portrait", "landscape"]}
+        style={{
+          width: "35%",
+          justifyContent: "center",
+          alignSelf: "center",
+        }}
       >
         <ScrollView className="flex-1 bg-gray-900">
           <Text className="text-center font-bold">Select subtitle</Text>
           {captions?.map((caption) => (
-            <Button
+            <Pressable
+              className="flex w-full flex-row justify-between p-3"
               key={caption.id}
-              title={caption.language}
               onPress={() => {
                 downloadAndSetCaption(caption);
                 off();
               }}
-              className="max-w-16"
-            />
+            >
+              <Text>{getPrettyLanguageNameFromLocale(caption.language)}</Text>
+              <MaterialCommunityIcons
+                name="download"
+                size={24}
+                color={colors.primary[300]}
+              />
+            </Pressable>
           ))}
         </ScrollView>
       </Modal>

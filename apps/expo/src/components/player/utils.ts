@@ -1,3 +1,5 @@
+import iso from "iso-639-1";
+
 export const mapMillisecondsToTime = (milliseconds: number): string => {
   const hours = Math.floor(milliseconds / (1000 * 60 * 60));
   const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
@@ -16,3 +18,8 @@ export const mapMillisecondsToTime = (milliseconds: number): string => {
 
   return formattedTime;
 };
+
+export function getPrettyLanguageNameFromLocale(locale: string): string | null {
+  const language = iso.getName(locale);
+  return language;
+}
