@@ -5,8 +5,8 @@ import type { MakeSlice } from "./types";
 import type { ItemData } from "~/components/item/item";
 
 export enum PlayerStatus {
-  SCRAPING = "scraping",
-  READY = "ready",
+  SCRAPING,
+  READY,
 }
 
 export interface InterfaceSlice {
