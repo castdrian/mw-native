@@ -1,9 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import Colors from "@movie-web/tailwind-config/colors";
+
+import SearchTabContext from "./SearchTabContext";
 
 export default function Searchbar({
   onSearchChange,
@@ -12,6 +14,14 @@ export default function Searchbar({
 }) {
   const [keyword, setKeyword] = useState("");
   const inputRef = useRef<TextInput>(null);
+
+  const { focusSearchInputRef } = useContext(SearchTabContext);
+
+  useEffect(() => {
+    focusSearchInputRef.current = () => {
+      inputRef.current?.focus();
+    };
+  }, [focusSearchInputRef]);
 
   useFocusEffect(
     useCallback(() => {
