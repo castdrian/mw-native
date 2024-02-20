@@ -9,10 +9,13 @@ export const useVolume = () => {
   const volume = useSharedValue(1);
   const debouncedVolume = useDebounce(volume.value, 20);
 
-  const handleVolumeChange = useCallback((newValue: number) => {
-    volume.value = newValue;
-    setShowVolumeOverlay(true);
-  }, []);
+  const handleVolumeChange = useCallback(
+    (newValue: number) => {
+      volume.value = newValue;
+      setShowVolumeOverlay(true);
+    },
+    [volume],
+  );
 
   return {
     showVolumeOverlay: debouncedShowVolumeOverlay,
