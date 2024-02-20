@@ -4,7 +4,10 @@ import type { SeasonDetails } from "@movie-web/tmdb";
 import type { MakeSlice } from "./types";
 import type { ItemData } from "~/components/item/item";
 
-export type PlayerStatus = "scraping" | "ready";
+export enum PlayerStatus {
+  SCRAPING = "scraping",
+  READY = "ready",
+}
 
 export interface InterfaceSlice {
   interface: {
@@ -41,7 +44,7 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
     seasonData: null,
     selectedCaption: null,
     hlsTracks: null,
-    playerStatus: "scraping",
+    playerStatus: PlayerStatus.SCRAPING,
   },
   setIsIdle: (state) => {
     set((s) => {
@@ -105,7 +108,7 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
         seasonData: null,
         selectedCaption: null,
         hlsTracks: null,
-        playerStatus: "scraping",
+        playerStatus: PlayerStatus.SCRAPING,
       },
     }));
   },

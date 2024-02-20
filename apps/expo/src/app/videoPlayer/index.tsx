@@ -4,6 +4,7 @@ import type { ItemData } from "~/components/item/item";
 import { ScraperProcess } from "~/components/player/ScraperProcess";
 import { VideoPlayer } from "~/components/player/VideoPlayer";
 import { usePlayer } from "~/hooks/player/usePlayer";
+import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
@@ -20,7 +21,8 @@ export default function VideoPlayerWrapper() {
 
   void presentFullscreenPlayer();
 
-  if (playerStatus === "scraping") return <ScraperProcess data={data} />;
+  if (playerStatus === PlayerStatus.SCRAPING)
+    return <ScraperProcess data={data} />;
 
-  if (playerStatus === "ready") return <VideoPlayer />;
+  if (playerStatus === PlayerStatus.READY) return <VideoPlayer />;
 }
