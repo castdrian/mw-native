@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useRouter } from "expo-router";
 
+import type { RunnerEvent } from "@movie-web/provider-utils";
 import {
   extractTracksFromHLS,
   getVideoStream,
@@ -28,6 +29,13 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
   const setPlayerStatus = usePlayerStore((state) => state.setPlayerStatus);
   const setSourceId = usePlayerStore((state) => state.setSourceId);
   const setMeta = usePlayerStore((state) => state.setMeta);
+  const [checkedSource, setCheckedSource] = useState("");
+
+  const handleEvent = (event: RunnerEvent) => {
+    if (typeof event === "string") {
+      setCheckedSource(event);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +80,12 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
       });
       const streamResult = await getVideoStream({
         media: scrapeMedia,
+        events: {
+          // init: handleEvent,
+          // update: handleEvent,
+          // discoverEmbeds: handleEvent,
+          start: handleEvent,
+        },
       });
       if (!streamResult) return router.back();
       setStream(streamResult.stream);
@@ -107,7 +121,9 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
     <View className="flex-1">
       <View className="flex-1 items-center justify-center bg-black">
         <View className="flex flex-col items-center">
-          <Text className="mb-4 text-2xl text-white">Checking sources</Text>
+          <Text className="mb-4 text-2xl text-white">
+            Checking {checkedSource}
+          </Text>
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       </View>
