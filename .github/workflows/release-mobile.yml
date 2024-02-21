@@ -21,7 +21,7 @@ jobs:
             fetch-depth: 0
   
         - name: Automated Version Bump
-          uses: phips28/gh-action-bump-version@v10.1.1
+          uses: phips28/gh-action-bump-version@v11.0.0
           with:
             skip-tag:  'true'
             commit-message: 'chore: bump mobile version to {{version}} [skip ci]'
