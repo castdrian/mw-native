@@ -20,6 +20,5 @@ export const mapMillisecondsToTime = (milliseconds: number): string => {
 };
 
 export function getPrettyLanguageNameFromLocale(locale: string): string | null {
-  const language = iso.getName(locale);
-  return language;
+  return iso.getName(locale);
 }
