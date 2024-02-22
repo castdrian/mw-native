@@ -65,6 +65,9 @@ importers:
       expo-constants:
         specifier: ~15.4.5
         version: 15.4.5(expo@50.0.5)
+      expo-haptics:
+        specifier: ~12.8.1
+        version: 12.8.1(expo@50.0.5)
       expo-linking:
         specifier: ~6.2.2
         version: 6.2.2(expo@50.0.5)
@@ -5613,6 +5616,14 @@ packages:
     dependencies:
       expo: 50.0.5(@babel/core@7.23.9)(@react-native/babel-preset@0.73.20)
       fontfaceobserver: 2.3.0
+    dev: false
+
+  /expo-haptics@12.8.1(expo@50.0.5):
+    resolution: {integrity: sha512-ntLsHkfle8K8w9MW8pZEw92ZN3sguaGUSSIxv30fPKNeQFu7Cq/h47Qv3tONv2MO3wU48N9FbKnant6XlfptpA==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 50.0.5(@babel/core@7.23.9)(@react-native/babel-preset@0.73.20)
     dev: false
 
   /expo-keep-awake@12.8.2(expo@50.0.5):

@@ -51,6 +51,7 @@ export const VideoPlayer = () => {
 
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
+  const hlsTracks = usePlayerStore((state) => state.interface.hlsTracks);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -136,7 +137,7 @@ export const VideoPlayer = () => {
     const initializePlayer = async () => {
       if (!stream) {
         await dismissFullscreenPlayer();
-        return router.push("/(tabs)");
+        return router.back();
       }
       setIsLoading(true);
 
@@ -144,6 +145,7 @@ export const VideoPlayer = () => {
 
       if (stream.type === "hls") {
         url = stream.playlist;
+        console.log(hlsTracks);
       }
 
       if (stream.type === "file") {
@@ -153,7 +155,7 @@ export const VideoPlayer = () => {
 
       if (!url) {
         await dismissFullscreenPlayer();
-        return router.push("/(tabs)");
+        return router.back();
       }
 
       setVideoSrc({
@@ -179,7 +181,7 @@ export const VideoPlayer = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [dismissFullscreenPlayer, hasStartedPlaying, router, stream]);
+  }, [dismissFullscreenPlayer, hasStartedPlaying, hlsTracks, router, stream]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
@@ -189,8 +191,6 @@ export const VideoPlayer = () => {
     setIsLoading(false);
     setHasStartedPlaying(true);
   };
-
-  console.log(videoSrc, isLoading);
 
   return (
     <GestureDetector gesture={composedGesture}>
