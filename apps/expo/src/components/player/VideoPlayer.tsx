@@ -10,6 +10,7 @@ import {
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS, useSharedValue } from "react-native-reanimated";
 import { ResizeMode, Video } from "expo-av";
+import * as Haptics from "expo-haptics";
 import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
@@ -58,6 +59,7 @@ export const VideoPlayer = () => {
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   };
 
   const pinchGesture = Gesture.Pinch().onUpdate((e) => {
