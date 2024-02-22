@@ -147,7 +147,6 @@ export const VideoPlayer = () => {
 
       if (stream.type === "hls") {
         url = stream.playlist;
-        console.log(hlsTracks);
       }
 
       if (stream.type === "file") {

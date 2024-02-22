@@ -92,7 +92,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
 
       if (streamResult.stream.type === "hls") {
         const tracks = await extractTracksFromHLS(
-          streamResult.stream.playlist,
+          streamResult.stream.playlist, // multiple track example: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
           {
             ...streamResult.stream.preferredHeaders,
             ...streamResult.stream.headers,
