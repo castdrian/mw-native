@@ -113,17 +113,26 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
         };
 
         if (tracks?.audio.length) {
-          const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
-            uri: constructFullUrl(
-              (streamResult.stream as HlsBasedStream).playlist,
-              track.uri,
-            ),
-            name: (track.properties[0]?.attributes.name as string) ?? "Unknown",
-            language:
-              (track.properties[0]?.attributes.language as string) ?? "Unknown",
-            active:
-              (track.properties[0]?.attributes.default as boolean) ?? false,
-          }));
+          const audioTracks: AudioTrack[] = tracks.audio
+            .map((track) => ({
+              uri: constructFullUrl(
+                (streamResult.stream as HlsBasedStream).playlist,
+                track.uri,
+              ),
+              name:
+                (track.properties[0]?.attributes.name as string) ?? "Unknown",
+              language:
+                (track.properties[0]?.attributes.language as string) ??
+                "Unknown",
+              active:
+                (track.properties[0]?.attributes.default as boolean) ?? false,
+            }))
+            .filter((track, index, self) => {
+              const trackUriSet = new Set(self.map((t) => t.uri));
+              return (
+                !trackUriSet.has(track.uri) || trackUriSet.size === index + 1
+              );
+            });
           setAudioTracks(audioTracks);
         }
       }
