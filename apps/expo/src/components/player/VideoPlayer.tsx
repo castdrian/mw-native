@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS, useSharedValue } from "react-native-reanimated";
-import { ResizeMode, Video } from "expo-av";
+import { Audio, ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
 import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
@@ -50,12 +50,11 @@ export const VideoPlayer = () => {
   const router = useRouter();
   const scale = useSharedValue(1);
   const [lastVelocityY, setLastVelocityY] = useState(0);
+  const [audioObject, setAudioObject] = useState<Audio.Sound | null>(null);
 
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
-  const _selectedAudioTrack = useAudioTrackStore(
-    (state) => state.selectedTrack,
-  );
+  const selectedAudioTrack = useAudioTrackStore((state) => state.selectedTrack);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -162,6 +161,28 @@ export const VideoPlayer = () => {
         return router.back();
       }
 
+      const loadAudioTrack = async () => {
+        if (selectedAudioTrack) {
+          const { uri } = selectedAudioTrack;
+          const sound = new Audio.Sound();
+          await sound.loadAsync({
+            uri,
+            headers: {
+              ...stream.headers,
+              ...stream.preferredHeaders,
+            },
+          });
+          setAudioObject(sound);
+        } else {
+          if (audioObject) {
+            await audioObject.unloadAsync();
+            setAudioObject(null);
+          }
+        }
+      };
+
+      void loadAudioTrack();
+
       setVideoSrc({
         uri: url,
         headers: {
@@ -184,8 +205,18 @@ export const VideoPlayer = () => {
 
     return () => {
       clearTimeout(timeout);
+      if (audioObject) {
+        void audioObject.unloadAsync();
+      }
     };
-  }, [dismissFullscreenPlayer, hasStartedPlaying, router, stream]);
+  }, [
+    audioObject,
+    dismissFullscreenPlayer,
+    hasStartedPlaying,
+    router,
+    selectedAudioTrack,
+    stream,
+  ]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
