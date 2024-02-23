@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import type { RunnerEvent } from "@movie-web/provider-utils";
+import type { HlsBasedStream, RunnerEvent } from "@movie-web/provider-utils";
 import {
   extractTracksFromHLS,
   getVideoStream,
@@ -94,7 +94,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
 
       if (streamResult.stream.type === "hls") {
         const tracks = await extractTracksFromHLS(
-          streamResult.stream.playlist, // multiple track example: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+          streamResult.stream.playlist, // multiple tracks example: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
           {
             ...streamResult.stream.preferredHeaders,
             ...streamResult.stream.headers,
@@ -102,9 +102,22 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
         );
         if (tracks) setHlsTracks(tracks);
 
+        const constructFullUrl = (playlistUrl: string, uri: string) => {
+          const baseUrl = playlistUrl.substring(
+            0,
+            playlistUrl.lastIndexOf("/") + 1,
+          );
+          return uri.startsWith("http://") || uri.startsWith("https://")
+            ? uri
+            : baseUrl + uri;
+        };
+
         if (tracks?.audio.length) {
           const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
-            uri: track.uri,
+            uri: constructFullUrl(
+              (streamResult.stream as HlsBasedStream).playlist,
+              track.uri,
+            ),
             name: (track.properties[0]?.attributes.name as string) ?? "Unknown",
             language:
               (track.properties[0]?.attributes.language as string) ?? "Unknown",
