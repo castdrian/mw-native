@@ -11,6 +11,7 @@ import {
 import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "../item/item";
+import type { AudioTrack } from "~/stores/player/slices/interface";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
@@ -26,6 +27,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
   const setStream = usePlayerStore((state) => state.setCurrentStream);
   const setSeasonData = usePlayerStore((state) => state.setSeasonData);
   const setHlsTracks = usePlayerStore((state) => state.setHlsTracks);
+  const setAudioTracks = usePlayerStore((state) => state.setAudioTracks);
   const setPlayerStatus = usePlayerStore((state) => state.setPlayerStatus);
   const setSourceId = usePlayerStore((state) => state.setSourceId);
   const setMeta = usePlayerStore((state) => state.setMeta);
@@ -99,6 +101,16 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
           },
         );
         if (tracks) setHlsTracks(tracks);
+
+        if (tracks?.audio.length) {
+          const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
+            uri: track.uri,
+            name: (track.properties[0]?.attributes.name as string) ?? "Unknown",
+            language:
+              (track.properties[0]?.attributes.language as string) ?? "Unknown",
+          }));
+          setAudioTracks(audioTracks);
+        }
       }
       setPlayerStatus(PlayerStatus.READY);
       setSourceId(streamResult.sourceId);
@@ -115,6 +127,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
     setMeta,
     meta?.season?.number,
     meta?.episode?.number,
+    setAudioTracks,
   ]);
 
   return (

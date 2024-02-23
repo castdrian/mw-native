@@ -9,6 +9,12 @@ export enum PlayerStatus {
   READY,
 }
 
+export interface AudioTrack {
+  uri: string;
+  name: string;
+  language: string;
+}
+
 export interface InterfaceSlice {
   interface: {
     isIdle: boolean;
@@ -20,6 +26,7 @@ export interface InterfaceSlice {
     seasonData: SeasonDetails | null;
     selectedCaption: Stream["captions"][0] | null;
     hlsTracks: HLSTracks | null;
+    audioTracks: AudioTrack[] | null;
     playerStatus: PlayerStatus;
   };
   setIsIdle(state: boolean): void;
@@ -29,6 +36,7 @@ export interface InterfaceSlice {
   setData(data: ItemData): void;
   setSeasonData(data: SeasonDetails): void;
   setHlsTracks(tracks: HLSTracks): void;
+  setAudioTracks(tracks: AudioTrack[]): void;
   setPlayerStatus(status: PlayerStatus): void;
   reset: () => void;
 }
@@ -44,6 +52,7 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
     seasonData: null,
     selectedCaption: null,
     hlsTracks: null,
+    audioTracks: null,
     playerStatus: PlayerStatus.SCRAPING,
   },
   setIsIdle: (state) => {
@@ -91,6 +100,11 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
       s.interface.hlsTracks = tracks;
     });
   },
+  setAudioTracks: (tracks) => {
+    set((s) => {
+      s.interface.audioTracks = tracks;
+    });
+  },
   setPlayerStatus: (status) => {
     set((s) => {
       s.interface.playerStatus = status;
@@ -108,6 +122,7 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
         seasonData: null,
         selectedCaption: null,
         hlsTracks: null,
+        audioTracks: null,
         playerStatus: PlayerStatus.SCRAPING,
       },
     }));
