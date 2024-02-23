@@ -3,6 +3,7 @@ import { TouchableOpacity, View } from "react-native";
 
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
+import { AudioTrackSelector } from "./AudioTrackSelector";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
 import { ProgressBar } from "./ProgressBar";
@@ -60,6 +61,7 @@ export const BottomControls = () => {
           <SeasonSelector />
           <CaptionsSelector />
           <SourceSelector />
+          <AudioTrackSelector />
         </View>
       </View>
     );

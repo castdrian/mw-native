@@ -11,7 +11,7 @@ import { Button } from "../ui/Button";
 import { Text } from "../ui/Text";
 import { Controls } from "./Controls";
 
-export const CaptionsSelector = () => {
+export const AudioTrackSelector = () => {
   const tracks = usePlayerStore((state) => state.interface.audioTracks);
 
   const setSelectedAudioTrack = useAudioTrackStore(
