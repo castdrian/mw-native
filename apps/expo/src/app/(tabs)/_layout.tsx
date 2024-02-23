@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { Platform, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 
 import Colors from "@movie-web/tailwind-config/colors";
 
@@ -28,6 +29,11 @@ export default function TabLayout() {
                 focusSearchInputRef.current();
                 break;
             }
+          },
+          focus: () => {
+            void ScreenOrientation.lockAsync(
+              ScreenOrientation.OrientationLock.PORTRAIT_UP,
+            );
           },
         })}
         screenOptions={{
