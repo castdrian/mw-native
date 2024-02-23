@@ -59,7 +59,7 @@ export const VideoPlayer = () => {
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
-    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
   const pinchGesture = Gesture.Pinch().onUpdate((e) => {

@@ -22,9 +22,7 @@ export default function TabLayout() {
         }}
         screenListeners={({ route }) => ({
           tabPress: () => {
-            void Haptics.notificationAsync(
-              Haptics.NotificationFeedbackType.Success,
-            );
+            void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             switch (route.name) {
               case "search":
                 focusSearchInputRef.current();
