@@ -52,7 +52,7 @@ export const VideoPlayer = () => {
 
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
-  const hlsTracks = usePlayerStore((state) => state.interface.hlsTracks);
+  const audioTracks = usePlayerStore((state) => state.interface.audioTracks);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -146,6 +146,7 @@ export const VideoPlayer = () => {
       let url = null;
 
       if (stream.type === "hls") {
+        console.log(audioTracks);
         url = stream.playlist;
       }
 
@@ -182,7 +183,7 @@ export const VideoPlayer = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [dismissFullscreenPlayer, hasStartedPlaying, hlsTracks, router, stream]);
+  }, [audioTracks, dismissFullscreenPlayer, hasStartedPlaying, router, stream]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
