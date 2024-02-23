@@ -50,10 +50,10 @@ jobs:
          - name: Rename apk
            run: cd apps/expo && mv android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/movie-web.apk
         
-         - name: Comment on pull request
-           uses: thollander/actions-comment-pull-request@v2
-           with:
-            filePath: ./apps/expo/android/app/build/outputs/apk/release/movie-web.apk
+        #  - name: Comment on pull request
+        #    uses: thollander/actions-comment-pull-request@v2
+        #    with:
+        #     filePath: ./apps/expo/android/app/build/outputs/apk/release/movie-web.apk
     
          - name: Upload movie-web.apk as artifact
            uses: actions/upload-artifact@v4
@@ -103,10 +103,10 @@ jobs:
             cd ios/build/Build/Products/Release-iphoneos
             zip -r ../../../movie-web.ipa Payload
     
-         - name: Comment on pull request
-           uses: thollander/actions-comment-pull-request@v2
-           with:
-            filePath: ./apps/expo/ios/build/movie-web.ipa
+        #  - name: Comment on pull request
+        #    uses: thollander/actions-comment-pull-request@v2
+        #    with:
+        #     filePath: ./apps/expo/ios/build/movie-web.ipa
     
          - name: Upload movie-web.ipa as artifact
            uses: actions/upload-artifact@v4
