@@ -20,6 +20,7 @@ import { findHighestQuality } from "@movie-web/provider-utils";
 import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlayer } from "~/hooks/player/usePlayer";
 import { useVolume } from "~/hooks/player/useVolume";
+import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
 import { CaptionRenderer } from "./CaptionRenderer";
@@ -53,6 +54,9 @@ export const VideoPlayer = () => {
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
   const audioTracks = usePlayerStore((state) => state.interface.audioTracks);
+  const _selectedAudioTrack = useAudioTrackStore(
+    (state) => state.selectedTrack,
+  );
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -146,7 +150,6 @@ export const VideoPlayer = () => {
       let url = null;
 
       if (stream.type === "hls") {
-        console.log(audioTracks);
         url = stream.playlist;
       }
 
