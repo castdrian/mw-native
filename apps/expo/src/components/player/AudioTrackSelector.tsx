@@ -11,6 +11,13 @@ import { Button } from "../ui/Button";
 import { Text } from "../ui/Text";
 import { Controls } from "./Controls";
 
+export interface AudioTrack {
+  uri: string;
+  name: string;
+  language: string;
+  active?: boolean;
+}
+
 export const AudioTrackSelector = () => {
   const tracks = usePlayerStore((state) => state.interface.audioTracks);
 
@@ -61,6 +68,13 @@ export const AudioTrackSelector = () => {
               }}
             >
               <Text>{track.name}</Text>
+              {track.active && (
+                <MaterialCommunityIcons
+                  name="check-circle"
+                  size={24}
+                  color={colors.primary[300]}
+                />
+              )}
             </Pressable>
           ))}
         </ScrollView>

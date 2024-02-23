@@ -11,7 +11,7 @@ import {
 import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "../item/item";
-import type { AudioTrack } from "~/stores/player/slices/interface";
+import type { AudioTrack } from "./AudioTrackSelector";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
@@ -121,6 +121,8 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
             name: (track.properties[0]?.attributes.name as string) ?? "Unknown",
             language:
               (track.properties[0]?.attributes.language as string) ?? "Unknown",
+            active:
+              (track.properties[0]?.attributes.default as boolean) ?? false,
           }));
           setAudioTracks(audioTracks);
         }

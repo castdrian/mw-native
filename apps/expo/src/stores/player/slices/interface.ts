@@ -3,16 +3,11 @@ import type { SeasonDetails } from "@movie-web/tmdb";
 
 import type { MakeSlice } from "./types";
 import type { ItemData } from "~/components/item/item";
+import type { AudioTrack } from "~/components/player/AudioTrackSelector";
 
 export enum PlayerStatus {
   SCRAPING,
   READY,
-}
-
-export interface AudioTrack {
-  uri: string;
-  name: string;
-  language: string;
 }
 
 export interface InterfaceSlice {

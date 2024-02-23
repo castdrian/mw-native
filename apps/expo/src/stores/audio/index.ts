@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import type { AudioTrack } from "../player/slices/interface";
+import type { AudioTrack } from "~/components/player/AudioTrackSelector";
 
 export interface AudioTrackStore {
   selectedTrack: AudioTrack | null;
