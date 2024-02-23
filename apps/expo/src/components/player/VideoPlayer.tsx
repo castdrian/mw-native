@@ -53,7 +53,6 @@ export const VideoPlayer = () => {
 
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
-  const audioTracks = usePlayerStore((state) => state.interface.audioTracks);
   const _selectedAudioTrack = useAudioTrackStore(
     (state) => state.selectedTrack,
   );
@@ -186,7 +185,7 @@ export const VideoPlayer = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [audioTracks, dismissFullscreenPlayer, hasStartedPlaying, router, stream]);
+  }, [dismissFullscreenPlayer, hasStartedPlaying, router, stream]);
 
   const onVideoLoadStart = () => {
     setIsLoading(true);
