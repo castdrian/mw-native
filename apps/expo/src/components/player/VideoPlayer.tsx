@@ -55,6 +55,7 @@ export const VideoPlayer = () => {
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
   const selectedAudioTrack = useAudioTrackStore((state) => state.selectedTrack);
+  const videoRef = usePlayerStore((state) => state.videoRef);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -226,6 +227,26 @@ export const VideoPlayer = () => {
     setIsLoading(false);
     setHasStartedPlaying(true);
   };
+
+  useEffect(() => {
+    const synchronizePlayback = async () => {
+      if (videoRef && hasStartedPlaying) {
+        const videoStatus = await videoRef.getStatusAsync();
+
+        if (selectedAudioTrack && audioObject && videoStatus.isLoaded) {
+          await videoRef.setIsMutedAsync(true);
+          await audioObject.setPositionAsync(videoStatus.positionMillis);
+          await audioObject.playAsync();
+        } else {
+          await videoRef.setIsMutedAsync(false);
+        }
+      }
+    };
+
+    if (hasStartedPlaying) {
+      void synchronizePlayback();
+    }
+  }, [audioObject, hasStartedPlaying, selectedAudioTrack, videoRef]);
 
   return (
     <GestureDetector gesture={composedGesture}>
