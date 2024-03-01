@@ -18,6 +18,7 @@ import * as StatusBar from "expo-status-bar";
 import { findHighestQuality } from "@movie-web/provider-utils";
 
 import { useBrightness } from "~/hooks/player/useBrightness";
+import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
 import { usePlayer } from "~/hooks/player/usePlayer";
 import { useVolume } from "~/hooks/player/useVolume";
 import { useAudioTrackStore } from "~/stores/audio";
@@ -41,6 +42,7 @@ export const VideoPlayer = () => {
     setShowVolumeOverlay,
     handleVolumeChange,
   } = useVolume();
+  const { currentSpeed } = usePlaybackSpeed();
   const { dismissFullscreenPlayer } = usePlayer();
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
@@ -257,6 +259,7 @@ export const VideoPlayer = () => {
           shouldPlay={shouldPlay}
           resizeMode={resizeMode}
           volume={currentVolume.value}
+          rate={currentSpeed.value}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}

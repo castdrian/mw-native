@@ -6,6 +6,7 @@ import { Text } from "../ui/Text";
 import { AudioTrackSelector } from "./AudioTrackSelector";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
+import { PlaybackSpeedSelector } from "./PlaybackSpeedSelector";
 import { ProgressBar } from "./ProgressBar";
 import { SeasonSelector } from "./SeasonEpisodeSelector";
 import { SourceSelector } from "./SourceSelector";
@@ -62,6 +63,7 @@ export const BottomControls = () => {
           <CaptionsSelector />
           <SourceSelector />
           <AudioTrackSelector />
+          <PlaybackSpeedSelector />
         </View>
       </View>
     );
