@@ -231,6 +231,12 @@ export const VideoPlayer = () => {
   };
 
   useEffect(() => {
+    if (videoRef) {
+      void videoRef.setRateAsync(currentSpeed.value, true);
+    }
+  }, [currentSpeed.value, videoRef]);
+
+  useEffect(() => {
     const synchronizePlayback = async () => {
       if (videoRef && hasStartedPlaying) {
         const videoStatus = await videoRef.getStatusAsync();
