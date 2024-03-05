@@ -7,7 +7,7 @@ import Colors from "@movie-web/tailwind-config/colors";
 
 import SearchTabContext from "./SearchTabContext";
 
-export default function Searchbar({
+export function SearchBar({
   onSearchChange,
 }: {
   onSearchChange: (text: string) => void;

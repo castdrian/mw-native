@@ -9,7 +9,7 @@ import Colors from "@movie-web/tailwind-config/colors";
 import { MovieWebSvg } from "~/components/Icon";
 import SvgTabBarIcon from "~/components/SvgTabBarIcon";
 import TabBarIcon from "~/components/TabBarIcon";
-import SearchTabContext from "./search/SearchTabContext";
+import SearchTabContext from "../../components/ui/SearchTabContext";
 
 export default function TabLayout() {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -79,7 +79,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="search"
           options={{
-            title: "Search",
+            title: "Home",
             tabBarLabel: "",
             tabBarIcon: ({ focused }) => (
               <View

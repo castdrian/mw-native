@@ -18,10 +18,10 @@ import {
   watching,
 } from "~/components/item/ItemListSection";
 import ScreenLayout from "~/components/layout/ScreenLayout";
+import { SearchBar } from "~/components/ui/Searchbar";
 import { Text } from "~/components/ui/Text";
-import Searchbar from "./Searchbar";
 
-export default function SearchScreen() {
+export default function HomeScreenContent() {
   const [query, setQuery] = useState("");
   const translateY = useSharedValue(0);
   const fadeAnim = useSharedValue(1);
@@ -146,7 +146,7 @@ export default function SearchScreen() {
           animatedStyle,
         ]}
       >
-        <Searchbar onSearchChange={setQuery} />
+        <SearchBar onSearchChange={setQuery} />
       </Animated.View>
     </View>
   );
