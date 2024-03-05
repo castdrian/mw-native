@@ -29,23 +29,23 @@ export default function SearchScreen() {
   const searchResultsScale = useSharedValue(0.95);
   const [searchResultsLoaded, setSearchResultsLoaded] = useState(false);
 
-  const { data, isSuccess } = useQuery({
+  const { data } = useQuery({
     queryKey: ["searchResults", query],
     queryFn: () => fetchSearchResults(query),
   });
 
   useEffect(() => {
-    if (isSuccess && data && data.length > 0) {
-      searchResultsOpacity.value = withTiming(1, { duration: 500 });
-      searchResultsScale.value = withTiming(1, { duration: 500 });
-      setSearchResultsLoaded(true);
-    } else if (!query) {
-      searchResultsOpacity.value = 0;
-      searchResultsScale.value = 0.95;
-      setSearchResultsLoaded(false);
-    }
-  }, [data, isSuccess, query, searchResultsOpacity, searchResultsScale]);
-
+	if (data && data.length > 0 && query) {
+	  searchResultsOpacity.value = withTiming(1, { duration: 500 });
+	  searchResultsScale.value = withTiming(1, { duration: 500 });
+	  setSearchResultsLoaded(true);
+	} else if (!query) {
+	  searchResultsOpacity.value = withTiming(0, { duration: 500 });
+	  searchResultsScale.value = withTiming(0.95, { duration: 500 });
+	  setSearchResultsLoaded(false);
+	}
+  }, [data, query, searchResultsOpacity, searchResultsScale]);
+  
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener(
       "keyboardWillShow",
