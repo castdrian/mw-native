@@ -25,6 +25,8 @@ export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const translateY = useSharedValue(0);
   const fadeAnim = useSharedValue(1);
+  const searchResultsOpacity = useSharedValue(0);
+  const searchResultsScale = useSharedValue(0.95);
   const [searchResultsLoaded, setSearchResultsLoaded] = useState(false);
 
   const { data, isSuccess } = useQuery({
@@ -34,11 +36,15 @@ export default function SearchScreen() {
 
   useEffect(() => {
     if (isSuccess && data && data.length > 0) {
+      searchResultsOpacity.value = withTiming(1, { duration: 500 });
+      searchResultsScale.value = withTiming(1, { duration: 500 });
       setSearchResultsLoaded(true);
-    } else {
+    } else if (!query) {
+      searchResultsOpacity.value = 0;
+      searchResultsScale.value = 0.95;
       setSearchResultsLoaded(false);
     }
-  }, [data, isSuccess]);
+  }, [data, isSuccess, query, searchResultsOpacity, searchResultsScale]);
 
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener(
@@ -77,6 +83,13 @@ export default function SearchScreen() {
     };
   });
 
+  const searchResultsStyle = useAnimatedStyle(() => {
+    return {
+      opacity: searchResultsOpacity.value,
+      transform: [{ scale: searchResultsScale.value }],
+    };
+  });
+
   const handleScrollBegin = () => {
     fadeAnim.value = withTiming(0, {
       duration: 100,
@@ -106,13 +119,15 @@ export default function SearchScreen() {
           }
         >
           {searchResultsLoaded ? (
-            <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
-              {data?.map((item, index) => (
-                <View key={index} className="basis-1/2 px-3 pb-3">
-                  <Item data={item} />
-                </View>
-              ))}
-            </View>
+            <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
+              <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
+                {data?.map((item, index) => (
+                  <View key={index} className="basis-1/2 px-3 pb-3">
+                    <Item data={item} />
+                  </View>
+                ))}
+              </View>
+            </Animated.View>
           ) : (
             <View style={{ flex: 1 }}>
               <ItemListSection title="Bookmarks" items={bookmarks} />
