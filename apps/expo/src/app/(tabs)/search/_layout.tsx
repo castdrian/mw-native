@@ -35,17 +35,17 @@ export default function SearchScreen() {
   });
 
   useEffect(() => {
-	if (data && data.length > 0 && query) {
-	  searchResultsOpacity.value = withTiming(1, { duration: 500 });
-	  searchResultsScale.value = withTiming(1, { duration: 500 });
-	  setSearchResultsLoaded(true);
-	} else if (!query) {
-	  searchResultsOpacity.value = withTiming(0, { duration: 500 });
-	  searchResultsScale.value = withTiming(0.95, { duration: 500 });
-	  setSearchResultsLoaded(false);
-	}
+    if (data && data.length > 0 && query) {
+      searchResultsOpacity.value = withTiming(1, { duration: 500 });
+      searchResultsScale.value = withTiming(1, { duration: 500 });
+      setSearchResultsLoaded(true);
+    } else if (!query) {
+      searchResultsOpacity.value = withTiming(0, { duration: 500 });
+      searchResultsScale.value = withTiming(0.95, { duration: 500 });
+      setSearchResultsLoaded(false);
+    }
   }, [data, query, searchResultsOpacity, searchResultsScale]);
-  
+
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener(
       "keyboardWillShow",
@@ -129,10 +129,14 @@ export default function SearchScreen() {
               </View>
             </Animated.View>
           ) : (
-            <View style={{ flex: 1 }}>
+            <ScrollView
+              scrollEnabled={
+                bookmarks.length > 0 || watching.length > 0 ? true : false
+              }
+            >
               <ItemListSection title="Bookmarks" items={bookmarks} />
               <ItemListSection title="Continue Watching" items={watching} />
-            </View>
+            </ScrollView>
           )}
         </ScreenLayout>
       </ScrollView>
