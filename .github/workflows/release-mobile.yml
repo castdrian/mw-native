@@ -164,13 +164,6 @@ jobs:
         with:
           node-version: 21
 
-      - name: Create app repo
-        run: |
-          npm install -g altstore-github
-          cd apps/expo
-          npx altstore-github --config repo.config.json > app.json
-          mv app.json ../../pages/app.json
-
       - name: Get new version and release date
         id: vars
         run: |
