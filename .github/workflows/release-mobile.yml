@@ -144,42 +144,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  app-repo:
-    environment:
-       name: github-pages
-       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: [build-ios, release-app]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+#   app-repo:
+#     environment:
+#        name: github-pages
+#        url: ${{ steps.deployment.outputs.page_url }}
+#     runs-on: ubuntu-latest
+#     needs: [build-ios, release-app]
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 21
+#       - name: Install Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: 21
 
-      - name: Create app repo
-        run: |
-          npm install -g altstore-github
-          mkdir -p pages
-          cd apps/expo
-          npx altstore-github --config repo.config.json > app.json
-          mv app.json ../../pages/app.json
+#       - name: Create app repo
+#         run: |
+#           npm install -g altstore-github
+#           mkdir -p pages
+#           cd apps/expo
+#           npx altstore-github --config repo.config.json > app.json
+#           mv app.json ../../pages/app.json
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+#       - name: Setup Pages
+#         uses: actions/configure-pages@v4
 
-      - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
-        with:
-          source: ./pages
-          destination: ./_site
+#       - name: Build with Jekyll
+#         uses: actions/jekyll-build-pages@v1
+#         with:
+#           source: ./pages
+#           destination: ./_site
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v3
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v2
 
