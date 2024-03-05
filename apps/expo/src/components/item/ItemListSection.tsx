@@ -51,7 +51,9 @@ export const ItemListSection = ({
 }) => {
   return (
     <View>
-      <Text className="mb-2 mt-4 text-xl font-semibold">{title}</Text>
+      <Text className="mb-2 mt-4 text-xl font-semibold text-white">
+        {title}
+      </Text>
       <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
         {items.map((item, index) => (
           <View key={index} className="basis-1/2 px-3 pb-3">
