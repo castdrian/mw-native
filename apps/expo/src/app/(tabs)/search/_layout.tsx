@@ -12,6 +12,11 @@ import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import Item from "~/components/item/item";
+import {
+  bookmarks,
+  ItemListSection,
+  watching,
+} from "~/components/item/ItemListSection";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { Text } from "~/components/ui/Text";
 import Searchbar from "./Searchbar";
@@ -20,11 +25,20 @@ export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const translateY = useSharedValue(0);
   const fadeAnim = useSharedValue(1);
+  const [searchResultsLoaded, setSearchResultsLoaded] = useState(false);
 
-  const { data } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: ["searchResults", query],
     queryFn: () => fetchSearchResults(query),
   });
+
+  useEffect(() => {
+    if (isSuccess && data && data.length > 0) {
+      setSearchResultsLoaded(true);
+    } else {
+      setSearchResultsLoaded(false);
+    }
+  }, [data, isSuccess]);
 
   useEffect(() => {
     const keyboardWillShowListener = Keyboard.addListener(
@@ -91,13 +105,20 @@ export default function SearchScreen() {
             </View>
           }
         >
-          <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
-            {data?.map((item, index) => (
-              <View key={index} className="basis-1/2 px-3 pb-3">
-                <Item data={item} />
-              </View>
-            ))}
-          </View>
+          {searchResultsLoaded ? (
+            <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
+              {data?.map((item, index) => (
+                <View key={index} className="basis-1/2 px-3 pb-3">
+                  <Item data={item} />
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View style={{ flex: 1 }}>
+              <ItemListSection title="Bookmarks" items={bookmarks} />
+              <ItemListSection title="Continue Watching" items={watching} />
+            </View>
+          )}
         </ScreenLayout>
       </ScrollView>
       <Animated.View
