@@ -144,42 +144,61 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-#   app-repo:
-#     environment:
-#        name: github-pages
-#        url: ${{ steps.deployment.outputs.page_url }}
-#     runs-on: ubuntu-latest
-#     needs: [build-ios, release-app]
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v4
+  app-repo:
+    environment:
+       name: github-pages
+       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: [build-ios, release-app]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+    
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
 
-#       - name: Install Node.js
-#         uses: actions/setup-node@v4
-#         with:
-#           node-version: 21
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
 
-#       - name: Create app repo
-#         run: |
-#           npm install -g altstore-github
-#           mkdir -p pages
-#           cd apps/expo
-#           npx altstore-github --config repo.config.json > app.json
-#           mv app.json ../../pages/app.json
+      - name: Create app repo
+        run: |
+          npm install -g altstore-github
+          cd apps/expo
+          npx altstore-github --config repo.config.json > app.json
+          mv app.json ../../pages/app.json
 
-#       - name: Setup Pages
-#         uses: actions/configure-pages@v4
+      - name: Get new version and release date
+        id: vars
+        run: |
+              VERSION=$(jq -r '.version' package.json)
+              DATE=$(date -Iseconds)
+              echo "::set-output name=version::$VERSION"
+              echo "::set-output name=date::$DATE"
+  
+      - name: Update app-repo.json
+        run: |
+              IPA_SIZE=$(stat -c%s "movie-web.ipa")
+              jq '.apps[0].versions[0].version = "${{ steps.vars.outputs.version }}" | .apps[0].versions[0].date = "${{ steps.vars.outputs.date }}" | .apps[0].versions[0].size = $IPA_SIZE' apps/expo/app-repo.json > temp.json
+              mkdir -p pages
+              mv temp.json pages/repo.json
+  
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-#       - name: Build with Jekyll
-#         uses: actions/jekyll-build-pages@v1
-#         with:
-#           source: ./pages
-#           destination: ./_site
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./pages
+          destination: ./_site
 
-#       - name: Upload artifact
-#         uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
 
-#       - name: Deploy to GitHub Pages
-#         id: deployment
-#         uses: actions/deploy-pages@v2
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
 

@@ -1,0 +1,25 @@
+{
+  "name": "movie-web native apps",
+  "apps": [
+    {
+      "name": "movie-web",
+      "bundleIdentifier": "dev.movieweb.app",
+      "category": "entertainment",
+      "developerName": "movie-web",
+      "iconURL": "https://github.com/movie-web/native-app/blob/master/apps/expo/assets/images/icon.png?raw=true",
+      "localizedDescription": "This service works by displaying video files from third-party providers inside an intuitive and aesthetic user interface.",
+      "subtitle": "A small app for watching movies and shows easily",
+      "tintColor": "a87fd1",
+      "versions": [
+        {
+          "version": "",
+          "date": "",
+          "downloadURL": "https://github.com/movie-web/native-app/releases/latest/download/movie-web.ipa",
+          "size": 0
+        }
+      ],
+      "appPermissions": {}
+    }
+  ],
+  "news": []
+}
