@@ -49,6 +49,7 @@
     "react-native-css-interop": "^0.0.35",
     "react-native-gesture-handler": "~2.14.1",
     "react-native-modal": "^13.0.1",
+    "react-native-progress": "^5.0.1",
     "react-native-quick-base64": "^2.0.8",
     "react-native-quick-crypto": "^0.6.1",
     "react-native-reanimated": "~3.6.2",

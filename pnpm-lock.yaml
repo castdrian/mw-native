@@ -119,6 +119,9 @@ importers:
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.73.2)(react@18.2.0)
+      react-native-progress:
+        specifier: ^5.0.1
+        version: 5.0.1(react-native-svg@14.1.0)
       react-native-quick-base64:
         specifier: ^2.0.8
         version: 2.0.8(react-native@0.73.2)(react@18.2.0)
@@ -9251,6 +9254,15 @@ packages:
       react: 18.2.0
       react-native: 0.73.2(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
       react-native-animatable: 1.3.3
+    dev: false
+
+  /react-native-progress@5.0.1(react-native-svg@14.1.0):
+    resolution: {integrity: sha512-TYfJ4auAe5vubDma2yfFvt7ktSI+UCfysqJnkdHEcLXqAitRFOozgF/cLgN5VNi/iLdaf3ga1ETi2RF4jVZ/+g==}
+    peerDependencies:
+      react-native-svg: '*'
+    dependencies:
+      prop-types: 15.8.1
+      react-native-svg: 14.1.0(react-native@0.73.2)(react@18.2.0)
     dev: false
 
   /react-native-quick-base64@2.0.8(react-native@0.73.2)(react@18.2.0):
