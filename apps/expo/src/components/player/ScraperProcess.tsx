@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import type { HlsBasedStream, RunnerEvent } from "@movie-web/provider-utils";
+import type {
+  DiscoverEmbedsEvent,
+  HlsBasedStream,
+  InitEvent,
+  RunnerEvent,
+  UpdateEvent,
+} from "@movie-web/provider-utils";
 import {
   extractTracksFromHLS,
   getVideoStream,
@@ -20,6 +26,12 @@ interface ScraperProcessProps {
   data: ItemData;
 }
 
+enum ScrapeStatus {
+  LOADING = "loading",
+  SUCCESS = "success",
+  ERROR = "error",
+}
+
 export const ScraperProcess = ({ data }: ScraperProcessProps) => {
   const router = useRouter();
 
@@ -33,11 +45,47 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
   const setMeta = usePlayerStore((state) => state.setMeta);
   const [checkedSource, setCheckedSource] = useState("");
 
-  const handleEvent = (event: RunnerEvent) => {
+  function isInitEvent(event: RunnerEvent): event is InitEvent {
+    return (event as InitEvent).sourceIds !== undefined;
+  }
+
+  function isUpdateEvent(event: RunnerEvent): event is UpdateEvent {
+    return (event as UpdateEvent).percentage !== undefined;
+  }
+
+  function isDiscoverEmbedsEvent(
+    event: RunnerEvent,
+  ): event is DiscoverEmbedsEvent {
+    return (event as DiscoverEmbedsEvent).sourceId !== undefined;
+  }
+
+  const handleEvent = useCallback((event: RunnerEvent) => {
     if (typeof event === "string") {
       setCheckedSource(event);
+      setScrapeStatus({ status: ScrapeStatus.LOADING, progress: 10 });
+    } else if (isUpdateEvent(event)) {
+      switch (event.status) {
+        case ScrapeStatus.SUCCESS:
+          setScrapeStatus({ status: ScrapeStatus.SUCCESS, progress: 100 });
+          break;
+        case ScrapeStatus.ERROR as string:
+          setScrapeStatus({ status: ScrapeStatus.ERROR, progress: 0 });
+          break;
+        case ScrapeStatus.LOADING as string:
+      }
+      setCheckedSource(event.id);
+    } else if (isInitEvent(event) || isDiscoverEmbedsEvent(event)) {
+      setScrapeStatus((prevStatus) => ({
+        status: ScrapeStatus.LOADING,
+        progress: Math.min(prevStatus.progress + 20, 95),
+      }));
     }
-  };
+  }, []);
+
+  const [_scrapeStatus, setScrapeStatus] = useState({
+    status: ScrapeStatus.LOADING,
+    progress: 0,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,8 +132,8 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
         media: scrapeMedia,
         events: {
           // init: handleEvent,
-          // update: handleEvent,
-          // discoverEmbeds: handleEvent,
+          update: handleEvent,
+          discoverEmbeds: handleEvent,
           start: handleEvent,
         },
       });
@@ -94,7 +142,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
 
       if (streamResult.stream.type === "hls") {
         const tracks = await extractTracksFromHLS(
-          streamResult.stream.playlist, // multiple tracks example: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+          streamResult.stream.playlist,
           {
             ...streamResult.stream.preferredHeaders,
             ...streamResult.stream.headers,
@@ -154,6 +202,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
     meta?.season?.number,
     meta?.episode?.number,
     setAudioTracks,
+    handleEvent,
   ]);
 
   return (
@@ -164,6 +213,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
             Checking {checkedSource}
           </Text>
           <ActivityIndicator size="large" color="#0000ff" />
+          {/* <StatusCircle type={scrapeStatus.status} percentage={scrapeStatus.progress} /> */}
         </View>
       </View>
     </View>
