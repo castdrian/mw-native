@@ -33,8 +33,8 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   const formattedDownloaded = formatBytes(downloaded);
 
   return (
-    <View className="mb-4 rounded-lg border border-gray-300 p-4">
-      <Text className="mb-2 text-lg text-gray-300">{filename}</Text>
+    <View className="mb-4 rounded-lg border border-white p-4">
+      <Text className="mb-2 text-lg text-white">{filename}</Text>
       <ProgressBar
         progress={progress}
         width={null}

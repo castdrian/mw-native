@@ -11,9 +11,9 @@ export default function SettingsScreen() {
   return (
     <ScreenLayout title="Settings">
       <View className="p-4">
-        <Text className="mb-4 text-lg font-bold text-gray-300">Player</Text>
-        <View className="flex-row items-center justify-between rounded-lg border border-gray-300 px-4 py-2">
-          <Text className="text-md text-gray-300">Gesture Controls</Text>
+        <Text className="mb-4 text-lg font-bold text-white">Player</Text>
+        <View className="flex-row items-center justify-between rounded-lg border border-white px-4 py-2">
+          <Text className="text-md text-white">Gesture Controls</Text>
           <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
         </View>
       </View>
