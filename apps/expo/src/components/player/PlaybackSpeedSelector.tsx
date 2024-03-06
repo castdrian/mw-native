@@ -55,7 +55,7 @@ export const PlaybackSpeedSelector = () => {
               }}
             >
               <Text>{speed}</Text>
-              {speed === currentSpeed.value && (
+              {speed === currentSpeed && (
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={24}

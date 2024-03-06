@@ -228,13 +228,10 @@ export const VideoPlayer = () => {
   const onReadyForDisplay = () => {
     setIsLoading(false);
     setHasStartedPlaying(true);
-  };
-
-  useEffect(() => {
     if (videoRef) {
-      void videoRef.setRateAsync(currentSpeed.value, true);
+      void videoRef.setRateAsync(currentSpeed, true);
     }
-  }, [currentSpeed.value, videoRef]);
+  };
 
   useEffect(() => {
     const synchronizePlayback = async () => {
@@ -265,7 +262,7 @@ export const VideoPlayer = () => {
           shouldPlay={shouldPlay}
           resizeMode={resizeMode}
           volume={currentVolume.value}
-          rate={currentSpeed.value}
+          rate={currentSpeed}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}

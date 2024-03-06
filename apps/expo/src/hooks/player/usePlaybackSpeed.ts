@@ -1,18 +1,21 @@
 import { useCallback } from "react";
-import { useSharedValue } from "react-native-reanimated";
+
+import { usePlayerStore } from "~/stores/player/store";
 
 export const usePlaybackSpeed = () => {
-  const speed = useSharedValue(1);
+  const videoRef = usePlayerStore((state) => state.videoRef);
 
   const changePlaybackSpeed = useCallback(
     (newValue: number) => {
-      speed.value = newValue;
+      if (videoRef) {
+        void videoRef.setRateAsync(newValue, true);
+      }
     },
-    [speed],
+    [videoRef],
   );
 
   return {
-    currentSpeed: speed,
+    currentSpeed: videoRef?.props.rate ?? 1,
     changePlaybackSpeed,
   } as const;
 };
