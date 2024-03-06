@@ -12,8 +12,8 @@ export const useAudioTrackStore = create(
   immer<AudioTrackStore>((set) => ({
     selectedTrack: null,
     setSelectedAudioTrack: (track) => {
-      set((s) => {
-        s.selectedTrack = track;
+      set((state) => {
+        state.selectedTrack = track;
       });
     },
   })),
