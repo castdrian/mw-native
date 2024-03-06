@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "@movie-web/tailwind-config/colors";
 
+import { useAudioTrack } from "~/hooks/player/useAudioTrack";
 import { useBoolean } from "~/hooks/useBoolean";
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
@@ -20,12 +21,14 @@ export interface AudioTrack {
 
 export const AudioTrackSelector = () => {
   const tracks = usePlayerStore((state) => state.interface.audioTracks);
+  const stream = usePlayerStore((state) => state.interface.currentStream);
 
   const setSelectedAudioTrack = useAudioTrackStore(
     (state) => state.setSelectedAudioTrack,
   );
 
   const { isTrue, on, off } = useBoolean();
+  const { synchronizePlayback } = useAudioTrack();
 
   if (!tracks?.length) return null;
 
@@ -64,6 +67,9 @@ export const AudioTrackSelector = () => {
               key={track.language}
               onPress={() => {
                 setSelectedAudioTrack(track);
+                if (stream) {
+                  void synchronizePlayback(track, stream);
+                }
                 off();
               }}
             >

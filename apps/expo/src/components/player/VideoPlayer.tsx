@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS, useSharedValue } from "react-native-reanimated";
-import { Audio, ResizeMode, Video } from "expo-av";
+import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
 import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
@@ -17,6 +17,7 @@ import * as StatusBar from "expo-status-bar";
 
 import { findHighestQuality } from "@movie-web/provider-utils";
 
+import { useAudioTrack } from "~/hooks/player/useAudioTrack";
 import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
 import { usePlayer } from "~/hooks/player/usePlayer";
@@ -43,6 +44,7 @@ export const VideoPlayer = () => {
     handleVolumeChange,
   } = useVolume();
   const { currentSpeed } = usePlaybackSpeed();
+  const { synchronizePlayback } = useAudioTrack();
   const { dismissFullscreenPlayer } = usePlayer();
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +54,6 @@ export const VideoPlayer = () => {
   const router = useRouter();
   const scale = useSharedValue(1);
   const [lastVelocityY, setLastVelocityY] = useState(0);
-  const [audioObject, setAudioObject] = useState<Audio.Sound | null>(null);
 
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
@@ -164,28 +165,6 @@ export const VideoPlayer = () => {
         return router.back();
       }
 
-      const loadAudioTrack = async () => {
-        if (selectedAudioTrack) {
-          const { uri } = selectedAudioTrack;
-          const sound = new Audio.Sound();
-          await sound.loadAsync({
-            uri,
-            headers: {
-              ...stream.headers,
-              ...stream.preferredHeaders,
-            },
-          });
-          setAudioObject(sound);
-        } else {
-          if (audioObject) {
-            await audioObject.unloadAsync();
-            setAudioObject(null);
-          }
-        }
-      };
-
-      void loadAudioTrack();
-
       setVideoSrc({
         uri: url,
         headers: {
@@ -208,17 +187,15 @@ export const VideoPlayer = () => {
 
     return () => {
       clearTimeout(timeout);
-      if (audioObject) {
-        void audioObject.unloadAsync();
-      }
+      void synchronizePlayback();
     };
   }, [
-    audioObject,
     dismissFullscreenPlayer,
     hasStartedPlaying,
     router,
     selectedAudioTrack,
     stream,
+    synchronizePlayback,
   ]);
 
   const onVideoLoadStart = () => {
@@ -234,24 +211,16 @@ export const VideoPlayer = () => {
   };
 
   useEffect(() => {
-    const synchronizePlayback = async () => {
-      if (videoRef && hasStartedPlaying) {
-        const videoStatus = await videoRef.getStatusAsync();
-
-        if (selectedAudioTrack && audioObject && videoStatus.isLoaded) {
-          await videoRef.setIsMutedAsync(true);
-          await audioObject.setPositionAsync(videoStatus.positionMillis);
-          await audioObject.playAsync();
-        } else {
-          await videoRef.setIsMutedAsync(false);
-        }
-      }
-    };
-
-    if (hasStartedPlaying) {
-      void synchronizePlayback();
+    if (hasStartedPlaying && selectedAudioTrack && stream) {
+      void synchronizePlayback(selectedAudioTrack, stream);
     }
-  }, [audioObject, hasStartedPlaying, selectedAudioTrack, videoRef]);
+  }, [
+    hasStartedPlaying,
+    selectedAudioTrack,
+    stream,
+    synchronizePlayback,
+    videoRef,
+  ]);
 
   return (
     <GestureDetector gesture={composedGesture}>
