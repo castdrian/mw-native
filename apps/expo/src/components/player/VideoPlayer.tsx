@@ -265,7 +265,7 @@ export const VideoPlayer = () => {
           shouldPlay={shouldPlay}
           resizeMode={resizeMode}
           volume={currentVolume.value}
-          rate={4}
+          rate={currentSpeed.value}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
           onPlaybackStatusUpdate={setStatus}
