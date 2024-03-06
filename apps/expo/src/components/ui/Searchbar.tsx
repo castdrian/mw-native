@@ -1,6 +1,5 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
-import { useFocusEffect } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import Colors from "@movie-web/tailwind-config/colors";
@@ -22,19 +21,6 @@ export function SearchBar({
       inputRef.current?.focus();
     };
   }, [focusSearchInputRef]);
-
-  useFocusEffect(
-    useCallback(() => {
-      // When the screen is focused
-      const focus = () => {
-        setTimeout(() => {
-          inputRef?.current?.focus();
-        }, 20);
-      };
-      focus();
-      return focus; // cleanup
-    }, []),
-  );
 
   const handleChange = (text: string) => {
     setKeyword(text);
