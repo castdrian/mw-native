@@ -114,7 +114,7 @@ export default function HomeScreenContent() {
         <ScreenLayout
           title={
             <View className="flex-row items-center">
-              <Text className="text-2xl font-bold">Search</Text>
+              <Text className="text-2xl font-bold">Home</Text>
             </View>
           }
         >
