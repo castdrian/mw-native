@@ -30,7 +30,7 @@ export const useAudioTrack = () => {
         }
       }
 
-      if (videoRef?.getStatusAsync && audioObject) {
+      if (videoRef && audioObject) {
         const videoStatus = await videoRef.getStatusAsync();
 
         if (selectedAudioTrack && videoStatus.isLoaded) {
