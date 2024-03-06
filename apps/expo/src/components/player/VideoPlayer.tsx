@@ -166,7 +166,7 @@ export const VideoPlayer = () => {
       }
 
       setVideoSrc({
-        uri: url,
+        uri: url, // multiple audio tracks: https://playertest.longtailvideo.com/adaptive/elephants_dream_v4/index.m3u8
         headers: {
           ...stream.preferredHeaders,
           ...stream.headers,
