@@ -208,8 +208,8 @@ importers:
   packages/provider-utils:
     dependencies:
       '@movie-web/providers':
-        specifier: ^2.2.1
-        version: 2.2.1
+        specifier: ^2.2.2
+        version: 2.2.2
       parse-hls:
         specifier: ^1.0.7
         version: 1.0.7
@@ -2473,8 +2473,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@movie-web/providers@2.2.1:
-    resolution: {integrity: sha512-JeGZx/c5SHsnPOEO8h8FB6DXItESDC78Lu/Oso8gjI75BSgYrsG3YxJXO6Y6y5Zo6LYYZNbtlk0NdTA/U/pRvQ==}
+  /@movie-web/providers@2.2.2:
+    resolution: {integrity: sha512-pTlErE5bdu+b68mUW2YAKOJKz2hwSx63auGAfTkGQ+0SHDMlCV9QQ8S8O9IoSsvdXps7/YlWJWOMX8pmKuYbPQ==}
     dependencies:
       cheerio: 1.0.0-rc.12
       cookie: 0.6.0
@@ -5409,6 +5409,11 @@ packages:
   /escalade@3.1.1:
     resolution: {integrity: sha512-k0er2gUkLf8O0zKJiAhmkTnJlTvINGv7ygDNPbeIsX/TJjGJZHuh9B2UxbsaEkmlEo9MfhrSzmhIlhRlI2GXnw==}
     engines: {node: '>=6'}
+
+  /escalade@3.1.2:
+    resolution: {integrity: sha512-ErCHMCae19vR8vQGe50xIsVomy19rg6gFu3+r3jkEO46suLMWBksvVyoGgQV+jOfl84ZSOSlmv6Gxa89PmTGmA==}
+    engines: {node: '>=6'}
+    dev: false
 
   /escape-html@1.0.3:
     resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
@@ -11307,7 +11312,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       cliui: 7.0.4
-      escalade: 3.1.1
+      escalade: 3.1.2
       get-caller-file: 2.0.5
       require-directory: 2.1.1
       string-width: 4.2.3

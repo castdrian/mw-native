@@ -29,7 +29,7 @@
   },
   "prettier": "@movie-web/prettier-config",
   "dependencies": {
-    "@movie-web/providers": "^2.2.1",
+    "@movie-web/providers": "^2.2.2",
     "parse-hls": "^1.0.7",
     "srt-webvtt": "^2.0.0",
     "tmdb-ts": "^1.6.1"
