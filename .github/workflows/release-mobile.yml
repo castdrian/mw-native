@@ -27,6 +27,7 @@ jobs:
             commit-message: 'chore: bump mobile version to {{version}} [skip ci]'
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            PACKAGEJSON_DIR: 'apps/expo'
             
   build-android:
     runs-on: ubuntu-latest
@@ -139,12 +140,14 @@ jobs:
           files: |
             movie-web.apk
             movie-web.ipa
+          generate_release_notes: true
           fail_on_unmatched_files: true
           token: ${{ env.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   app-repo:
+    continue-on-error: true
     environment:
        name: github-pages
        url: ${{ steps.deployment.outputs.page_url }}
