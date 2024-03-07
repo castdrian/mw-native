@@ -29,6 +29,14 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             PACKAGEJSON_DIR: 'apps/expo'
+
+        - name: Upload movie-web.apk as artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: json
+            path: |
+              ./apps/expo/package.json
+              ./apps/expo/app-repo.json
             
   build-android:
     runs-on: ubuntu-latest
@@ -122,9 +130,6 @@ jobs:
     needs: [build-android, build-ios]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -133,8 +138,6 @@ jobs:
       - name: Get package version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
-        with:
-          path: apps/expo
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -157,11 +160,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-ios, release-app]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: 'master'
-    
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -175,7 +173,7 @@ jobs:
       - name: Get new version and release date
         id: vars
         run: |
-            VERSION=$(jq -r '.version' apps/expo/package.json)
+            VERSION=$(jq -r '.version' package.json)
             DATE=$(date -Iseconds)
             echo "::set-output name=version::$VERSION"
             echo "::set-output name=date::$DATE"
@@ -183,7 +181,7 @@ jobs:
       - name: Update app-repo.json
         run: |
           IPA_SIZE=$(stat -c%s "movie-web.ipa")
-          jq --arg IPA_SIZE "$IPA_SIZE" '.apps[0].versions[0].version = "${{ steps.vars.outputs.version }}" | .apps[0].versions[0].date = "${{ steps.vars.outputs.date }}" | .apps[0].versions[0].size = ($IPA_SIZE | tonumber)' apps/expo/app-repo.json > temp.json
+          jq --arg IPA_SIZE "$IPA_SIZE" '.apps[0].versions[0].version = "${{ steps.vars.outputs.version }}" | .apps[0].versions[0].date = "${{ steps.vars.outputs.date }}" | .apps[0].versions[0].size = ($IPA_SIZE | tonumber)' app-repo.json > temp.json
           mkdir -p pages
           mv temp.json pages/repo.json
   
