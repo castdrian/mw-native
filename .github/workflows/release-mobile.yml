@@ -159,6 +159,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
     
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -173,10 +175,10 @@ jobs:
       - name: Get new version and release date
         id: vars
         run: |
-              VERSION=$(jq -r '.version' package.json)
-              DATE=$(date -Iseconds)
-              echo "::set-output name=version::$VERSION"
-              echo "::set-output name=date::$DATE"
+            VERSION=$(jq -r '.version' apps/expo/package.json)
+            DATE=$(date -Iseconds)
+            echo "::set-output name=version::$VERSION"
+            echo "::set-output name=date::$DATE"
   
       - name: Update app-repo.json
         run: |
@@ -200,4 +202,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
