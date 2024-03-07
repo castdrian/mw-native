@@ -142,12 +142,13 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
 
       if (streamResult.stream.type === "hls") {
         const tracks = await extractTracksFromHLS(
-          streamResult.stream.playlist, // multiple audio tracks: 'https://playertest.longtailvideo.com/adaptive/elephants_dream_v4/index.m3u8',
+          streamResult.stream.playlist,
           {
             ...streamResult.stream.preferredHeaders,
             ...streamResult.stream.headers,
           },
         );
+
         if (tracks) setHlsTracks(tracks);
 
         const constructFullUrl = (playlistUrl: string, uri: string) => {

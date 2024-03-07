@@ -9,6 +9,9 @@ interface SeekProps {
 export const SeekButton = ({ type }: SeekProps) => {
   const videoRef = usePlayerStore((state) => state.videoRef);
   const status = usePlayerStore((state) => state.status);
+  const setAudioPositionAsync = usePlayerStore(
+    (state) => state.setAudioPositionAsync,
+  );
 
   return (
     <MaterialIcons
@@ -25,6 +28,7 @@ export const SeekButton = ({ type }: SeekProps) => {
           videoRef?.setPositionAsync(position).catch(() => {
             console.log("Error seeking backwards");
           });
+          void setAudioPositionAsync(position);
         }
       }}
     />

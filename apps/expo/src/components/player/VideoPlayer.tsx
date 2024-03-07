@@ -166,7 +166,7 @@ export const VideoPlayer = () => {
       }
 
       setVideoSrc({
-        uri: url, // multiple audio tracks: 'https://playertest.longtailvideo.com/adaptive/elephants_dream_v4/index.m3u8',
+        uri: url,
         headers: {
           ...stream.preferredHeaders,
           ...stream.headers,
@@ -209,18 +209,6 @@ export const VideoPlayer = () => {
       void videoRef.setRateAsync(currentSpeed, true);
     }
   };
-
-  useEffect(() => {
-    if (hasStartedPlaying && selectedAudioTrack && stream) {
-      void synchronizePlayback(selectedAudioTrack, stream);
-    }
-  }, [
-    hasStartedPlaying,
-    selectedAudioTrack,
-    stream,
-    synchronizePlayback,
-    videoRef,
-  ]);
 
   return (
     <GestureDetector gesture={composedGesture}>
