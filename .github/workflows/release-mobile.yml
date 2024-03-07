@@ -178,10 +178,10 @@ jobs:
   
       - name: Update app-repo.json
         run: |
-              IPA_SIZE=$(stat -c%s "movie-web.ipa")
-              jq '.apps[0].versions[0].version = "${{ steps.vars.outputs.version }}" | .apps[0].versions[0].date = "${{ steps.vars.outputs.date }}" | .apps[0].versions[0].size = $IPA_SIZE' apps/expo/app-repo.json > temp.json
-              mkdir -p pages
-              mv temp.json pages/repo.json
+          IPA_SIZE=$(stat -c%s "movie-web.ipa")
+          jq --arg IPA_SIZE "$IPA_SIZE" '.apps[0].versions[0].version = "${{ steps.vars.outputs.version }}" | .apps[0].versions[0].date = "${{ steps.vars.outputs.date }}" | .apps[0].versions[0].size = ($IPA_SIZE | tonumber)' apps/expo/app-repo.json > temp.json
+          mkdir -p pages
+          mv temp.json pages/repo.json
   
       - name: Setup Pages
         uses: actions/configure-pages@v4
