@@ -13,7 +13,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary-300",
-        outline: "border border-primary-400 bg-transparent",
+        outline: "border-primary-400 border bg-transparent",
         secondary: "bg-secondary-300",
       },
       size: {

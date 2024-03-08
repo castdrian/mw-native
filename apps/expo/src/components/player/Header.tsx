@@ -29,7 +29,7 @@ export const Header = () => {
               )
             : ""}
         </Text>
-        <View className="flex h-12 w-36 flex-row items-center justify-center gap-2 space-x-2 rounded-full bg-secondary-300 px-4 py-2 opacity-80">
+        <View className="bg-secondary-300 flex h-12 w-36 flex-row items-center justify-center gap-2 space-x-2 rounded-full px-4 py-2 opacity-80">
           <Image source={Icon} className="h-6 w-6" />
           <Text className="font-bold">movie-web</Text>
         </View>

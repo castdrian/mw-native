@@ -28,7 +28,7 @@ export function SearchBar({
   };
 
   return (
-    <View className="mb-6 mt-4 flex-row items-center rounded-full border border-primary-400 bg-black focus-within:border-primary-300">
+    <View className="border-primary-400 focus-within:border-primary-300 mb-6 mt-4 flex-row items-center rounded-full border bg-black">
       <View className="ml-1 w-12 items-center justify-center">
         <FontAwesome5
           name="search"
