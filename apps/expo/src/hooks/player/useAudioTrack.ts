@@ -71,7 +71,7 @@ export const useAudioTrack = () => {
       if (selectedAudioTrack && videoStatus.isLoaded) {
         await videoRef.setIsMutedAsync(true);
         await audioObject.playAsync();
-        await audioObject.setPositionAsync(videoStatus.positionMillis);
+        await audioObject.setPositionAsync(videoStatus.positionMillis + 2000);
       } else {
         await videoRef.setIsMutedAsync(false);
       }
