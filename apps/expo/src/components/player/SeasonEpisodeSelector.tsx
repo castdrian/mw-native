@@ -9,7 +9,7 @@ import Modal from "react-native-modal";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 
-import colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
 
 import { useBoolean } from "~/hooks/useBoolean";
@@ -45,7 +45,10 @@ const EpisodeSelector = ({
     <>
       {isLoading && (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" color={colors.primary[300]} />
+          <ActivityIndicator
+            size="large"
+            color={defaultTheme.extend.colors.buttons.primary}
+          />
         </View>
       )}
       {data && (
@@ -120,7 +123,7 @@ export const SeasonSelector = () => {
             <MaterialCommunityIcons
               name="audio-video"
               size={24}
-              color={colors.primary[300]}
+              color={defaultTheme.extend.colors.buttons.primary}
             />
           }
         />
@@ -140,7 +143,10 @@ export const SeasonSelector = () => {
           <>
             {isLoading && (
               <View className="flex-1 items-center justify-center">
-                <ActivityIndicator size="large" color={colors.primary[300]} />
+                <ActivityIndicator
+                  size="large"
+                  color={defaultTheme.extend.colors.buttons.primary}
+                />
               </View>
             )}
             {data && (

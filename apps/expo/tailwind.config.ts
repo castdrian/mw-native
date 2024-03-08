@@ -7,8 +7,8 @@ import baseConfig from "@movie-web/tailwind-config/native";
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   presets: [
-    baseConfig,
     nativewind,
+    baseConfig,
     {
       theme: {
         extend: {

@@ -5,8 +5,7 @@
   "type": "module",
   "exports": {
     "./native": "./native.ts",
-    "./web": "./web.ts",
-    "./colors": "./colors.ts"
+    "./themes": "./themes/index.ts"
   },
   "license": "MIT",
   "scripts": {
@@ -19,7 +18,8 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-themer": "^4.0.0"
   },
   "devDependencies": {
     "@movie-web/eslint-config": "workspace:^0.2.0",

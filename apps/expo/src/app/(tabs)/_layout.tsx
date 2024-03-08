@@ -4,7 +4,7 @@ import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 
-import Colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 import { MovieWebSvg } from "~/components/Icon";
 import SvgTabBarIcon from "~/components/SvgTabBarIcon";
@@ -19,7 +19,7 @@ export default function TabLayout() {
     <SearchTabContext.Provider value={{ focusSearchInputRef }}>
       <Tabs
         sceneContainerStyle={{
-          backgroundColor: Colors.background,
+          backgroundColor: defaultTheme.extend.colors.background.main,
         }}
         screenListeners={({ route }) => ({
           tabPress: () => {
@@ -38,9 +38,9 @@ export default function TabLayout() {
         })}
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: Colors.primary[100],
+          tabBarActiveTintColor: defaultTheme.extend.colors.tabBar.active,
           tabBarStyle: {
-            backgroundColor: Colors.secondary[700],
+            backgroundColor: defaultTheme.extend.colors.tabBar.background,
             borderTopColor: "transparent",
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,

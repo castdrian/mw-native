@@ -3,7 +3,7 @@ import { Pressable, ScrollView, View } from "react-native";
 import Modal from "react-native-modal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 import { useAudioTrack } from "~/hooks/player/useAudioTrack";
 import { useBoolean } from "~/hooks/useBoolean";
@@ -62,7 +62,7 @@ export const AudioTrackSelector = () => {
             <MaterialCommunityIcons
               name="volume-high"
               size={24}
-              color={colors.primary[300]}
+              color={defaultTheme.extend.colors.buttons.primary}
             />
           }
         />
@@ -97,7 +97,7 @@ export const AudioTrackSelector = () => {
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={24}
-                  color={colors.primary[300]}
+                  color={defaultTheme.extend.colors.buttons.primary}
                 />
               )}
             </Pressable>

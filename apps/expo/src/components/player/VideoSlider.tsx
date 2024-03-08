@@ -17,7 +17,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 import { usePlayerStore } from "~/stores/player/store";
 
@@ -132,7 +132,7 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
             {
               height: trackSize_,
               borderRadius: trackSize_,
-              backgroundColor: colors.secondary[700],
+              backgroundColor: defaultTheme.extend.colors.video.context.slider,
               width,
             },
           ]}
@@ -142,7 +142,8 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
               {
                 position: "absolute",
                 height: trackSize_,
-                backgroundColor: colors.primary[300],
+                backgroundColor:
+                  defaultTheme.extend.colors.video.context.sliderFilled,
                 borderRadius: trackSize_ / 2,
               },
               progressStyle,
@@ -160,7 +161,8 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
                   height: knobSize_,
                   width: knobSize_,
                   borderRadius: knobSize_ / 2,
-                  backgroundColor: colors.primary[300],
+                  backgroundColor:
+                    defaultTheme.extend.colors.video.context.sliderFilled,
                 },
                 scrollTranslationStyle,
               ]}

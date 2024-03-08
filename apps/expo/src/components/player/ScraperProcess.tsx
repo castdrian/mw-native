@@ -18,6 +18,7 @@ import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
 
 import type { ItemData } from "../item/item";
 import type { AudioTrack } from "./AudioTrackSelector";
+import { constructFullUrl } from "~/lib/url";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
@@ -64,14 +65,16 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
       setCheckedSource(event);
       setScrapeStatus({ status: ScrapeStatus.LOADING, progress: 10 });
     } else if (isUpdateEvent(event)) {
+      console.log(event.status);
       switch (event.status) {
-        case ScrapeStatus.SUCCESS:
+        case "success":
           setScrapeStatus({ status: ScrapeStatus.SUCCESS, progress: 100 });
           break;
-        case ScrapeStatus.ERROR as string:
+        case "failure":
           setScrapeStatus({ status: ScrapeStatus.ERROR, progress: 0 });
           break;
-        case ScrapeStatus.LOADING as string:
+        case "pending":
+        case "notfound":
       }
       setCheckedSource(event.id);
     } else if (isInitEvent(event) || isDiscoverEmbedsEvent(event)) {
@@ -131,7 +134,7 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
       const streamResult = await getVideoStream({
         media: scrapeMedia,
         events: {
-          // init: handleEvent,
+          init: handleEvent,
           update: handleEvent,
           discoverEmbeds: handleEvent,
           start: handleEvent,
@@ -151,27 +154,16 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
 
         if (tracks) setHlsTracks(tracks);
 
-        const constructFullUrl = (playlistUrl: string, uri: string) => {
-          const baseUrl = playlistUrl.substring(
-            0,
-            playlistUrl.lastIndexOf("/") + 1,
-          );
-          return uri.startsWith("http://") || uri.startsWith("https://")
-            ? uri
-            : baseUrl + uri;
-        };
-
         if (tracks?.audio.length) {
           const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
             uri: constructFullUrl(
               (streamResult.stream as HlsBasedStream).playlist,
               track.uri,
             ),
-            name: (track.properties[0]?.attributes.name as string) ?? "Unknown",
+            name: track.properties[0]?.attributes.name?.toString() ?? "Unknown",
             language:
-              (track.properties[0]?.attributes.language as string) ?? "Unknown",
-            active:
-              (track.properties[0]?.attributes.default as boolean) ?? false,
+              track.properties[0]?.attributes.language?.toString() ?? "Unknown",
+            active: Boolean(track.properties[0]?.attributes.default) ?? false,
           }));
 
           const uniqueTracks = new Set(audioTracks.map((t) => t.language));

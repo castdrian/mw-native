@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Bar as ProgressBar } from "react-native-progress";
 
-import colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 export interface DownloadItemProps {
   filename: string;
@@ -38,8 +38,8 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
       <ProgressBar
         progress={progress}
         width={null}
-        color={colors.primary[400]}
-        unfilledColor={colors.gray[200]}
+        color={defaultTheme.extend.colors.download.progressFilled}
+        unfilledColor={defaultTheme.extend.colors.download.progress}
         borderWidth={0}
         height={10}
         borderRadius={5}

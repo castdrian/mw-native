@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { getBuiltinSources, providers } from "@movie-web/provider-utils";
-import colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 import {
   useEmbedScrape,
@@ -55,14 +55,14 @@ const SourceItem = ({
         <MaterialCommunityIcons
           name="check-circle"
           size={24}
-          color={colors.primary[300]}
+          color={defaultTheme.extend.colors.buttons.primary}
         />
       )}
       {isError && (
         <MaterialCommunityIcons
           name="alert-circle"
           size={24}
-          color={colors.red[500]}
+          color={defaultTheme.extend.colors.video.context.error}
         />
       )}
       {isPending && <ActivityIndicator size="small" color="#0000ff" />}
@@ -141,7 +141,7 @@ export const SourceSelector = () => {
             <MaterialCommunityIcons
               name="video"
               size={24}
-              color={colors.primary[300]}
+              color={defaultTheme.extend.colors.buttons.primary}
             />
           }
         />

@@ -1,14 +1,22 @@
 import type { Config } from "tailwindcss";
+import themer from "tailwindcss-themer";
 
-import base from "./base";
-import colors from "./colors";
+import { allThemes, defaultTheme, safeThemeList } from "./themes";
 
 export default {
-  content: base.content,
-  presets: [base],
-  theme: {
-    extend: {
-      colors,
-    },
-  },
+  content: ["src/**/*.{ts,tsx}"],
+  safelist: safeThemeList,
+  plugins: [
+    themer({
+      defaultTheme,
+      themes: [
+        {
+          name: "default",
+          selectors: [".theme-default"],
+          ...defaultTheme,
+        },
+        ...allThemes,
+      ],
+    }),
+  ],
 } satisfies Config;

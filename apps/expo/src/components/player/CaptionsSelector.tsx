@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { parse } from "subsrt-ts";
 
 import type { Stream } from "@movie-web/provider-utils";
-import colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 import { useBoolean } from "~/hooks/useBoolean";
 import { useCaptionsStore } from "~/stores/captions";
@@ -59,7 +59,7 @@ export const CaptionsSelector = () => {
             <MaterialCommunityIcons
               name="subtitles"
               size={24}
-              color={colors.primary[300]}
+              color={defaultTheme.extend.colors.buttons.primary}
             />
           }
         />
@@ -90,7 +90,7 @@ export const CaptionsSelector = () => {
               <MaterialCommunityIcons
                 name="download"
                 size={24}
-                color={colors.primary[300]}
+                color={defaultTheme.extend.colors.buttons.primary}
               />
             </Pressable>
           ))}

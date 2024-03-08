@@ -1,6 +1,6 @@
 import React from "react";
 
-import Colors from "@movie-web/tailwind-config/colors";
+import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 interface SvgTabBarIconProps {
   focused?: boolean;
@@ -11,7 +11,9 @@ export default function SvgTabBarIcon({
   focused,
   children,
 }: SvgTabBarIconProps) {
-  const fillColor = focused ? Colors.primary[300] : Colors.secondary[300];
+  const fillColor = focused
+    ? defaultTheme.extend.colors.tabBar.active
+    : defaultTheme.extend.colors.tabBar.inactive;
 
   if (React.isValidElement(children)) {
     return React.cloneElement(children, { fillColor } as React.Attributes);
