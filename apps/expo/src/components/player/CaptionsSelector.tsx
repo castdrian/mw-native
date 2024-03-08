@@ -59,7 +59,7 @@ export const CaptionsSelector = () => {
             <MaterialCommunityIcons
               name="subtitles"
               size={24}
-              color={defaultTheme.extend.colors.buttons.primary}
+              color={defaultTheme.extend.colors.buttons.purple}
             />
           }
         />
@@ -90,7 +90,7 @@ export const CaptionsSelector = () => {
               <MaterialCommunityIcons
                 name="download"
                 size={24}
-                color={defaultTheme.extend.colors.buttons.primary}
+                color={defaultTheme.extend.colors.buttons.purple}
               />
             </Pressable>
           ))}

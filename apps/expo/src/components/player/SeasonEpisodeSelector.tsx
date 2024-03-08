@@ -47,7 +47,7 @@ const EpisodeSelector = ({
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator
             size="large"
-            color={defaultTheme.extend.colors.buttons.primary}
+            color={defaultTheme.extend.colors.buttons.purple}
           />
         </View>
       )}
@@ -123,7 +123,7 @@ export const SeasonSelector = () => {
             <MaterialCommunityIcons
               name="audio-video"
               size={24}
-              color={defaultTheme.extend.colors.buttons.primary}
+              color={defaultTheme.extend.colors.buttons.purple}
             />
           }
         />
@@ -145,7 +145,7 @@ export const SeasonSelector = () => {
               <View className="flex-1 items-center justify-center">
                 <ActivityIndicator
                   size="large"
-                  color={defaultTheme.extend.colors.buttons.primary}
+                  color={defaultTheme.extend.colors.buttons.purple}
                 />
               </View>
             )}

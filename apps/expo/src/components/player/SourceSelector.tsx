@@ -55,7 +55,7 @@ const SourceItem = ({
         <MaterialCommunityIcons
           name="check-circle"
           size={24}
-          color={defaultTheme.extend.colors.buttons.primary}
+          color={defaultTheme.extend.colors.buttons.purple}
         />
       )}
       {isError && (
@@ -141,7 +141,7 @@ export const SourceSelector = () => {
             <MaterialCommunityIcons
               name="video"
               size={24}
-              color={defaultTheme.extend.colors.buttons.primary}
+              color={defaultTheme.extend.colors.buttons.purple}
             />
           }
         />

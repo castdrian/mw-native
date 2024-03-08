@@ -27,7 +27,7 @@ export const PlaybackSpeedSelector = () => {
             <MaterialCommunityIcons
               name="speedometer"
               size={24}
-              color={defaultTheme.extend.colors.buttons.primary}
+              color={defaultTheme.extend.colors.buttons.purple}
             />
           }
         />
@@ -59,7 +59,7 @@ export const PlaybackSpeedSelector = () => {
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={24}
-                  color={defaultTheme.extend.colors.buttons.primary}
+                  color={defaultTheme.extend.colors.buttons.purple}
                 />
               )}
             </Pressable>

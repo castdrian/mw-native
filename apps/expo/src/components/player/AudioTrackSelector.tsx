@@ -62,7 +62,7 @@ export const AudioTrackSelector = () => {
             <MaterialCommunityIcons
               name="volume-high"
               size={24}
-              color={defaultTheme.extend.colors.buttons.primary}
+              color={defaultTheme.extend.colors.buttons.purple}
             />
           }
         />
@@ -97,7 +97,7 @@ export const AudioTrackSelector = () => {
                 <MaterialCommunityIcons
                   name="check-circle"
                   size={24}
-                  color={defaultTheme.extend.colors.buttons.primary}
+                  color={defaultTheme.extend.colors.buttons.purple}
                 />
               )}
             </Pressable>
