@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Dimensions, ScrollView, Text, View } from "react-native";
 
 import type { ItemData } from "~/components/item/item";
 import Item from "~/components/item/item";
@@ -42,6 +42,10 @@ export const watching: ItemData[] = [
   },
 ];
 
+const padding = 20;
+const screenWidth = Dimensions.get("window").width;
+const itemWidth = screenWidth / 2.3 - padding;
+
 export const ItemListSection = ({
   title,
   items,
@@ -54,13 +58,24 @@ export const ItemListSection = ({
       <Text className="mb-2 mt-4 text-xl font-semibold text-white">
         {title}
       </Text>
-      <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 3 }}
+      >
         {items.map((item, index) => (
-          <View key={index} className="basis-1/2 px-3 pb-3">
+          <View
+            key={index}
+            style={{
+              width: itemWidth,
+              paddingHorizontal: padding / 2,
+              paddingBottom: padding,
+            }}
+          >
             <Item data={item} />
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };

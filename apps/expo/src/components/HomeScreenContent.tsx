@@ -107,7 +107,7 @@ export default function HomeScreenContent() {
       <ScrollView
         onScrollBeginDrag={handleScrollBegin}
         onMomentumScrollEnd={handleScrollEnd}
-        scrollEnabled={data && data.length > 0 ? true : false}
+        scrollEnabled={searchResultsLoaded ? true : false}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
       >
@@ -134,8 +134,14 @@ export default function HomeScreenContent() {
                 bookmarks.length > 0 || watching.length > 0 ? true : false
               }
             >
-              <ItemListSection title="Bookmarks" items={bookmarks} />
-              <ItemListSection title="Continue Watching" items={watching} />
+              <ItemListSection
+                title="Bookmarks"
+                items={bookmarks.concat(watching)}
+              />
+              <ItemListSection
+                title="Continue Watching"
+                items={watching.concat(bookmarks)}
+              />
             </ScrollView>
           )}
         </ScreenLayout>
