@@ -9,7 +9,7 @@ export const bookmarks: ItemData[] = [
     id: "219651",
     title: "Welcome to Samdal-ri",
     posterUrl:
-      "https://www.themoviedb.org/t/p/w185/98IvA2i0PsTY8CThoHByCKOEAjz.jpg",
+      "https://www.themoviedb.org/t/p/w500/98IvA2i0PsTY8CThoHByCKOEAjz.jpg",
     type: "tv",
     year: 2023,
   },
@@ -17,7 +17,7 @@ export const bookmarks: ItemData[] = [
     id: "194797",
     title: "Doona!",
     posterUrl:
-      "https://www.themoviedb.org/t/p/w185/bQhiOkU3lCu5pwCqPdNVG5GBLlj.jpg",
+      "https://www.themoviedb.org/t/p/w500/bQhiOkU3lCu5pwCqPdNVG5GBLlj.jpg",
     type: "tv",
     year: 2023,
   },
@@ -28,7 +28,7 @@ export const watching: ItemData[] = [
     id: "113268",
     title: "The Uncanny Counter",
     posterUrl:
-      "https://www.themoviedb.org/t/p/w185/tKU34QiJUfVipcuhAs5S3TdCpAF.jpg",
+      "https://www.themoviedb.org/t/p/w500/tKU34QiJUfVipcuhAs5S3TdCpAF.jpg",
     type: "tv",
     year: 2020,
   },
@@ -36,7 +36,7 @@ export const watching: ItemData[] = [
     id: "203508",
     title: "Earth Arcade",
     posterUrl:
-      "https://www.themoviedb.org/t/p/w185/vBJ0uF0WlFcjr9obZZqE6GSsKoL.jpg",
+      "https://www.themoviedb.org/t/p/w500/vBJ0uF0WlFcjr9obZZqE6GSsKoL.jpg",
     type: "tv",
     year: 2022,
   },
