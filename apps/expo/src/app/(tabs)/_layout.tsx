@@ -80,7 +80,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="search"
           options={{
-            title: "Home",
+            title: "Search",
             tabBarLabel: "",
             tabBarIcon: ({ focused }) => (
               <View
