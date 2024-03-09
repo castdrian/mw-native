@@ -25,7 +25,7 @@ export default function TabLayout() {
           tabPress: () => {
             void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             switch (route.name) {
-              case "index":
+              case "search":
                 focusSearchInputRef.current();
                 break;
             }
