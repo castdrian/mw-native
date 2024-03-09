@@ -16,7 +16,7 @@ export const Header = () => {
 
   if (!isIdle && meta) {
     return (
-      <View className="z-50 flex h-16 w-full flex-row justify-between px-6 pt-6">
+      <View className="z-50 flex h-16 w-full flex-row items-center justify-between px-6 pt-6">
         <Controls>
           <BackButton className="w-36" />
         </Controls>
@@ -29,7 +29,7 @@ export const Header = () => {
               )
             : ""}
         </Text>
-        <View className="bg-secondary-300 flex h-12 w-36 flex-row items-center justify-center gap-2 space-x-2 rounded-full px-4 py-2 opacity-80">
+        <View className="flex h-12 w-36 flex-row items-center justify-center gap-2 space-x-2 rounded-full bg-pill-background px-4 py-2 opacity-80">
           <Image source={Icon} className="h-6 w-6" />
           <Text className="font-bold">movie-web</Text>
         </View>

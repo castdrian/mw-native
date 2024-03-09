@@ -2,6 +2,12 @@ import type { AppendToResponse, MovieDetails, TvShowDetails } from "tmdb-ts";
 
 import type { ScrapeMedia } from "@movie-web/providers";
 
+import { providers } from "./video";
+
+export function getMetaData() {
+  return [...providers.listSources(), ...providers.listEmbeds()];
+}
+
 export function transformSearchResultToScrapeMedia<T extends "tv" | "movie">(
   type: T,
   result: T extends "tv"

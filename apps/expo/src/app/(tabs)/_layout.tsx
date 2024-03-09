@@ -9,6 +9,7 @@ import { defaultTheme } from "@movie-web/tailwind-config/themes";
 import { MovieWebSvg } from "~/components/Icon";
 import SvgTabBarIcon from "~/components/SvgTabBarIcon";
 import TabBarIcon from "~/components/TabBarIcon";
+import { cn } from "~/lib/utils";
 import SearchTabContext from "../../components/ui/SearchTabContext";
 
 export default function TabLayout() {
@@ -83,7 +84,13 @@ export default function TabLayout() {
             tabBarLabel: "",
             tabBarIcon: ({ focused }) => (
               <View
-                className={`android:top-2 ios:top-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full ${focused ? "bg-primary-300" : "bg-primary-400"} text-center align-middle text-2xl text-white`}
+                className={cn(
+                  `top-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full text-center align-middle text-2xl text-white ${focused ? "bg-tabBar-active" : "bg-tabBar-inactive"}`,
+                  {
+                    "bg-tabBar-active": focused,
+                    "bg-tabBar-inactive": !focused,
+                  },
+                )}
               >
                 <TabBarIcon name="search" color="#FFF" />
               </View>
