@@ -27,6 +27,7 @@ import { usePlayerStore } from "~/stores/player/store";
 import { Text } from "../ui/Text";
 import { CaptionRenderer } from "./CaptionRenderer";
 import { ControlsOverlay } from "./ControlsOverlay";
+import { isPointInSliderVicinity } from "./VideoSlider";
 
 export const VideoPlayer = () => {
   const {
@@ -51,6 +52,7 @@ export const VideoPlayer = () => {
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [shouldPlay, setShouldPlay] = useState(true);
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
+  const isGestureInSliderVicinity = useSharedValue(false);
   const router = useRouter();
   const scale = useSharedValue(1);
   const [lastVelocityY, setLastVelocityY] = useState(0);
@@ -62,6 +64,10 @@ export const VideoPlayer = () => {
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
+
+  const checkGestureInSliderVicinity = (x: number, y: number) => {
+    isGestureInSliderVicinity.value = isPointInSliderVicinity(x, y);
+  };
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
@@ -90,6 +96,12 @@ export const VideoPlayer = () => {
   const screenHalfWidth = Dimensions.get("window").width / 2;
 
   const panGesture = Gesture.Pan()
+    .onStart((event) => {
+      runOnJS(checkGestureInSliderVicinity)(event.x, event.y);
+      if (isGestureInSliderVicinity.value) {
+        return;
+      }
+    })
     .onUpdate((event) => {
       const divisor = 5000;
       const panIsInHeaderOrFooter = event.y < 100 || event.y > 400;

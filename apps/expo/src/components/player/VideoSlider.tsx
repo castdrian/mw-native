@@ -30,6 +30,22 @@ interface VideoSliderProps {
   onSlidingComplete?: (value: number) => void;
 }
 
+const SLIDER_VICINITY = {
+  x: 20,
+  y: 200,
+  width: Dimensions.get("window").width - 40,
+  height: 20,
+};
+
+export const isPointInSliderVicinity = (x: number, y: number) => {
+  return (
+    x >= SLIDER_VICINITY.x &&
+    x <= SLIDER_VICINITY.x + SLIDER_VICINITY.width &&
+    y >= SLIDER_VICINITY.y &&
+    y <= SLIDER_VICINITY.y + SLIDER_VICINITY.height
+  );
+};
+
 const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   const tapRef = useRef<TapGestureHandler>(null);
   const panRef = useRef<PanGestureHandler>(null);
