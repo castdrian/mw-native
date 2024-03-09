@@ -88,9 +88,9 @@ export const VideoPlayer = () => {
   const togglePlayback = () => {
     setShouldPlay(!shouldPlay);
     if (shouldPlay) {
-      void pauseAudio();
-    } else {
       void playAudio();
+    } else {
+      void pauseAudio();
     }
   };
 
