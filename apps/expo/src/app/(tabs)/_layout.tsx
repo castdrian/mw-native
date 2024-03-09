@@ -25,7 +25,7 @@ export default function TabLayout() {
           tabPress: () => {
             void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             switch (route.name) {
-              case "search":
+              case "index":
                 focusSearchInputRef.current();
                 break;
             }
@@ -79,7 +79,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="search"
           options={{
-            title: "Home",
+            title: "Search",
             tabBarLabel: "",
             tabBarIcon: ({ focused }) => (
               <View
