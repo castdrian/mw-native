@@ -64,6 +64,8 @@ export const VideoPlayer = () => {
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
+  const playAudio = usePlayerStore((state) => state.playAudio);
+  const pauseAudio = usePlayerStore((state) => state.pauseAudio);
 
   const checkGestureInSliderVicinity = (x: number, y: number) => {
     isGestureInSliderVicinity.value = isPointInSliderVicinity(x, y);
@@ -85,6 +87,11 @@ export const VideoPlayer = () => {
 
   const togglePlayback = () => {
     setShouldPlay(!shouldPlay);
+    if (shouldPlay) {
+      void pauseAudio();
+    } else {
+      void playAudio();
+    }
   };
 
   const doubleTapGesture = Gesture.Tap()
