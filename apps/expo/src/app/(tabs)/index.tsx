@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 
 import {
   bookmarks,
@@ -19,20 +19,11 @@ export default function HomeScreen() {
           </View>
         }
       >
-        <ScrollView
-          scrollEnabled={
-            bookmarks.length > 0 || watching.length > 0 ? true : false
-          }
-        >
-          <ItemListSection
-            title="Bookmarks"
-            items={bookmarks.concat(watching)}
-          />
-          <ItemListSection
-            title="Continue Watching"
-            items={watching.concat(bookmarks)}
-          />
-        </ScrollView>
+        <ItemListSection title="Bookmarks" items={bookmarks.concat(watching)} />
+        <ItemListSection
+          title="Continue Watching"
+          items={watching.concat(bookmarks)}
+        />
       </ScreenLayout>
     </View>
   );
