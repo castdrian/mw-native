@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Platform, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -9,7 +9,6 @@ import { defaultTheme } from "@movie-web/tailwind-config/themes";
 import { MovieWebSvg } from "~/components/Icon";
 import SvgTabBarIcon from "~/components/SvgTabBarIcon";
 import TabBarIcon from "~/components/TabBarIcon";
-import { cn } from "~/lib/utils";
 import SearchTabContext from "../../components/ui/SearchTabContext";
 
 export default function TabLayout() {
@@ -84,13 +83,10 @@ export default function TabLayout() {
             tabBarLabel: "",
             tabBarIcon: ({ focused }) => (
               <View
-                className={cn(
-                  `top-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full text-center align-middle text-2xl text-white ${focused ? "bg-tabBar-active" : "bg-tabBar-inactive"}`,
-                  {
-                    "bg-tabBar-active": focused,
-                    "bg-tabBar-inactive": !focused,
-                  },
-                )}
+                style={[
+                  styles.searchTab,
+                  focused ? styles.active : styles.inactive,
+                ]}
               >
                 <TabBarIcon name="search" color="#FFF" />
               </View>
@@ -121,3 +117,23 @@ export default function TabLayout() {
     </SearchTabContext.Provider>
   );
 }
+
+const styles = StyleSheet.create({
+  searchTab: {
+    top: 2,
+    height: 56, // 14 units in your scale
+    width: 56, // 14 units in your scale
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: 100,
+    textAlign: "center",
+    // 'alignMiddle' and 'text2xl' would be dependent on your specific implementation
+  },
+  active: {
+    backgroundColor: defaultTheme.extend.colors.tabBar.active,
+  },
+  inactive: {
+    backgroundColor: defaultTheme.extend.colors.tabBar.inactive,
+  },
+});

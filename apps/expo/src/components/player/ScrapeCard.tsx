@@ -1,11 +1,10 @@
 import type { ReactNode } from "react";
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
-import { cn } from "~/lib/utils";
 import { Text } from "../ui/Text";
 
 export interface ScrapeItemProps {
@@ -83,37 +82,87 @@ export function ScrapeItem(props: ScrapeItemProps) {
   const text = statusTextMap[props.status];
 
   return (
-    <View className="flex flex-col">
-      <View className="flex flex-row items-center gap-4">
+    <View style={styles.scrapeItemContainer}>
+      <View style={styles.itemRow}>
         <StatusCircle type={props.status} percentage={props.percentage ?? 0} />
         <Text
-          className={cn("text-lg", {
-            "text-white": props.status === "pending",
-            "text-type-secondary": props.status !== "pending",
-          })}
+          style={[
+            styles.itemText,
+            props.status === "pending"
+              ? styles.textPending
+              : styles.textSecondary,
+          ]}
         >
           {props.name}
         </Text>
       </View>
-      <View className="flex flex-row gap-4">
-        <View style={{ width: 40 }} />
-        <View>{text && <Text className="mt-1 text-lg">{text}</Text>}</View>
+      <View style={styles.textRow}>
+        <View style={styles.spacer} />
+        <View>{text && <Text style={styles.statusText}>{text}</Text>}</View>
       </View>
-      <View className="ml-12">{props.children}</View>
+      <View style={styles.childrenContainer}>{props.children}</View>
     </View>
   );
 }
 
 export function ScrapeCard(props: ScrapeCardProps) {
   return (
-    <View className="w-96">
+    <View style={styles.cardContainer}>
       <View
-        className={cn("w-96 rounded-xl px-6 py-3", {
-          "bg-video-scraping-card": props.hasChildren,
-        })}
+        style={[
+          styles.cardContent,
+          props.hasChildren ? styles.cardBackground : null,
+        ]}
       >
         <ScrapeItem {...props} />
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  scrapeItemContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  itemRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  itemText: {
+    fontSize: 18,
+  },
+  textPending: {
+    color: "white",
+  },
+  textSecondary: {
+    color: "secondaryColor",
+  },
+  textRow: {
+    flexDirection: "row",
+    gap: 16,
+  },
+  spacer: {
+    width: 40,
+  },
+  statusText: {
+    marginTop: 4,
+    fontSize: 18,
+  },
+  childrenContainer: {
+    marginLeft: 48,
+  },
+  cardContainer: {
+    width: 384,
+  },
+  cardContent: {
+    width: 384,
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  cardBackground: {
+    backgroundColor: "cardBackgroundColor",
+  },
+});
