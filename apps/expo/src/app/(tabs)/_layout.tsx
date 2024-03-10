@@ -121,14 +121,13 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   searchTab: {
     top: 2,
-    height: 56, // 14 units in your scale
-    width: 56, // 14 units in your scale
+    height: 56,
+    width: 56,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
     borderRadius: 100,
     textAlign: "center",
-    // 'alignMiddle' and 'text2xl' would be dependent on your specific implementation
   },
   active: {
     backgroundColor: defaultTheme.extend.colors.tabBar.active,
