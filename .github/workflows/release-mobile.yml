@@ -111,7 +111,7 @@ jobs:
       - name: Build iOS app
         run: cd apps/expo && pnpm run ipa
           
-      - name: Export .ipa from .app
+      - name: Pack .ipa from .app
         run: |
           cd apps/expo
           mkdir -p ios/build/Build/Products/Release-iphoneos/Payload
