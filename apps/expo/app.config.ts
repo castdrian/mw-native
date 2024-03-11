@@ -1,10 +1,12 @@
 import type { ExpoConfig } from "expo/config";
 
+import { version } from "./package.json";
+
 const defineConfig = (): ExpoConfig => ({
   name: "movie-web",
   slug: "mw-mobile",
-  scheme: "dev.movieweb.app",
-  version: "0.1.0",
+  scheme: "movieweb",
+  version,
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "automatic",
   splash: {
@@ -33,11 +35,6 @@ const defineConfig = (): ExpoConfig => ({
     favicon: "./assets/images/favicon.png",
     bundler: "metro",
   },
-  // extra: {
-  //   eas: {
-  //     projectId: "your-eas-project-id",
-  //   },
-  // },
   experiments: {
     tsconfigPaths: true,
     typedRoutes: true,
