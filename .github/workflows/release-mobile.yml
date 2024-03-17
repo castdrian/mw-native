@@ -169,6 +169,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Pull version bump
+        run: git pull --all
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
