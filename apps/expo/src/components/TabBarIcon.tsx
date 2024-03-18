@@ -1,5 +1,4 @@
 import { FontAwesome } from "@expo/vector-icons";
-
 import { useTheme } from "tamagui";
 
 type Props = {
@@ -8,6 +7,6 @@ type Props = {
 
 export default function TabBarIcon({ focused, ...rest }: Props) {
   const theme = useTheme();
-  const color = focused ? theme.tabBarIconFocused.val : theme.tabBarIcon.val
+  const color = focused ? theme.tabBarIconFocused.val : theme.tabBarIcon.val;
   return <FontAwesome color={color} size={24} {...rest} />;
 }

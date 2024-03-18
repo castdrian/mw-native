@@ -38,6 +38,7 @@ const config = {
     "**/.eslintrc.cjs",
     "dist",
     "pnpm-lock.yaml",
+    "tamagui-web.css",
   ],
   reportUnusedDisableDirectives: true,
 };
