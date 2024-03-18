@@ -25,10 +25,6 @@ const defineConfig = (): ExpoConfig => ({
   },
   android: {
     package: "dev.movieweb.app",
-    adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png",
-      backgroundColor: "#FFFFFF",
-    },
     permissions: ["WRITE_SETTINGS"],
   },
   web: {
