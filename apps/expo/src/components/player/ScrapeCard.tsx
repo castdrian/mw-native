@@ -1,11 +1,7 @@
 import type { ReactNode } from "react";
 import React from "react";
-import { StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
-
-import { Text } from "../ui/Text";
+import { Text, useTheme, View } from "tamagui";
 
 export interface ScrapeItemProps {
   status: "failure" | "pending" | "notfound" | "success" | "waiting";
@@ -37,41 +33,42 @@ export function StatusCircle({
   type: ScrapeItemProps["status"];
   percentage: number;
 }) {
+  const theme = useTheme();
   return (
     <>
       {type === "waiting" && (
         <MaterialCommunityIcons
           name="circle-outline"
           size={40}
-          color={defaultTheme.extend.colors.video.scraping.noresult}
+          color={theme.scrapingNoResult.val}
         />
       )}
       {type === "pending" && (
         <MaterialCommunityIcons
           name={mapPercentageToIcon(percentage) as "circle-slice-1"}
           size={40}
-          color={defaultTheme.extend.colors.video.scraping.loading}
+          color={theme.scrapingLoading.val}
         />
       )}
       {type === "failure" && (
         <MaterialCommunityIcons
           name="close-circle"
           size={40}
-          color={defaultTheme.extend.colors.video.scraping.error}
+          color={theme.scrapingError.val}
         />
       )}
       {type === "notfound" && (
         <MaterialIcons
           name="remove-circle"
           size={40}
-          color={defaultTheme.extend.colors.video.scraping.noresult}
+          color={theme.scrapingNoResult.val}
         />
       )}
       {type === "success" && (
         <MaterialIcons
           name="check-circle"
           size={40}
-          color={defaultTheme.extend.colors.video.scraping.success}
+          color={theme.scrapingSuccess.val}
         />
       )}
     </>
@@ -82,87 +79,37 @@ export function ScrapeItem(props: ScrapeItemProps) {
   const text = statusTextMap[props.status];
 
   return (
-    <View style={styles.scrapeItemContainer}>
-      <View style={styles.itemRow}>
+    <View flex={1} flexDirection="column">
+      <View flexDirection="row" alignItems="center" gap={16}>
         <StatusCircle type={props.status} percentage={props.percentage ?? 0} />
         <Text
-          style={[
-            styles.itemText,
-            props.status === "pending"
-              ? styles.textPending
-              : styles.textSecondary,
-          ]}
+          fontSize={18}
+          color={props.status === "pending" ? "$scrapingLoading" : "white"}
         >
           {props.name}
         </Text>
       </View>
-      <View style={styles.textRow}>
-        <View style={styles.spacer} />
-        <View>{text && <Text style={styles.statusText}>{text}</Text>}</View>
+      <View flexDirection="row" alignItems="center" gap={16}>
+        <View width={40} />
+        <View>{text && <Text fontSize={18}>{text}</Text>}</View>
       </View>
-      <View style={styles.childrenContainer}>{props.children}</View>
+      <View marginLeft={48}>{props.children}</View>
     </View>
   );
 }
 
 export function ScrapeCard(props: ScrapeCardProps) {
   return (
-    <View style={styles.cardContainer}>
+    <View width={384}>
       <View
-        style={[
-          styles.cardContent,
-          props.hasChildren ? styles.cardBackground : null,
-        ]}
+        width="100%"
+        borderRadius={10}
+        paddingVertical={12}
+        paddingHorizontal={24}
+        backgroundColor={props.hasChildren ? "$scrapingCard" : "transparent"}
       >
         <ScrapeItem {...props} />
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  scrapeItemContainer: {
-    flex: 1,
-    flexDirection: "column",
-  },
-  itemRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  itemText: {
-    fontSize: 18,
-  },
-  textPending: {
-    color: "white",
-  },
-  textSecondary: {
-    color: "secondaryColor",
-  },
-  textRow: {
-    flexDirection: "row",
-    gap: 16,
-  },
-  spacer: {
-    width: 40,
-  },
-  statusText: {
-    marginTop: 4,
-    fontSize: 18,
-  },
-  childrenContainer: {
-    marginLeft: 48,
-  },
-  cardContainer: {
-    width: 384,
-  },
-  cardContent: {
-    width: 384,
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-  },
-  cardBackground: {
-    backgroundColor: "cardBackgroundColor",
-  },
-});

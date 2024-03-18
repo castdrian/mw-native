@@ -1,5 +1,6 @@
 import React from "react";
-import { Dimensions, ScrollView, Text, View } from "react-native";
+import { Dimensions } from "react-native";
+import { ScrollView, Text, View } from "tamagui";
 
 import type { ItemData } from "~/components/item/item";
 import Item from "~/components/item/item";
@@ -55,7 +56,7 @@ export const ItemListSection = ({
 }) => {
   return (
     <View>
-      <Text className="mb-2 mt-4 text-xl font-semibold text-white">
+      <Text marginBottom={8} marginTop={16} fontWeight="500" fontSize={20}>
         {title}
       </Text>
       <ScrollView
@@ -66,11 +67,9 @@ export const ItemListSection = ({
         {items.map((item, index) => (
           <View
             key={index}
-            style={{
-              width: itemWidth,
-              paddingHorizontal: padding / 2,
-              paddingBottom: padding,
-            }}
+            width={itemWidth}
+            paddingHorizontal={padding / 2}
+            paddingBottom={padding}
           >
             <Item data={item} />
           </View>

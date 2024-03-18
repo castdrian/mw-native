@@ -1,17 +1,13 @@
-import { useEffect } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import Modal from "react-native-modal";
+import { useEffect, useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
+import { useTheme } from "tamagui";
 
 import { useAudioTrack } from "~/hooks/player/useAudioTrack";
-import { useBoolean } from "~/hooks/useBoolean";
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
-import { Button } from "../ui/Button";
-import { Text } from "../ui/Text";
+import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
+import { Settings } from "./settings/Sheet";
 
 export interface AudioTrack {
   uri: string;
@@ -21,6 +17,9 @@ export interface AudioTrack {
 }
 
 export const AudioTrackSelector = () => {
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+
   const tracks = usePlayerStore((state) => state.interface.audioTracks);
   const setAudioTracks = usePlayerStore((state) => state.setAudioTracks);
   const stream = usePlayerStore((state) => state.interface.currentStream);
@@ -30,7 +29,6 @@ export const AudioTrackSelector = () => {
     (state) => state.setSelectedAudioTrack,
   );
 
-  const { isTrue, on, off } = useBoolean();
   const { synchronizePlayback } = useAudioTrack();
 
   useEffect(() => {
@@ -52,58 +50,67 @@ export const AudioTrackSelector = () => {
   if (!tracks?.length) return null;
 
   return (
-    <View className="max-w-36 flex-1">
+    <>
       <Controls>
-        <Button
-          title="Audio"
-          variant="outline"
-          onPress={on}
-          iconLeft={
+        <MWButton
+          type="secondary"
+          icon={
             <MaterialCommunityIcons
-              name="volume-high"
+              name="subtitles"
               size={24}
-              color={defaultTheme.extend.colors.buttons.purple}
+              color={theme.buttonSecondaryText.val}
             />
           }
-        />
+          onPress={() => setOpen(true)}
+        >
+          Subtitles
+        </MWButton>
       </Controls>
 
-      <Modal
-        isVisible={isTrue}
-        onBackdropPress={off}
-        supportedOrientations={["portrait", "landscape"]}
-        style={{
-          width: "35%",
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
+      <Settings.Sheet
+        forceRemoveScrollEnabled={open}
+        open={open}
+        onOpenChange={setOpen}
       >
-        <ScrollView className="flex-1 bg-gray-900">
-          <Text className="text-center font-bold">Select audio</Text>
-          {tracks?.map((track) => (
-            <Pressable
-              className="flex w-full flex-row justify-between p-3"
-              key={track.language}
-              onPress={() => {
-                setSelectedAudioTrack(track);
-                if (stream) {
-                  void synchronizePlayback(track, stream);
+        <Settings.SheetOverlay />
+        <Settings.SheetHandle />
+        <Settings.SheetFrame>
+          <Settings.Header
+            icon={
+              <MaterialCommunityIcons
+                name="close"
+                size={24}
+                color={theme.playerSettingsUnactiveText.val}
+                onPress={() => setOpen(false)}
+              />
+            }
+            title="Audio"
+          />
+          <Settings.Content>
+            {tracks?.map((track) => (
+              <Settings.Item
+                key={track.language}
+                title={track.name}
+                iconRight={
+                  track.active && (
+                    <MaterialCommunityIcons
+                      name="check-circle"
+                      size={24}
+                      color={theme.playerSettingsUnactiveText.val}
+                    />
+                  )
                 }
-                off();
-              }}
-            >
-              <Text>{track.name}</Text>
-              {track.active && (
-                <MaterialCommunityIcons
-                  name="check-circle"
-                  size={24}
-                  color={defaultTheme.extend.colors.buttons.purple}
-                />
-              )}
-            </Pressable>
-          ))}
-        </ScrollView>
-      </Modal>
-    </View>
+                onPress={() => {
+                  setSelectedAudioTrack(track);
+                  if (stream) {
+                    void synchronizePlayback(track, stream);
+                  }
+                }}
+              />
+            ))}
+          </Settings.Content>
+        </Settings.SheetFrame>
+      </Settings.Sheet>
+    </>
   );
 };

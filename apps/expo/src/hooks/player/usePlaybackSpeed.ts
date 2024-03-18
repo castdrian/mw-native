@@ -6,9 +6,9 @@ export const usePlaybackSpeed = () => {
   const videoRef = usePlayerStore((state) => state.videoRef);
 
   const changePlaybackSpeed = useCallback(
-    (newValue: number) => {
+    async (newValue: number) => {
       if (videoRef) {
-        void videoRef.setRateAsync(newValue, true);
+        await videoRef.setRateAsync(newValue, true);
       }
     },
     [videoRef],

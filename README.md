@@ -15,20 +15,19 @@ apps
       ├─ Expo SDK 50
       ├─ React Native using React 18
       ├─ Navigation using Expo Router
-      ├─ Tailwind using Nativewind
-      └─ Typesafe API calls using tRPC
+      └─ Styling with Tamagui
 packages
   ├─ tmdb
   |   └─ Typesafe API calls to The Movie Database
   └─ provider-utils
       └─ Typesafe API calls to the video providers 
 tooling
+  ├─ color
+  |   └─ shared color palette
   ├─ eslint
   |   └─ shared, fine-grained, eslint presets
   ├─ prettier
   |   └─ shared prettier configuration
-  ├─ tailwind
-  |   └─ shared tailwind configuration
   └─ typescript
       └─ shared tsconfig you can extend from
 ```

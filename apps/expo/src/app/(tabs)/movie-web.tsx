@@ -1,5 +1,6 @@
+import { Text } from "tamagui";
+
 import ScreenLayout from "~/components/layout/ScreenLayout";
-import { Text } from "~/components/ui/Text";
 
 export default function MovieWebScreen() {
   return (

@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
+import { Text, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
-import { Text } from "../ui/Text";
 import { AudioTrackSelector } from "./AudioTrackSelector";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
@@ -44,13 +44,22 @@ export const BottomControls = () => {
 
   if (status?.isLoaded) {
     return (
-      <View className="flex h-32 w-full flex-col items-center justify-center p-6">
+      <View
+        height={128}
+        width="100%"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        padding={24}
+      >
         <Controls>
-          <View className="flex w-full flex-row items-center">
-            <Text className="font-bold">{currentTime}</Text>
-            <Text className="mx-1 font-bold">/</Text>
+          <View flexDirection="row" justifyContent="space-between" width="$11">
+            <Text fontWeight="bold">{currentTime}</Text>
+            <Text marginHorizontal={1} fontWeight="bold">
+              /
+            </Text>
             <TouchableOpacity onPress={toggleTimeDisplay}>
-              <Text className="font-bold">
+              <Text fontWeight="bold">
                 {showRemaining ? remainingTime : durationTime}
               </Text>
             </TouchableOpacity>
@@ -58,7 +67,13 @@ export const BottomControls = () => {
 
           <ProgressBar />
         </Controls>
-        <View className="flex w-full flex-row items-center justify-center gap-4 pb-10">
+        <View
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="center"
+          gap={4}
+          paddingBottom={40}
+        >
           <SeasonSelector />
           <CaptionsSelector />
           <SourceSelector />

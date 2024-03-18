@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
+import { View } from "tamagui";
 
 import type { HlsBasedStream } from "@movie-web/provider-utils";
 import { extractTracksFromHLS } from "@movie-web/provider-utils";
@@ -11,7 +12,6 @@ import type { AudioTrack } from "./AudioTrackSelector";
 import { useMeta } from "~/hooks/player/useMeta";
 import { useScrape } from "~/hooks/player/useSourceScrape";
 import { constructFullUrl } from "~/lib/url";
-import { cn } from "~/lib/utils";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { convertMetaToScrapeMedia } from "~/stores/player/slices/video";
 import { usePlayerStore } from "~/stores/player/store";
@@ -106,17 +106,35 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
 
   useEffect(() => {
     scrollViewRef.current?.scrollTo({
-      y: currentProviderIndex * 80,
+      y: currentProviderIndex * 110,
       animated: true,
     });
   }, [currentProviderIndex]);
 
   return (
-    <SafeAreaView className="flex h-full flex-1 flex-col">
-      <View className="flex-1 items-center justify-center bg-background-main">
+    <SafeAreaView
+      style={{
+        display: "flex",
+        height: "100%",
+        flexDirection: "column",
+        flex: 1,
+      }}
+    >
+      <View
+        flex={1}
+        alignItems="center"
+        justifyContent="center"
+        backgroundColor="$screenBackground"
+      >
         <ScrollView
           ref={scrollViewRef}
-          contentContainerClassName="items-center flex flex-col py-16"
+          contentContainerStyle={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            paddingVertical: 64,
+          }}
         >
           {sourceOrder.map((order) => {
             const source = sources[order.id];
@@ -138,9 +156,9 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
                   percentage={source.percentage}
                 >
                   <View
-                    className={cn({
-                      "mt-8 space-y-6": order.children.length > 0,
-                    })}
+                    marginTop={order.children.length > 0 ? 8 : 0}
+                    flexDirection="column"
+                    gap={16}
                   >
                     {order.children.map((embedId) => {
                       const embed = sources[embedId];

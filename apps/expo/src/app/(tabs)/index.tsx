@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "tamagui";
 
 import {
   bookmarks,
@@ -7,15 +7,16 @@ import {
   watching,
 } from "~/components/item/ItemListSection";
 import ScreenLayout from "~/components/layout/ScreenLayout";
-import { Text } from "~/components/ui/Text";
 
 export default function HomeScreen() {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} flex={1}>
       <ScreenLayout
         title={
-          <View className="flex-row items-center">
-            <Text className="text-2xl font-bold">Home</Text>
+          <View flexDirection="row" alignItems="center">
+            <Text fontWeight="bold" fontSize={20}>
+              Home
+            </Text>
           </View>
         }
       >

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
+import { useTheme } from "tamagui";
 
 interface SvgTabBarIconProps {
   focused?: boolean;
@@ -11,9 +11,8 @@ export default function SvgTabBarIcon({
   focused,
   children,
 }: SvgTabBarIconProps) {
-  const fillColor = focused
-    ? defaultTheme.extend.colors.tabBar.active
-    : defaultTheme.extend.colors.tabBar.inactive;
+  const theme = useTheme();
+  const fillColor = focused ? theme.tabBarIconFocused.val : theme.tabBarIcon.val;
 
   if (React.isValidElement(children)) {
     return React.cloneElement(children, { fillColor } as React.Attributes);

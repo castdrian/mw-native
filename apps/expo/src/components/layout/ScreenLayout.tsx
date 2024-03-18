@@ -1,6 +1,4 @@
-import { View } from "react-native";
-
-import { Text } from "~/components/ui/Text";
+import { Text, View } from "tamagui";
 
 interface Props {
   title?: React.ReactNode | string;
@@ -10,13 +8,17 @@ interface Props {
 
 export default function ScreenLayout({ title, subtitle, children }: Props) {
   return (
-    <View className="bg-shade-900 flex-1 p-12">
+    <View flex={1} padding={44} backgroundColor="$screenBackground">
       {typeof title === "string" && (
-        <Text className="text-2xl font-bold">{title}</Text>
+        <Text fontWeight="bold" fontSize={24}>
+          {title}
+        </Text>
       )}
       {typeof title !== "string" && title}
-      <Text className="mt-1 text-sm font-bold">{subtitle}</Text>
-      <View className="py-3">{children}</View>
+      <Text fontSize={16} fontWeight="bold" marginTop={1}>
+        {subtitle}
+      </Text>
+      <View paddingVertical={12}>{children}</View>
     </View>
   );
 }

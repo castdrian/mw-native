@@ -1,20 +1,18 @@
-import { useCallback, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
-import Modal from "react-native-modal";
+import type { SheetProps } from "tamagui";
+import { useCallback, useEffect, useState } from "react";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Spinner, Text, useTheme, View } from "tamagui";
 
 import { getBuiltinSources, providers } from "@movie-web/provider-utils";
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
 import {
   useEmbedScrape,
   useSourceScrape,
 } from "~/hooks/player/useSourceScrape";
-import { useBoolean } from "~/hooks/useBoolean";
 import { usePlayerStore } from "~/stores/player/store";
-import { Button } from "../ui/Button";
-import { Text } from "../ui/Text";
+import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
+import { Settings } from "./settings/Sheet";
 
 const SourceItem = ({
   name,
@@ -22,20 +20,39 @@ const SourceItem = ({
   active,
   embed,
   onPress,
-  closeModal,
 }: {
   name: string;
   id: string;
   active?: boolean;
   embed?: { url: string; embedId: string };
   onPress?: (id: string) => void;
-  closeModal?: () => void;
 }) => {
-  const { mutate, isPending, isError } = useEmbedScrape(closeModal);
+  const theme = useTheme();
+  const { mutate, isPending, isError } = useEmbedScrape();
 
   return (
-    <Pressable
-      className="flex w-full flex-row justify-between p-3"
+    <Settings.Item
+      title={name}
+      iconRight={
+        <>
+          {active && (
+            <MaterialCommunityIcons
+              name="check-circle"
+              size={24}
+              color={theme.sheetItemSelected.val}
+            />
+          )}
+          {isError && (
+            <MaterialCommunityIcons
+              name="alert-circle"
+              size={24}
+              color={theme.scrapingError.val}
+            />
+          )}
+
+          {isPending && <Spinner size="small" color="$scrapingLoading" />}
+        </>
+      }
       onPress={() => {
         if (onPress) {
           onPress(id);
@@ -49,79 +66,85 @@ const SourceItem = ({
           });
         }
       }}
-    >
-      <Text className="font-bold">{name}</Text>
-      {active && (
-        <MaterialCommunityIcons
-          name="check-circle"
-          size={24}
-          color={defaultTheme.extend.colors.buttons.purple}
-        />
-      )}
-      {isError && (
-        <MaterialCommunityIcons
-          name="alert-circle"
-          size={24}
-          color={defaultTheme.extend.colors.video.context.error}
-        />
-      )}
-      {isPending && <ActivityIndicator size="small" color="#0000ff" />}
-    </Pressable>
+    />
   );
 };
 
 const EmbedsPart = ({
   sourceId,
-  setCurrentScreen,
-  closeModal,
-}: {
+  closeParent,
+  ...props
+}: SheetProps & {
   sourceId: string;
-  setCurrentScreen: (screen: "source" | "embed") => void;
-  closeModal: () => void;
+  closeParent?: (open: boolean) => void;
 }) => {
-  const { data, isPending, error } = useSourceScrape(sourceId, closeModal);
+  const theme = useTheme();
+  const { data, isPending, isError, error, status } = useSourceScrape(sourceId);
+
+  console.log(data);
+
+  useEffect(() => {
+    if (status === "success" && !isError && data && data?.length <= 1) {
+      props.onOpenChange?.(false);
+      closeParent?.(false);
+    }
+  }, [props.onOpenChange, status, data, isError]);
 
   return (
-    <View className="flex w-full flex-col gap-4 p-3">
-      <View className="flex-row items-center gap-4">
-        <Ionicons
-          name="arrow-back"
-          size={30}
-          color="white"
-          onPress={() => setCurrentScreen("source")}
+    <Settings.Sheet
+      open={props.open}
+      onOpenChange={props.onOpenChange}
+      {...props}
+    >
+      <Settings.SheetOverlay />
+      <Settings.SheetHandle />
+      <Settings.SheetFrame>
+        <Settings.Header
+          icon={
+            <Ionicons
+              name="arrow-back"
+              size={24}
+              color={theme.buttonSecondaryText.val}
+              onPress={() => {
+                props.onOpenChange?.(false);
+              }}
+            />
+          }
+          title={providers.getMetadata(sourceId)?.name ?? "Embeds"}
         />
-        <Text className="text-xl font-bold">Embeds</Text>
-      </View>
-      {isPending && <ActivityIndicator size="small" color="#0000ff" />}
-      {error && <Text>{error.message}</Text>}
-      {data && data?.length > 1 && (
-        <View className="flex w-full flex-col p-3">
-          {data.map((embed) => {
-            const metaData = providers.getMetadata(embed.embedId)!;
-            return (
-              <SourceItem
-                key={embed.embedId}
-                name={metaData.name}
-                id={embed.embedId}
-                embed={embed}
-                closeModal={closeModal}
-              />
-            );
-          })}
-        </View>
-      )}
-    </View>
+        <Settings.Content>
+          <View alignItems="center" justifyContent="center">
+            {isPending && <Spinner size="small" color="$loadingIndicator" />}
+            {error && <Text>Something went wrong!</Text>}
+          </View>
+          {data && data?.length > 1 && (
+            <Settings.Content>
+              {data.map((embed) => {
+                const metaData = providers.getMetadata(embed.embedId)!;
+                return (
+                  <SourceItem
+                    key={embed.embedId}
+                    name={metaData.name}
+                    id={embed.embedId}
+                    embed={embed}
+                  />
+                );
+              })}
+            </Settings.Content>
+          )}
+        </Settings.Content>
+      </Settings.SheetFrame>
+    </Settings.Sheet>
   );
 };
 
 export const SourceSelector = () => {
-  const [currentScreen, setCurrentScreen] = useState<"source" | "embed">(
-    "source",
-  );
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const [embedOpen, setEmbedOpen] = useState(false);
+
   const sourceId = usePlayerStore((state) => state.interface.sourceId);
   const setSourceId = usePlayerStore((state) => state.setSourceId);
-
-  const { isTrue, on, off } = useBoolean();
 
   const isActive = useCallback(
     (id: string) => {
@@ -131,65 +154,71 @@ export const SourceSelector = () => {
   );
 
   return (
-    <View className="max-w-36">
+    <>
       <Controls>
-        <Button
-          title="Source"
-          variant="outline"
-          onPress={on}
-          iconLeft={
+        <MWButton
+          type="secondary"
+          icon={
             <MaterialCommunityIcons
               name="video"
               size={24}
-              color={defaultTheme.extend.colors.buttons.purple}
+              color={theme.buttonSecondaryText.val}
             />
           }
-        />
+          onPress={() => setOpen(true)}
+        >
+          Source
+        </MWButton>
       </Controls>
 
-      <Modal
-        isVisible={isTrue}
-        onBackdropPress={off}
-        supportedOrientations={["portrait", "landscape"]}
-        style={{
-          width: "35%",
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
+      <Settings.Sheet
+        forceRemoveScrollEnabled={open}
+        open={open}
+        onOpenChange={setOpen}
       >
-        <ScrollView
-          className="w-full flex-1 bg-gray-900"
-          contentContainerStyle={{
-            padding: 10,
-          }}
-        >
-          {currentScreen === "source" && (
+        <Settings.SheetOverlay />
+        <Settings.SheetHandle />
+        <Settings.SheetFrame>
+          {embedOpen && sourceId ? (
+            <EmbedsPart
+              sourceId={sourceId}
+              open={embedOpen}
+              onOpenChange={setEmbedOpen}
+              closeParent={setOpen}
+            />
+          ) : (
             <>
-              {getBuiltinSources()
-                .sort((a, b) => b.rank - a.rank)
-                .map((source) => (
-                  <SourceItem
-                    key={source.id}
-                    name={source.name}
-                    id={source.id}
-                    active={isActive(source.id)}
-                    onPress={() => {
-                      setSourceId(source.id);
-                      setCurrentScreen("embed");
-                    }}
+              <Settings.Header
+                icon={
+                  <MaterialCommunityIcons
+                    name="close"
+                    size={24}
+                    color={theme.playerSettingsUnactiveText.val}
+                    onPress={() => setOpen(false)}
                   />
-                ))}
+                }
+                title="Sources"
+              />
+              <Settings.Content>
+                {getBuiltinSources()
+                  .sort((a, b) => b.rank - a.rank)
+                  .map((source) => (
+                    <SourceItem
+                      key={source.id}
+                      name={source.name}
+                      id={source.id}
+                      active={isActive(source.id)}
+                      onPress={(id) => {
+                        setSourceId(id);
+                        setEmbedOpen(true);
+                      }}
+                    />
+                  ))}
+              </Settings.Content>
             </>
           )}
-          {currentScreen === "embed" && (
-            <EmbedsPart
-              sourceId={sourceId!}
-              setCurrentScreen={setCurrentScreen}
-              closeModal={off}
-            />
-          )}
-        </ScrollView>
-      </Modal>
-    </View>
+        </Settings.SheetFrame>
+      </Settings.Sheet>
+    </>
   );
 };

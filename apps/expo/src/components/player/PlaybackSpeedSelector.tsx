@@ -1,71 +1,82 @@
-import { Pressable, ScrollView, View } from "react-native";
-import Modal from "react-native-modal";
+import { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
+import { useTheme } from "tamagui";
 
 import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
-import { useBoolean } from "~/hooks/useBoolean";
-import { Button } from "../ui/Button";
-import { Text } from "../ui/Text";
+import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
+import { Settings } from "./settings/Sheet";
 
 export const PlaybackSpeedSelector = () => {
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
   const { currentSpeed, changePlaybackSpeed } = usePlaybackSpeed();
-  const { isTrue, on, off } = useBoolean();
 
   const speeds = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
   return (
-    <View className="max-w-36 flex-1">
+    <>
       <Controls>
-        <Button
-          title="Speed"
-          variant="outline"
-          onPress={on}
-          iconLeft={
+        <MWButton
+          type="secondary"
+          icon={
             <MaterialCommunityIcons
               name="speedometer"
               size={24}
-              color={defaultTheme.extend.colors.buttons.purple}
+              color={theme.buttonSecondaryText.val}
             />
           }
-        />
+          onPress={() => setOpen(true)}
+        >
+          Playback
+        </MWButton>
       </Controls>
 
-      <Modal
-        isVisible={isTrue}
-        onBackdropPress={off}
-        supportedOrientations={["portrait", "landscape"]}
-        style={{
-          width: "35%",
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
+      <Settings.Sheet
+        forceRemoveScrollEnabled={open}
+        open={open}
+        onOpenChange={setOpen}
       >
-        <ScrollView className="flex-1 bg-gray-900">
-          <Text className="text-center font-bold">Select speed</Text>
-          {speeds.map((speed) => (
-            <Pressable
-              className="flex w-full flex-row justify-between p-3"
-              key={speed}
-              onPress={() => {
-                changePlaybackSpeed(speed);
-                off();
-              }}
-            >
-              <Text>{speed}</Text>
-              {speed === currentSpeed && (
-                <MaterialCommunityIcons
-                  name="check-circle"
-                  size={24}
-                  color={defaultTheme.extend.colors.buttons.purple}
-                />
-              )}
-            </Pressable>
-          ))}
-        </ScrollView>
-      </Modal>
-    </View>
+        <Settings.SheetOverlay />
+        <Settings.SheetHandle />
+        <Settings.SheetFrame>
+          <Settings.Header
+            icon={
+              <MaterialCommunityIcons
+                name="close"
+                size={24}
+                color={theme.playerSettingsUnactiveText.val}
+                onPress={() => setOpen(false)}
+              />
+            }
+            title="Playback settings"
+          />
+          <Settings.Content>
+            {speeds.map((speed) => (
+              <Settings.Item
+                key={speed}
+                title={`${speed}x`}
+                iconRight={
+                  speed === currentSpeed && (
+                    <MaterialCommunityIcons
+                      name="check-circle"
+                      size={24}
+                      color={theme.sheetItemSelected.val}
+                    />
+                  )
+                }
+                onPress={() => {
+                  changePlaybackSpeed(speed)
+                    .then(() => setOpen(false))
+                    .catch((err) => {
+                      console.log("error", err);
+                    });
+                }}
+              />
+            ))}
+          </Settings.Content>
+        </Settings.SheetFrame>
+      </Settings.Sheet>
+    </>
   );
 };

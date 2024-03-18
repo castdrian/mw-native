@@ -1,5 +1,4 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
 import Animated, {
   Easing,
   useAnimatedProps,
@@ -8,6 +7,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Circle, Svg } from "react-native-svg";
 import { AntDesign } from "@expo/vector-icons";
+import { View } from "tamagui";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -50,7 +50,7 @@ export const StatusCircle = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View justifyContent="center" alignItems="center" position="relative">
       <Svg height="60" width="60" viewBox="0 0 60 60">
         {type === "loading" && (
           <AnimatedCircle
@@ -70,11 +70,3 @@ export const StatusCircle = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-});

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Keyboard, ScrollView, View } from "react-native";
+import { Keyboard, ScrollView } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -7,19 +7,14 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useQuery } from "@tanstack/react-query";
+import { Text, View } from "tamagui";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import Item from "~/components/item/item";
-import {
-  bookmarks,
-  ItemListSection,
-  watching,
-} from "~/components/item/ItemListSection";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { SearchBar } from "~/components/ui/Searchbar";
-import { Text } from "~/components/ui/Text";
 
 export default function HomeScreen() {
   const [query, setQuery] = useState("");
@@ -113,36 +108,28 @@ export default function HomeScreen() {
       >
         <ScreenLayout
           title={
-            <View className="flex-row items-center">
-              <Text className="text-2xl font-bold">Search</Text>
+            <View flexDirection="row" alignItems="center">
+              <Text fontWeight="bold" fontSize={20}>
+                Search
+              </Text>
             </View>
           }
         >
-          {searchResultsLoaded ? (
+          {searchResultsLoaded && (
             <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
-              <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
+              <View flexDirection="row" flexWrap="wrap">
                 {data?.map((item, index) => (
-                  <View key={index} className="basis-1/2 px-3 pb-3">
+                  <View
+                    key={index}
+                    paddingHorizontal={12}
+                    paddingBottom={12}
+                    width="50%"
+                  >
                     <Item data={item} />
                   </View>
                 ))}
               </View>
             </Animated.View>
-          ) : (
-            <ScrollView
-              scrollEnabled={
-                bookmarks.length > 0 || watching.length > 0 ? true : false
-              }
-            >
-              <ItemListSection
-                title="Bookmarks"
-                items={bookmarks.concat(watching)}
-              />
-              <ItemListSection
-                title="Continue Watching"
-                items={watching.concat(bookmarks)}
-              />
-            </ScrollView>
           )}
         </ScreenLayout>
       </ScrollView>

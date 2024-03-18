@@ -4,7 +4,7 @@ import type {
   TapGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
 import React, { useEffect, useRef } from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions } from "react-native";
 import {
   PanGestureHandler,
   State,
@@ -16,8 +16,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
+import { useTheme, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
 
@@ -47,6 +46,7 @@ export const isPointInSliderVicinity = (x: number, y: number) => {
 };
 
 const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
+  const theme = useTheme();
   const tapRef = useRef<TapGestureHandler>(null);
   const panRef = useRef<PanGestureHandler>(null);
   const status = usePlayerStore((state) => state.status);
@@ -143,13 +143,13 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
         ]}
       >
         <View
-          className="justify-center"
           style={[
             {
               height: trackSize_,
               borderRadius: trackSize_,
-              backgroundColor: defaultTheme.extend.colors.video.context.slider,
+              backgroundColor: theme.videoSlider.val,
               width,
+              justifyContent: "center",
             },
           ]}
         >
@@ -158,8 +158,7 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
               {
                 position: "absolute",
                 height: trackSize_,
-                backgroundColor:
-                  defaultTheme.extend.colors.video.context.sliderFilled,
+                backgroundColor: theme.videoSliderFilled.val,
                 borderRadius: trackSize_ / 2,
               },
               progressStyle,
@@ -172,13 +171,13 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
           >
             <Animated.View
               style={[
-                styles.knob,
                 {
+                  justifyContent: "center",
+                  alignItems: "center",
                   height: knobSize_,
                   width: knobSize_,
                   borderRadius: knobSize_ / 2,
-                  backgroundColor:
-                    defaultTheme.extend.colors.video.context.sliderFilled,
+                  backgroundColor: theme.videoSliderFilled.val,
                 },
                 scrollTranslationStyle,
               ]}
@@ -189,12 +188,5 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
     </TapGestureHandler>
   );
 };
-
-const styles = StyleSheet.create({
-  knob: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default VideoSlider;

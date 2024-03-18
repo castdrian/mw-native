@@ -4,7 +4,7 @@ import { immer } from "zustand/middleware/immer";
 
 import type { Stream } from "@movie-web/provider-utils";
 
-type CaptionWithData = Stream["captions"][0] & {
+export type CaptionWithData = Stream["captions"][0] & {
   data: ContentCaption[];
 };
 

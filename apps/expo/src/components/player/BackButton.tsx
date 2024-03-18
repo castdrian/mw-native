@@ -4,9 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { usePlayer } from "~/hooks/player/usePlayer";
 
-export const BackButton = ({
-  className,
-}: Partial<React.ComponentProps<typeof Ionicons>>) => {
+export const BackButton = () => {
   const { dismissFullscreenPlayer } = usePlayer();
   const router = useRouter();
 
@@ -30,7 +28,9 @@ export const BackButton = ({
       }}
       size={36}
       color="white"
-      className={className}
+      style={{
+        width: 100,
+      }}
     />
   );
 };

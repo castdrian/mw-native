@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Keyboard, ScrollView, View } from "react-native";
+import { Keyboard } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -7,6 +7,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useQuery } from "@tanstack/react-query";
+import { ScrollView, Text, View } from "tamagui";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -19,7 +20,6 @@ import {
 } from "~/components/item/ItemListSection";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { SearchBar } from "~/components/ui/Searchbar";
-import { Text } from "~/components/ui/Text";
 
 export default function HomeScreenContent() {
   const [query, setQuery] = useState("");
@@ -103,7 +103,7 @@ export default function HomeScreenContent() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View flex={1}>
       <ScrollView
         onScrollBeginDrag={handleScrollBegin}
         onMomentumScrollEnd={handleScrollEnd}
@@ -113,16 +113,23 @@ export default function HomeScreenContent() {
       >
         <ScreenLayout
           title={
-            <View className="flex-row items-center">
-              <Text className="text-2xl font-bold">Home</Text>
+            <View flexDirection="row" alignItems="center">
+              <Text fontWeight="bold" fontSize={20}>
+                Home
+              </Text>
             </View>
           }
         >
           {searchResultsLoaded ? (
             <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
-              <View className="flex w-full flex-1 flex-row flex-wrap justify-start">
+              <View
+                width="100%"
+                flexWrap="wrap"
+                justifyContent="flex-start"
+                flexDirection="row"
+              >
                 {data?.map((item, index) => (
-                  <View key={index} className="basis-1/2 px-3 pb-3">
+                  <View key={index} flexBasis={1 / 2} paddingHorizontal={12}>
                     <Item data={item} />
                   </View>
                 ))}

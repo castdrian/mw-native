@@ -1,10 +1,9 @@
 import { useRef } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Tabs } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
-
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
+import { useTheme, View } from "tamagui";
 
 import { MovieWebSvg } from "~/components/Icon";
 import SvgTabBarIcon from "~/components/SvgTabBarIcon";
@@ -15,11 +14,13 @@ export default function TabLayout() {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const focusSearchInputRef = useRef(() => {});
 
+  const theme = useTheme();
+
   return (
     <SearchTabContext.Provider value={{ focusSearchInputRef }}>
       <Tabs
         sceneContainerStyle={{
-          backgroundColor: defaultTheme.extend.colors.background.main,
+          backgroundColor: theme.screenBackground.val,
         }}
         screenListeners={({ route }) => ({
           tabPress: () => {
@@ -38,9 +39,9 @@ export default function TabLayout() {
         })}
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: defaultTheme.extend.colors.tabBar.active,
+          tabBarActiveTintColor: theme.tabBarIconFocused.val,
           tabBarStyle: {
-            backgroundColor: defaultTheme.extend.colors.tabBar.background,
+            backgroundColor: theme.tabBarBackground.val,
             borderTopColor: "transparent",
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
@@ -83,10 +84,16 @@ export default function TabLayout() {
             tabBarLabel: "",
             tabBarIcon: ({ focused }) => (
               <View
-                style={[
-                  styles.searchTab,
-                  focused ? styles.active : styles.inactive,
-                ]}
+                top={2}
+                height={56}
+                width={56}
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+                borderRadius={100}
+                backgroundColor={
+                  focused ? theme.tabBarIconFocused : theme.tabBarIcon
+                }
               >
                 <TabBarIcon name="search" color="#FFF" />
               </View>
@@ -117,22 +124,3 @@ export default function TabLayout() {
     </SearchTabContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  searchTab: {
-    top: 2,
-    height: 56,
-    width: 56,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    borderRadius: 100,
-    textAlign: "center",
-  },
-  active: {
-    backgroundColor: defaultTheme.extend.colors.tabBar.active,
-  },
-  inactive: {
-    backgroundColor: defaultTheme.extend.colors.tabBar.inactive,
-  },
-});

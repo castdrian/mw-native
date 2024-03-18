@@ -1,101 +1,153 @@
 import type { ContentCaption } from "subsrt-ts/dist/types/handler";
-import { useCallback } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import Modal from "react-native-modal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
 import { parse } from "subsrt-ts";
+import { useTheme, View } from "tamagui";
 
 import type { Stream } from "@movie-web/provider-utils";
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
 
-import { useBoolean } from "~/hooks/useBoolean";
+import type { CaptionWithData } from "~/stores/captions";
 import { useCaptionsStore } from "~/stores/captions";
 import { usePlayerStore } from "~/stores/player/store";
-import { Button } from "../ui/Button";
-import { Text } from "../ui/Text";
+import { FlagIcon } from "../FlagIcon";
+import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
+import { Settings } from "./settings/Sheet";
 import { getPrettyLanguageNameFromLocale } from "./utils";
 
 const parseCaption = async (
   caption: Stream["captions"][0],
-): Promise<ContentCaption[]> => {
+): Promise<CaptionWithData> => {
   const response = await fetch(caption.url);
   const data = await response.text();
-  return parse(data).filter(
-    (cue) => cue.type === "caption",
-  ) as ContentCaption[];
+  return {
+    ...caption,
+    data: parse(data).filter(
+      (cue) => cue.type === "caption",
+    ) as ContentCaption[],
+  };
 };
 
 export const CaptionsSelector = () => {
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
   const captions = usePlayerStore(
     (state) => state.interface.currentStream?.captions,
   );
+  const selectedCaption = useCaptionsStore((state) => state.selectedCaption);
   const setSelectedCaption = useCaptionsStore(
     (state) => state.setSelectedCaption,
   );
-  const { isTrue, on, off } = useBoolean();
 
-  const downloadAndSetCaption = useCallback(
-    (caption: Stream["captions"][0]) => {
-      parseCaption(caption)
-        .then((data) => {
-          setSelectedCaption({ ...caption, data });
-        })
-        .catch(console.error);
+  const downloadCaption = useMutation({
+    mutationKey: ["captions", selectedCaption?.id],
+    mutationFn: parseCaption,
+    onSuccess: (data) => {
+      setSelectedCaption(data);
     },
-    [setSelectedCaption],
-  );
+  });
 
   if (!captions?.length) return null;
 
   return (
-    <View className="max-w-36 flex-1">
+    <>
       <Controls>
-        <Button
-          title="Subtitles"
-          variant="outline"
-          onPress={on}
-          iconLeft={
+        <MWButton
+          type="secondary"
+          icon={
             <MaterialCommunityIcons
               name="subtitles"
               size={24}
-              color={defaultTheme.extend.colors.buttons.purple}
+              color={theme.buttonSecondaryText.val}
             />
           }
-        />
+          onPress={() => setOpen(true)}
+        >
+          Subtitles
+        </MWButton>
       </Controls>
-
-      <Modal
-        isVisible={isTrue}
-        onBackdropPress={off}
-        supportedOrientations={["portrait", "landscape"]}
-        style={{
-          width: "35%",
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
+      <Settings.Sheet
+        forceRemoveScrollEnabled={open}
+        open={open}
+        onOpenChange={setOpen}
       >
-        <ScrollView className="flex-1 bg-gray-900">
-          <Text className="text-center font-bold">Select subtitle</Text>
-          {captions?.map((caption) => (
-            <Pressable
-              className="flex w-full flex-row justify-between p-3"
-              key={caption.id}
-              onPress={() => {
-                downloadAndSetCaption(caption);
-                off();
-              }}
-            >
-              <Text>{getPrettyLanguageNameFromLocale(caption.language)}</Text>
-              <MaterialCommunityIcons
-                name="download"
+        <Settings.SheetOverlay />
+        <Settings.SheetHandle />
+        <Settings.SheetFrame>
+          <Settings.Header
+            icon={
+              <MaterialIcons
+                name="close"
                 size={24}
-                color={defaultTheme.extend.colors.buttons.purple}
+                color={theme.playerSettingsUnactiveText.val}
+                onPress={() => setOpen(false)}
               />
-            </Pressable>
-          ))}
-        </ScrollView>
-      </Modal>
-    </View>
+            }
+            title="Subtitles"
+            rightButton={
+              <MWButton
+                color="$playerSettingsUnactiveText"
+                fontWeight="bold"
+                chromeless
+              >
+                Customize
+              </MWButton>
+            }
+          />
+          <Settings.Content>
+            <Settings.Item
+              iconLeft={
+                <View
+                  width="$5"
+                  height="$3"
+                  backgroundColor="$subtitleSelectorBackground"
+                  borderRadius="$5"
+                />
+              }
+              title={"Off"}
+              iconRight={
+                !selectedCaption?.id && (
+                  <MaterialIcons
+                    name="check-circle"
+                    size={24}
+                    color={theme.sheetItemSelected.val}
+                  />
+                )
+              }
+              onPress={() => setSelectedCaption(null)}
+            />
+
+            {captions?.map((caption) => (
+              <Settings.Item
+                iconLeft={
+                  <View
+                    width="$5"
+                    height="$3"
+                    backgroundColor="$subtitleSelectorBackground"
+                    borderRadius="$5"
+                    overflow="hidden"
+                  >
+                    <FlagIcon languageCode={caption.language} />
+                  </View>
+                }
+                title={getPrettyLanguageNameFromLocale(caption.language) ?? ""}
+                iconRight={
+                  selectedCaption?.id === caption.id && (
+                    <MaterialIcons
+                      name="check-circle"
+                      size={24}
+                      color={theme.sheetItemSelected.val}
+                    />
+                  )
+                }
+                onPress={() => downloadCaption.mutate(caption)}
+                key={caption.id}
+              />
+            ))}
+          </Settings.Content>
+        </Settings.SheetFrame>
+      </Settings.Sheet>
+    </>
   );
 };

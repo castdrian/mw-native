@@ -1,8 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
-import { Bar as ProgressBar } from "react-native-progress";
-
-import { defaultTheme } from "@movie-web/tailwind-config/themes";
+import { Progress, Text, View } from "tamagui";
 
 export interface DownloadItemProps {
   filename: string;
@@ -33,22 +30,28 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   const formattedDownloaded = formatBytes(downloaded);
 
   return (
-    <View className="mb-4 rounded-lg border border-white p-4">
-      <Text className="mb-2 text-lg text-white">{filename}</Text>
-      <ProgressBar
-        progress={progress}
-        width={null}
-        color={defaultTheme.extend.colors.download.progressFilled}
-        unfilledColor={defaultTheme.extend.colors.download.progress}
-        borderWidth={0}
-        height={10}
-        borderRadius={5}
-      />
-      <View className="mt-2 flex-row items-center justify-between">
-        <Text className="text-sm text-gray-600">
+    <View marginBottom={16} borderRadius={8} borderColor="white" padding={16}>
+      <Text marginBottom={4} fontSize={16}>
+        {filename}
+      </Text>
+      <Progress value={60} height={10} backgroundColor="$progressBackground">
+        <Progress.Indicator
+          animation="bounce"
+          backgroundColor="$progressFilled"
+        />
+      </Progress>
+      <View
+        marginTop={8}
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Text fontSize={12} color="gray">
           {percentage}% - {formattedDownloaded} of {formattedFileSize}
         </Text>
-        <Text className="text-sm text-gray-600">{speed} MB/s</Text>
+        <Text fontSize={12} color="gray">
+          {speed} MB/s
+        </Text>
       </View>
     </View>
   );

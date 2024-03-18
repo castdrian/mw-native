@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { View } from "react-native";
 import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
@@ -7,8 +6,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import { Text, View } from "tamagui";
 
-import { Text } from "~/components/ui/Text";
 import { convertMilliSecondsToSeconds } from "~/lib/number";
 import { useCaptionsStore } from "~/stores/captions";
 import { usePlayerStore } from "~/stores/player/store";
@@ -74,12 +73,21 @@ export const CaptionRenderer = () => {
 
   return (
     <Animated.View
-      className="absolute bottom-[95px] rounded bg-black/60 px-4 py-1 text-center leading-normal"
-      style={animatedStyles}
+      style={[
+        {
+          position: "absolute",
+          bottom: 95,
+          borderRadius: 4,
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+        },
+        animatedStyles,
+      ]}
     >
       {visibleCaptions?.map((caption) => (
         <View key={caption.index}>
-          <Text>{caption.text}</Text>
+          <Text style={{ textAlign: "center" }}>{caption.text}</Text>
         </View>
       ))}
     </Animated.View>

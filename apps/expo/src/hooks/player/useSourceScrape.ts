@@ -189,7 +189,7 @@ export function useScrape() {
   };
 }
 
-export const useEmbedScrape = (closeModal?: () => void) => {
+export const useEmbedScrape = () => {
   const setCurrentStream = usePlayerStore((state) => state.setCurrentStream);
 
   const queryClient = useQueryClient();
@@ -208,8 +208,8 @@ export const useEmbedScrape = (closeModal?: () => void) => {
         url,
         embedId,
       });
+      if (!result) throw new Error("no result");
       if (result?.stream) {
-        closeModal?.();
         setCurrentStream(result.stream[0]!);
         return result.stream;
       }
@@ -224,10 +224,7 @@ export const useEmbedScrape = (closeModal?: () => void) => {
   return mutate;
 };
 
-export const useSourceScrape = (
-  sourceId: string | null,
-  closeModal: () => void,
-) => {
+export const useSourceScrape = (sourceId: string | null) => {
   const meta = usePlayerStore((state) => state.meta);
   const setCurrentStream = usePlayerStore((state) => state.setCurrentStream);
   const setSourceId = usePlayerStore((state) => state.setSourceId);
@@ -235,6 +232,7 @@ export const useSourceScrape = (
   const query = useQuery({
     queryKey: ["sourceScrape", meta, sourceId],
     queryFn: async () => {
+      console.log("useSourceScrape", meta, sourceId);
       if (!meta || !sourceId) return;
       const scrapeMedia = convertMetaToScrapeMedia(meta);
       const result = await getVideoStreamFromSource({
@@ -242,13 +240,13 @@ export const useSourceScrape = (
         media: scrapeMedia,
         events: {
           update(evt) {
-            console.log(evt);
+            console.log("update useSourceScrape", evt);
           },
         },
       });
+      console.log("useSourceScrape result", result);
 
       if (result?.stream) {
-        closeModal();
         setCurrentStream(result.stream[0]!);
         setSourceId(sourceId);
         return [];
@@ -256,7 +254,6 @@ export const useSourceScrape = (
       if (result?.embeds.length === 1) {
         const embedResult = await getVideoStreamFromEmbed(result.embeds[0]!);
         if (embedResult?.stream) {
-          closeModal();
           setCurrentStream(embedResult.stream[0]!);
           setSourceId(sourceId);
           return [];
