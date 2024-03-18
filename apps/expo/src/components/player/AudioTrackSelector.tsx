@@ -56,14 +56,14 @@ export const AudioTrackSelector = () => {
           type="secondary"
           icon={
             <MaterialCommunityIcons
-              name="subtitles"
+              name="volume-high"
               size={24}
               color={theme.buttonSecondaryText.val}
             />
           }
           onPress={() => setOpen(true)}
         >
-          Subtitles
+          Audio
         </MWButton>
       </Controls>
 
