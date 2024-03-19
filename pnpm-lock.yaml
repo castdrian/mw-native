@@ -165,8 +165,8 @@ importers:
         specifier: ^0.19.10
         version: 0.19.10(react-dom@18.2.0)(react@18.2.0)
       rn-dynamic-app-icon:
-        specifier: ^0.6.1
-        version: 0.6.1(react-native@0.73.5)(react@18.2.0)
+        specifier: github:castdrian/rn-dynamic-app-icon
+        version: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0)
       subsrt-ts:
         specifier: ^2.1.2
         version: 2.1.2
@@ -11963,16 +11963,6 @@ packages:
       inherits: 2.0.4
     dev: false
 
-  /rn-dynamic-app-icon@0.6.1(react-native@0.73.5)(react@18.2.0):
-    resolution: {integrity: sha512-pYC13v1quEFPrYwFK700uM6TmhoTLl/2Mr8PB8godAXhAdnfPEPVgb3TYex3iDXxATc1yevb93XsWIkZn61lNw==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-    dependencies:
-      react: 18.2.0
-      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-    dev: false
-
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -13728,4 +13718,19 @@ packages:
       immer: 10.0.3
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/castdrian/rn-dynamic-app-icon/tar.gz/4bc39bb0ac29c0845fbae3c1cc78721869015c9e}
+    id: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e
+    name: rn-dynamic-app-icon
+    version: 0.6.1
+    prepare: true
+    requiresBuild: true
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
     dev: false

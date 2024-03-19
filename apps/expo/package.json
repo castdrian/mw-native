@@ -64,7 +64,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "react-native-web": "^0.19.10",
-    "rn-dynamic-app-icon": "^0.6.1",
+    "rn-dynamic-app-icon": "github:castdrian/rn-dynamic-app-icon",
     "subsrt-ts": "^2.1.2",
     "tamagui": "^1.91.4",
     "zustand": "^4.4.7"
