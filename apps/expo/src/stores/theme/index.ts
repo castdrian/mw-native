@@ -22,12 +22,11 @@ export const useThemeStore = create(
     return {
       theme: "main",
       setTheme: (newTheme) => {
-        setAppIcon(newTheme);
-
         saveTheme(newTheme)
           .then(() => {
             set((s) => {
               s.theme = newTheme;
+              setAppIcon(newTheme);
             });
           })
           .catch((error) => {
