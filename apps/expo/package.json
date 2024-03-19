@@ -52,6 +52,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.5",
+    "react-native-change-icon": "^5.0.0",
     "react-native-context-menu-view": "^1.14.1",
     "react-native-gesture-handler": "~2.14.1",
     "react-native-ios-modal": "^0.1.8",
@@ -63,7 +64,6 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "react-native-web": "^0.19.10",
-    "rn-dynamic-app-icon": "github:castdrian/rn-dynamic-app-icon",
     "subsrt-ts": "^2.1.2",
     "tamagui": "^1.91.4",
     "zustand": "^4.4.7"

@@ -128,6 +128,9 @@ importers:
       react-native:
         specifier: 0.73.5
         version: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
+      react-native-change-icon:
+        specifier: ^5.0.0
+        version: 5.0.0(react-native@0.73.5)
       react-native-context-menu-view:
         specifier: ^1.14.1
         version: 1.14.1(react-native@0.73.5)(react@18.2.0)
@@ -161,9 +164,6 @@ importers:
       react-native-web:
         specifier: ^0.19.10
         version: 0.19.10(react-dom@18.2.0)(react@18.2.0)
-      rn-dynamic-app-icon:
-        specifier: github:castdrian/rn-dynamic-app-icon
-        version: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0)
       subsrt-ts:
         specifier: ^2.1.2
         version: 2.1.2
@@ -11299,6 +11299,14 @@ packages:
       prop-types: 15.8.1
     dev: false
 
+  /react-native-change-icon@5.0.0(react-native@0.73.5):
+    resolution: {integrity: sha512-pq2SlMeaRlgEDDlJQL2dAa2P6YpgXpKMmZ4CsXHRnmXBVjpG7SBSI9tbP85grxqZSj6b6EBuP9u1oyfZm2b+JA==}
+    peerDependencies:
+      react-native: '*'
+    dependencies:
+      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
+    dev: false
+
   /react-native-context-menu-view@1.14.1(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-rPtC6RCbEVismTQ6M7WSt1HisNvgbS9bWqWX4RQXNXHKOKsVvXpI+bWRypFAjeBN/P+winn6Dxn1+meLBMrjmQ==}
     peerDependencies:
@@ -13642,19 +13650,4 @@ packages:
       immer: 10.0.3
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
-
-  github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/castdrian/rn-dynamic-app-icon/tar.gz/4bc39bb0ac29c0845fbae3c1cc78721869015c9e}
-    id: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e
-    name: rn-dynamic-app-icon
-    version: 0.6.1
-    prepare: true
-    requiresBuild: true
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-    dependencies:
-      react: 18.2.0
-      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
     dev: false
