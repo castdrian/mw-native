@@ -1,4 +1,4 @@
-import { setAppIcon } from "expo-dynamic-app-icon";
+import { changeIcon } from "rn-dynamic-app-icon";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -26,7 +26,7 @@ export const useThemeStore = create(
           .then(() => {
             set((s) => {
               s.theme = newTheme;
-              setAppIcon(newTheme);
+              void changeIcon(newTheme);
             });
           })
           .catch((error) => {

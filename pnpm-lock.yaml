@@ -26,6 +26,9 @@ importers:
 
   apps/expo:
     dependencies:
+      '@config-plugins/react-native-dynamic-app-icon':
+        specifier: ^7.0.0
+        version: 7.0.0(expo@50.0.13)
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.21)
@@ -80,9 +83,6 @@ importers:
       expo-constants:
         specifier: ~15.4.5
         version: 15.4.5(expo@50.0.13)
-      expo-dynamic-app-icon:
-        specifier: github:simonsturge/expo-dynamic-app-icon
-        version: github.com/simonsturge/expo-dynamic-app-icon/acfd73827573e99a5e1bfbe47cf2fb1656e9ccf0(expo@50.0.13)(react-native@0.73.5)(react@18.2.0)
       expo-haptics:
         specifier: ~12.8.1
         version: 12.8.1(expo@50.0.13)
@@ -164,6 +164,9 @@ importers:
       react-native-web:
         specifier: ^0.19.10
         version: 0.19.10(react-dom@18.2.0)(react@18.2.0)
+      rn-dynamic-app-icon:
+        specifier: ^0.6.1
+        version: 0.6.1(react-native@0.73.5)(react@18.2.0)
       subsrt-ts:
         specifier: ^2.1.2
         version: 2.1.2
@@ -1852,6 +1855,15 @@ packages:
       deepmerge: 3.3.0
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
+    dev: false
+
+  /@config-plugins/react-native-dynamic-app-icon@7.0.0(expo@50.0.13):
+    resolution: {integrity: sha512-ujNXdDCso8HI9KHJIanDMP558mQ43w3YT7mVD82kBxL/WTWQ9tZav7Qu12fzipZkVL4oLDQNrPgbzYRCfZpN6g==}
+    peerDependencies:
+      expo: ^50
+    dependencies:
+      expo: 50.0.13(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
+      xcode: 3.0.1
     dev: false
 
   /@craftzdog/react-native-buffer@6.0.5(react-native@0.73.5)(react@18.2.0):
@@ -11951,6 +11963,16 @@ packages:
       inherits: 2.0.4
     dev: false
 
+  /rn-dynamic-app-icon@0.6.1(react-native@0.73.5)(react@18.2.0):
+    resolution: {integrity: sha512-pYC13v1quEFPrYwFK700uM6TmhoTLl/2Mr8PB8godAXhAdnfPEPVgb3TYex3iDXxATc1yevb93XsWIkZn61lNw==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
+    dev: false
+
   /run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
     engines: {node: '>=0.12.0'}
@@ -13706,20 +13728,4 @@ packages:
       immer: 10.0.3
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
-
-  github.com/simonsturge/expo-dynamic-app-icon/acfd73827573e99a5e1bfbe47cf2fb1656e9ccf0(expo@50.0.13)(react-native@0.73.5)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/simonsturge/expo-dynamic-app-icon/tar.gz/acfd73827573e99a5e1bfbe47cf2fb1656e9ccf0}
-    id: github.com/simonsturge/expo-dynamic-app-icon/acfd73827573e99a5e1bfbe47cf2fb1656e9ccf0
-    name: expo-dynamic-app-icon
-    version: 1.2.0
-    requiresBuild: true
-    peerDependencies:
-      expo: '>=49'
-      react: '*'
-      react-native: '*'
-    dependencies:
-      expo: 50.0.13(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
-      react: 18.2.0
-      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
     dev: false

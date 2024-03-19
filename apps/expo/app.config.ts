@@ -59,7 +59,7 @@ const defineConfig = (): ExpoConfig => ({
       },
     ],
     [
-      "expo-dynamic-app-icon",
+      "@config-plugins/react-native-dynamic-app-icon",
       {
         main: {
           image: "./assets/images/main.png",
