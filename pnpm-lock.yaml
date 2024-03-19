@@ -162,8 +162,8 @@ importers:
         specifier: ^0.19.10
         version: 0.19.10(react-dom@18.2.0)(react@18.2.0)
       rn-dynamic-app-icon:
-        specifier: github:jorrinkievit/rn-dynamic-app-icon
-        version: github.com/jorrinkievit/rn-dynamic-app-icon/95b1b3a86736bc0880c1fb1cb66e41c11c164226(react-native@0.73.5)(react@18.2.0)
+        specifier: github:castdrian/rn-dynamic-app-icon
+        version: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0)
       subsrt-ts:
         specifier: ^2.1.2
         version: 2.1.2
@@ -13644,11 +13644,12 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/jorrinkievit/rn-dynamic-app-icon/95b1b3a86736bc0880c1fb1cb66e41c11c164226(react-native@0.73.5)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/jorrinkievit/rn-dynamic-app-icon/tar.gz/95b1b3a86736bc0880c1fb1cb66e41c11c164226}
-    id: github.com/jorrinkievit/rn-dynamic-app-icon/95b1b3a86736bc0880c1fb1cb66e41c11c164226
+  github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/castdrian/rn-dynamic-app-icon/tar.gz/4bc39bb0ac29c0845fbae3c1cc78721869015c9e}
+    id: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e
     name: rn-dynamic-app-icon
     version: 0.6.1
+    prepare: true
     requiresBuild: true
     peerDependencies:
       react: '*'
