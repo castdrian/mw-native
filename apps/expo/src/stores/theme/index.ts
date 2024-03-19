@@ -1,4 +1,4 @@
-import { changeIcon } from 'react-native-change-icon';
+import { changeIcon } from "react-native-change-icon";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
