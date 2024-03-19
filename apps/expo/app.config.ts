@@ -58,6 +58,31 @@ const defineConfig = (): ExpoConfig => ({
         },
       },
     ],
+    [
+      "expo-dynamic-app-icon",
+      {
+        main: {
+          image: "./assets/images/main.png",
+          prerendered: true,
+        },
+        blue: {
+          image: "./assets/images/blue.png",
+          prerendered: true,
+        },
+        gray: {
+          image: "./assets/images/gray.png",
+          prerendered: true,
+        },
+        red: {
+          image: "./assets/images/red.png",
+          prerendered: true,
+        },
+        teal: {
+          image: "./assets/images/teal.png",
+          prerendered: true,
+        },
+      },
+    ],
   ],
 });
 

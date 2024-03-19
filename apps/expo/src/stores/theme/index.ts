@@ -1,3 +1,4 @@
+import { setAppIcon } from "expo-dynamic-app-icon";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -14,6 +15,7 @@ export const useThemeStore = create(
     setTheme(v) {
       set((s) => {
         s.theme = v;
+        setAppIcon(v);
       });
     },
   })),
