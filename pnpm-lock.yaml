@@ -140,9 +140,6 @@ importers:
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.73.5)(react@18.2.0)
-      react-native-paper:
-        specifier: ^5.12.3
-        version: 5.12.3(react-native-safe-area-context@4.8.2)(react-native-vector-icons@10.0.3)(react-native@0.73.5)(react@18.2.0)
       react-native-quick-base64:
         specifier: ^2.0.8
         version: 2.0.8(react-native@0.73.5)(react@18.2.0)
@@ -165,8 +162,8 @@ importers:
         specifier: ^0.19.10
         version: 0.19.10(react-dom@18.2.0)(react@18.2.0)
       rn-dynamic-app-icon:
-        specifier: github:castdrian/rn-dynamic-app-icon
-        version: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0)
+        specifier: github:jorrinkievit/rn-dynamic-app-icon
+        version: github.com/jorrinkievit/rn-dynamic-app-icon/95b1b3a86736bc0880c1fb1cb66e41c11c164226(react-native@0.73.5)(react@18.2.0)
       subsrt-ts:
         specifier: ^2.1.2
         version: 2.1.2
@@ -1846,16 +1843,6 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
-
-  /@callstack/react-theme-provider@3.0.9(react@18.2.0):
-    resolution: {integrity: sha512-tTQ0uDSCL0ypeMa8T/E9wAZRGKWj8kXP7+6RYgPTfOPs9N07C9xM8P02GJ3feETap4Ux5S69D9nteq9mEj86NA==}
-    peerDependencies:
-      react: '>=16.3.0'
-    dependencies:
-      deepmerge: 3.3.0
-      hoist-non-react-statics: 3.3.2
-      react: 18.2.0
-    dev: false
 
   /@config-plugins/react-native-dynamic-app-icon@7.0.0(expo@50.0.13):
     resolution: {integrity: sha512-ujNXdDCso8HI9KHJIanDMP558mQ43w3YT7mVD82kBxL/WTWQ9tZav7Qu12fzipZkVL4oLDQNrPgbzYRCfZpN6g==}
@@ -6368,14 +6355,6 @@ packages:
       wrap-ansi: 6.2.0
     dev: false
 
-  /cliui@7.0.4:
-    resolution: {integrity: sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==}
-    dependencies:
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
-      wrap-ansi: 7.0.0
-    dev: false
-
   /cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
@@ -6434,13 +6413,6 @@ packages:
 
   /color2k@2.0.3:
     resolution: {integrity: sha512-zW190nQTIoXcGCaU08DvVNFTmQhUpnJfVuAKfWqUQkflXKpaDdpaYoM0iluLS9lgJNHyBF58KKA2FBEwkD7wog==}
-    dev: false
-
-  /color@3.2.1:
-    resolution: {integrity: sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==}
-    dependencies:
-      color-convert: 1.9.3
-      color-string: 1.9.1
     dev: false
 
   /color@4.2.3:
@@ -6797,11 +6769,6 @@ packages:
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
-
-  /deepmerge@3.3.0:
-    resolution: {integrity: sha512-GRQOafGHwMHpjPx9iCvTgpu9NojZ49q794EEL94JVEw6VaeA8XTUyBKvAkOOjBX9oJNiV6G3P+T+tihFjo2TqA==}
-    engines: {node: '>=0.10.0'}
-    dev: false
 
   /deepmerge@4.3.1:
     resolution: {integrity: sha512-3sUqbMEc77XqpdNO7FRyRog+eW3ph+GYCbj+rK+uYyRMuwsVy0rMiVtPn+QJlKFvWP/1PYpapqYn0Me2knFn+A==}
@@ -11411,23 +11378,6 @@ packages:
       react-native-animatable: 1.3.3
     dev: false
 
-  /react-native-paper@5.12.3(react-native-safe-area-context@4.8.2)(react-native-vector-icons@10.0.3)(react-native@0.73.5)(react@18.2.0):
-    resolution: {integrity: sha512-nH1e1pGPE/aOE5YR2GRX7CfMHFA9cAfrAfgCtwL4amJPDZCoVjc5yt2VDiUE1rT+JUfk0qdICMP3UggxvjMgug==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-      react-native-safe-area-context: '*'
-      react-native-vector-icons: '*'
-    dependencies:
-      '@callstack/react-theme-provider': 3.0.9(react@18.2.0)
-      color: 3.2.1
-      react: 18.2.0
-      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-      react-native-safe-area-context: 4.8.2(react-native@0.73.5)(react@18.2.0)
-      react-native-vector-icons: 10.0.3
-      use-latest-callback: 0.1.9(react@18.2.0)
-    dev: false
-
   /react-native-quick-base64@2.0.8(react-native@0.73.5)(react@18.2.0):
     resolution: {integrity: sha512-2kMlnLSy0qz4NA0KXMGugd3qNB5EAizxZ6ghEVNGIxAOlc9CGvC8miv35wgpFbSKeiaBRfcPfkdTM/5Erb/6SQ==}
     peerDependencies:
@@ -11514,14 +11464,6 @@ packages:
       css-tree: 1.1.3
       react: 18.2.0
       react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-    dev: false
-
-  /react-native-vector-icons@10.0.3:
-    resolution: {integrity: sha512-ZgVlV5AdQgnPHHvBEihGf2xwyziT1acpXV1U+WfCgCv3lcEeCRsmwAsBU+kUSNsU+8TcWVsX04kdI6qUaS8D7w==}
-    hasBin: true
-    dependencies:
-      prop-types: 15.8.1
-      yargs: 16.2.0
     dev: false
 
   /react-native-web-internals@1.91.4:
@@ -13637,11 +13579,6 @@ packages:
       decamelize: 1.2.0
     dev: false
 
-  /yargs-parser@20.2.9:
-    resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}
-    engines: {node: '>=10'}
-    dev: false
-
   /yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
     engines: {node: '>=12'}
@@ -13662,19 +13599,6 @@ packages:
       which-module: 2.0.1
       y18n: 4.0.3
       yargs-parser: 18.1.3
-    dev: false
-
-  /yargs@16.2.0:
-    resolution: {integrity: sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==}
-    engines: {node: '>=10'}
-    dependencies:
-      cliui: 7.0.4
-      escalade: 3.1.2
-      get-caller-file: 2.0.5
-      require-directory: 2.1.1
-      string-width: 4.2.3
-      y18n: 5.0.8
-      yargs-parser: 20.2.9
     dev: false
 
   /yargs@17.7.2:
@@ -13720,12 +13644,11 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e(react-native@0.73.5)(react@18.2.0):
-    resolution: {tarball: https://codeload.github.com/castdrian/rn-dynamic-app-icon/tar.gz/4bc39bb0ac29c0845fbae3c1cc78721869015c9e}
-    id: github.com/castdrian/rn-dynamic-app-icon/4bc39bb0ac29c0845fbae3c1cc78721869015c9e
+  github.com/jorrinkievit/rn-dynamic-app-icon/95b1b3a86736bc0880c1fb1cb66e41c11c164226(react-native@0.73.5)(react@18.2.0):
+    resolution: {tarball: https://codeload.github.com/jorrinkievit/rn-dynamic-app-icon/tar.gz/95b1b3a86736bc0880c1fb1cb66e41c11c164226}
+    id: github.com/jorrinkievit/rn-dynamic-app-icon/95b1b3a86736bc0880c1fb1cb66e41c11c164226
     name: rn-dynamic-app-icon
     version: 0.6.1
-    prepare: true
     requiresBuild: true
     peerDependencies:
       react: '*'
