@@ -1,4 +1,5 @@
 import type { SheetProps, ViewProps } from "tamagui";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import {
   ScrollView,
   Separator,
@@ -52,22 +53,26 @@ function SettingsSheetFrame({
   isLoading?: boolean;
 }) {
   return (
-    <Sheet.Frame
-      backgroundColor="$playerSettingsBackground"
-      padding="$5"
-      gap="$4"
-    >
-      {isLoading && (
-        <Spinner
-          size="large"
-          color="$loadingIndicator"
-          style={{
-            position: "absolute",
-          }}
-        />
-      )}
-      {!isLoading && children}
-    </Sheet.Frame>
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Sheet.Frame
+          backgroundColor="$playerSettingsBackground"
+          padding="$5"
+          gap="$4"
+        >
+          {isLoading && (
+            <Spinner
+              size="large"
+              color="$loadingIndicator"
+              style={{
+                position: "absolute",
+              }}
+            />
+          )}
+          {!isLoading && children}
+        </Sheet.Frame>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
