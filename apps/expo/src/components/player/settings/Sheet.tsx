@@ -54,7 +54,7 @@ function SettingsSheetFrame({
 }) {
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Sheet.Frame
           backgroundColor="$playerSettingsBackground"
           padding="$5"
