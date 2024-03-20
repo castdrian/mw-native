@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 
-interface DownloadItem {
+import { loadDownloadHistory, saveDownloadHistory } from "~/settings";
+
+export interface DownloadItem {
   id: string;
   filename: string;
   progress: number;
@@ -38,6 +40,21 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [downloads, setDownloads] = useState<DownloadItem[]>([]);
+
+  useEffect(() => {
+    const initializeDownloads = async () => {
+      const storedDownloads = await loadDownloadHistory();
+      if (storedDownloads) {
+        setDownloads(storedDownloads);
+      }
+    };
+
+    void initializeDownloads();
+  }, []);
+
+  useEffect(() => {
+    void saveDownloadHistory(downloads.slice(0, 10));
+  }, [downloads]);
 
   const startDownload = async (url: string, type: "mp4" | "hls") => {
     const newDownload: DownloadItem = {

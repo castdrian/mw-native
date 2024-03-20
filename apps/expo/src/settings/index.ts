@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import type { DownloadItem } from "~/hooks/DownloadManagerContext";
 import type { ThemeStoreOption } from "~/stores/theme";
 
 interface ThemeSettings {
@@ -30,4 +31,27 @@ export const saveTheme = async (newTheme: ThemeStoreOption) => {
   const settings = (await loadSettings()) ?? { themes: { theme: newTheme } };
   settings.themes.theme = newTheme;
   await saveSettings(settings);
+};
+
+interface DownloadHistory {
+  downloads: DownloadItem[];
+}
+
+const downloadHistoryKey = "downloadHistory";
+
+export const saveDownloadHistory = async (downloads: DownloadItem[]) => {
+  const json = await AsyncStorage.getItem(downloadHistoryKey);
+  const settings = json
+    ? (JSON.parse(json) as DownloadHistory)
+    : { downloads: [] };
+  settings.downloads = downloads;
+  await AsyncStorage.setItem(downloadHistoryKey, JSON.stringify(settings));
+};
+
+export const loadDownloadHistory = async (): Promise<DownloadItem[]> => {
+  const json = await AsyncStorage.getItem(downloadHistoryKey);
+  const settings = json
+    ? (JSON.parse(json) as DownloadHistory)
+    : { downloads: [] };
+  return settings.downloads;
 };
