@@ -50,7 +50,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       isFinished: false,
     };
 
-    setDownloads((currentDownloads) => [...currentDownloads, newDownload]);
+	setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
 
     if (type === "mp4") {
       await downloadMP4(url);
