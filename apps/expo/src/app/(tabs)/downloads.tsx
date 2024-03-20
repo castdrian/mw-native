@@ -6,13 +6,13 @@ import ScreenLayout from "~/components/layout/ScreenLayout";
 import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 
 const DownloadsScreen: React.FC = () => {
-  const { downloads } = useDownloadManager();
+  const { downloads, removeDownload } = useDownloadManager();
 
   return (
     <ScreenLayout title="Downloads">
       <ScrollView>
         {downloads.map((item) => (
-          <DownloadItem key={item.id} {...item} />
+          <DownloadItem key={item.id} {...item} onLongPress={removeDownload} />
         ))}
       </ScrollView>
     </ScreenLayout>

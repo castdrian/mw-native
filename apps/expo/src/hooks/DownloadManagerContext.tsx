@@ -20,6 +20,7 @@ export interface DownloadItem {
 interface DownloadManagerContextType {
   downloads: DownloadItem[];
   startDownload: (url: string, type: "mp4" | "hls") => Promise<void>;
+  removeDownload: (id: string) => void;
 }
 
 const DownloadManagerContext = createContext<
@@ -168,8 +169,16 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const removeDownload = (id: string) => {
+    const updatedDownloads = downloads.filter((download) => download.id !== id);
+    setDownloads(updatedDownloads);
+    void saveDownloadHistory(updatedDownloads);
+  };
+
   return (
-    <DownloadManagerContext.Provider value={{ downloads, startDownload }}>
+    <DownloadManagerContext.Provider
+      value={{ downloads, startDownload, removeDownload }}
+    >
       {children}
     </DownloadManagerContext.Provider>
   );
