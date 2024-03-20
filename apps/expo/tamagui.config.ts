@@ -1,6 +1,6 @@
 import { createAnimations } from "@tamagui/animations-moti";
 import { config } from "@tamagui/config/v3";
-import { createTamagui } from "tamagui";
+import { createFont, createTamagui } from "tamagui";
 
 import {
   blueTokens,
@@ -75,6 +75,32 @@ const createThemeConfig = (tokens: Tokens) => ({
   buttonCancelBackgroundHover: tokens.ash.c300,
 });
 
+const openSansFace = {
+  normal: { normal: "OpenSans-Regular", italic: "OpenSans-Italic" },
+  bold: { normal: "OpenSans-Bold", italic: "OpenSans-BoldItalic" },
+  300: { normal: "OpenSans-Light", italic: "OpenSans-LightItalic" },
+  500: { normal: "OpenSans-Regular", italic: "OpenSans-Italic" },
+  600: { normal: "OpenSans-SemiBold", italic: "OpenSans-SemiBoldItalic" },
+  700: { normal: "OpenSans-Bold", italic: "OpenSans-BoldItalic" },
+  800: { normal: "OpenSans-ExtraBold", italic: "OpenSans-ExtraBoldItalic" },
+};
+
+const headingFont = createFont({
+  size: config.fonts.heading.size,
+  lineHeight: config.fonts.heading.lineHeight,
+  weight: config.fonts.heading.weight,
+  letterSpacing: config.fonts.heading.letterSpacing,
+  face: openSansFace,
+});
+
+const bodyFont = createFont({
+  size: config.fonts.body.size,
+  lineHeight: config.fonts.body.lineHeight,
+  weight: config.fonts.body.weight,
+  letterSpacing: config.fonts.body.letterSpacing,
+  face: openSansFace,
+});
+
 export const tamaguiConfig = createTamagui({
   ...config,
   tokens: config.tokens,
@@ -127,6 +153,10 @@ export const tamaguiConfig = createTamagui({
       damping: 20,
     },
   }),
+  fonts: {
+    heading: headingFont,
+    body: bodyFont,
+  },
 });
 
 export default tamaguiConfig;
