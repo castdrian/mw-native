@@ -1,3 +1,4 @@
+import type { LanguageCode } from "iso-639-1";
 import type { ContentCaption } from "subsrt-ts/dist/types/handler";
 import { useState } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -14,7 +15,10 @@ import { FlagIcon } from "../FlagIcon";
 import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
 import { Settings } from "./settings/Sheet";
-import { getPrettyLanguageNameFromLocale } from "./utils";
+import {
+  getCountryCodeFromLanguage,
+  getPrettyLanguageNameFromLocale,
+} from "./utils";
 
 const parseCaption = async (
   caption: Stream["captions"][0],
@@ -128,7 +132,11 @@ export const CaptionsSelector = () => {
                     borderRadius="$5"
                     overflow="hidden"
                   >
-                    <FlagIcon languageCode={caption.language} />
+                    <FlagIcon
+                      languageCode={getCountryCodeFromLanguage(
+                        caption.language as LanguageCode,
+                      )}
+                    />
                   </View>
                 }
                 title={getPrettyLanguageNameFromLocale(caption.language) ?? ""}
