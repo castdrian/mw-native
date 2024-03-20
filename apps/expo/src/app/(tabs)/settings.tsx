@@ -76,7 +76,6 @@ export function ThemeSelector(props: SelectProps) {
 
       <Adapt platform="native">
         <Sheet
-          native
           modal
           dismissOnSnapToBottom
           dismissOnOverlayPress

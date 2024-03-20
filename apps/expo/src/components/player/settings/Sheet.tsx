@@ -19,7 +19,7 @@ const PlayerText = styled(Text, {
 function SettingsSheet(props: SheetProps) {
   return (
     <Sheet
-      snapPoints={[90]}
+      snapPoints={[80]}
       dismissOnSnapToBottom
       modal
       animation="spring"
@@ -54,7 +54,7 @@ function SettingsSheetFrame({
 }) {
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: "black" }}>
         <Sheet.Frame
           backgroundColor="$playerSettingsBackground"
           padding="$5"

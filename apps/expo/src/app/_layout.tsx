@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// @ts-expect-error - No exported types
-import { ModalView } from "react-native-ios-modal";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import { setupNativeSheet } from "@tamagui/sheet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TamaguiProvider, Theme, useTheme } from "tamagui";
 import tamaguiConfig from "tamagui.config";
@@ -20,8 +17,6 @@ export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from "expo-router";
-
-setupNativeSheet("ios", ModalView);
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.

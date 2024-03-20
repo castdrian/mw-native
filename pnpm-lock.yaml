@@ -137,9 +137,6 @@ importers:
       react-native-gesture-handler:
         specifier: ~2.14.1
         version: 2.14.1(react-native@0.73.5)(react@18.2.0)
-      react-native-ios-modal:
-        specifier: ^0.1.8
-        version: 0.1.8(react-native@0.73.5)(react@18.2.0)
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.73.5)(react@18.2.0)
@@ -11372,16 +11369,6 @@ packages:
       invariant: 2.2.4
       lodash: 4.17.21
       prop-types: 15.8.1
-      react: 18.2.0
-      react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-    dev: false
-
-  /react-native-ios-modal@0.1.8(react-native@0.73.5)(react@18.2.0):
-    resolution: {integrity: sha512-kA068hIhI9+r21OnRXzkRevGjGYTVAYf5kzsIFI15IrCiAkR40dE2lqJtOpnrB3lZ9KZeS0ph59qNNpDSG7xpA==}
-    peerDependencies:
-      react: '*'
-      react-native: '*'
-    dependencies:
       react: 18.2.0
       react-native: 0.73.5(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
     dev: false
