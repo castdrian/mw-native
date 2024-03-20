@@ -4,6 +4,7 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 
 interface DownloadItem {
+  id: string;
   filename: string;
   progress: number;
   speed: number;
@@ -40,6 +41,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
 
   const startDownload = async (url: string, type: "mp4" | "hls") => {
     const newDownload: DownloadItem = {
+      id: `download-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       filename: url.split("/").pop() ?? "unknown",
       progress: 0,
       speed: 0,
@@ -50,7 +52,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       isFinished: false,
     };
 
-	setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
+    setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
 
     if (type === "mp4") {
       await downloadMP4(url);

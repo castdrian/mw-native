@@ -11,8 +11,8 @@ const DownloadsScreen: React.FC = () => {
   return (
     <ScreenLayout title="Downloads">
       <ScrollView>
-        {downloads.map((item, index) => (
-          <DownloadItem key={index} {...item} />
+        {downloads.map((item) => (
+          <DownloadItem key={item.id} {...item} />
         ))}
       </ScrollView>
     </ScreenLayout>
