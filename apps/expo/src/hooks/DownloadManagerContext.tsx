@@ -15,6 +15,7 @@ export interface DownloadItem {
   url: string;
   type: "mp4" | "hls";
   isFinished: boolean;
+  statusText?: string;
 }
 
 interface DownloadManagerContextType {
@@ -73,13 +74,21 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
 
     if (type === "mp4") {
-      await downloadMP4(url);
+      await downloadMP4(url, newDownload.id);
     } else if (type === "hls") {
       // HLS stuff later
     }
   };
 
-  const downloadMP4 = async (url: string) => {
+  const updateDownloadItem = (id: string, updates: Partial<DownloadItem>) => {
+    setDownloads((currentDownloads) =>
+      currentDownloads.map((download) =>
+        download.id === id ? { ...download, ...updates } : download,
+      ),
+    );
+  };
+
+  const downloadMP4 = async (url: string, downloadId: string) => {
     let lastBytesWritten = 0;
     let lastTimestamp = Date.now();
 
@@ -92,22 +101,15 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       const bytesWritten = downloadProgress.totalBytesWritten;
       const newBytes = bytesWritten - lastBytesWritten;
       const speed = newBytes / timeElapsed / 1024;
-
       const progress =
         bytesWritten / downloadProgress.totalBytesExpectedToWrite;
 
-      setDownloads((currentDownloads) =>
-        currentDownloads.map((item) =>
-          item.url === url
-            ? {
-                ...item,
-                progress,
-                speed,
-                fileSize: downloadProgress.totalBytesExpectedToWrite,
-              }
-            : item,
-        ),
-      );
+      updateDownloadItem(downloadId, {
+        progress,
+        speed,
+        fileSize: downloadProgress.totalBytesExpectedToWrite,
+        downloaded: bytesWritten,
+      });
 
       lastBytesWritten = bytesWritten;
       lastTimestamp = currentTime;
@@ -132,29 +134,20 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       const result = await downloadResumable.downloadAsync();
       if (result) {
         console.log("Finished downloading to ", result.uri);
-        await saveFileToMediaLibraryAndDeleteOriginal(result.uri);
-
-        setDownloads((currentDownloads) =>
-          currentDownloads.map((item) =>
-            item.url === url
-              ? {
-                  ...item,
-                  progress: 1,
-                  speed: 0,
-                  downloaded: item.fileSize,
-                  isFinished: true,
-                }
-              : item,
-          ),
-        );
+        await saveFileToMediaLibraryAndDeleteOriginal(result.uri, downloadId);
       }
     } catch (e) {
       console.error(e);
     }
   };
 
-  const saveFileToMediaLibraryAndDeleteOriginal = async (fileUri: string) => {
+  const saveFileToMediaLibraryAndDeleteOriginal = async (
+    fileUri: string,
+    downloadId: string,
+  ) => {
     try {
+      updateDownloadItem(downloadId, { statusText: "Importing" });
+
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== MediaLibrary.PermissionStatus.GRANTED) {
         throw new Error("MediaLibrary permission not granted");
@@ -163,6 +156,10 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       await MediaLibrary.saveToLibraryAsync(fileUri);
       await FileSystem.deleteAsync(fileUri);
 
+      updateDownloadItem(downloadId, {
+        statusText: undefined,
+        isFinished: true,
+      });
       console.log("File saved to media library and original deleted");
     } catch (error) {
       console.error("Error saving file to media library:", error);

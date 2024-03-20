@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Progress, Text, View } from "tamagui";
+import { Progress, Spinner, Text, View } from "tamagui";
 
 export interface DownloadItemProps {
   id: string;
@@ -11,6 +11,7 @@ export interface DownloadItemProps {
   downloaded: number;
   isFinished: boolean;
   onLongPress: (id: string) => void;
+  statusText?: string;
 }
 
 const formatBytes = (bytes: number, decimals = 2) => {
@@ -31,10 +32,36 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   downloaded,
   isFinished,
   onLongPress,
+  statusText,
 }) => {
   const percentage = progress * 100;
   const formattedFileSize = formatBytes(fileSize);
   const formattedDownloaded = formatBytes(downloaded);
+
+  const renderStatus = () => {
+    if (statusText) {
+      return (
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Spinner size="small" color="$loadingIndicator" />
+          <Text fontSize={12} color="gray" style={{ marginLeft: 8 }}>
+            {statusText}
+          </Text>
+        </View>
+      );
+    } else if (isFinished) {
+      return (
+        <Text fontSize={12} color="gray">
+          Finished
+        </Text>
+      );
+    } else {
+      return (
+        <Text fontSize={12} color="gray">
+          {speed.toFixed(2)} MB/s
+        </Text>
+      );
+    }
+  };
 
   return (
     <TouchableOpacity onLongPress={() => onLongPress(id)} activeOpacity={0.7}>
@@ -59,17 +86,10 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
           justifyContent="space-between"
         >
           <Text fontSize={12} color="gray">
-            {percentage}% - {formattedDownloaded} of {formattedFileSize}
+            {percentage.toFixed()}% - {formattedDownloaded} of{" "}
+            {formattedFileSize}
           </Text>
-          {isFinished ? (
-            <Text fontSize={12} color="gray">
-              Finished
-            </Text>
-          ) : (
-            <Text fontSize={12} color="gray">
-              {speed.toFixed(2)} MB/s
-            </Text>
-          )}
+          {renderStatus()}
         </View>
       </View>
     </TouchableOpacity>
