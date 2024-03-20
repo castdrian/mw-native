@@ -7,6 +7,7 @@ export interface DownloadItemProps {
   speed: number;
   fileSize: number;
   downloaded: number;
+  isFinished: boolean;
 }
 
 const formatBytes = (bytes: number, decimals = 2) => {
@@ -24,8 +25,9 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   speed,
   fileSize,
   downloaded,
+  isFinished,
 }) => {
-  const percentage = (progress * 100).toFixed(0);
+  const percentage = progress * 100;
   const formattedFileSize = formatBytes(fileSize);
   const formattedDownloaded = formatBytes(downloaded);
 
@@ -34,7 +36,11 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
       <Text marginBottom={4} fontSize={16}>
         {filename}
       </Text>
-      <Progress value={60} height={10} backgroundColor="$progressBackground">
+      <Progress
+        value={percentage}
+        height={10}
+        backgroundColor="$progressBackground"
+      >
         <Progress.Indicator
           animation="bounce"
           backgroundColor="$progressFilled"
@@ -49,9 +55,15 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
         <Text fontSize={12} color="gray">
           {percentage}% - {formattedDownloaded} of {formattedFileSize}
         </Text>
-        <Text fontSize={12} color="gray">
-          {speed} MB/s
-        </Text>
+        {isFinished ? (
+          <Text fontSize={12} color="gray">
+            Finished
+          </Text>
+        ) : (
+          <Text fontSize={12} color="gray">
+            {speed.toFixed(2)} MB/s
+          </Text>
+        )}
       </View>
     </View>
   );

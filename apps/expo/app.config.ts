@@ -23,6 +23,10 @@ const defineConfig = (): ExpoConfig => ({
     bundleIdentifier: "dev.movieweb.app",
     supportsTablet: true,
     requireFullScreen: true,
+    infoPlist: {
+      NSPhotoLibraryUsageDescription:
+        "This app saves videos to the photo library.",
+    },
   },
   android: {
     package: "dev.movieweb.app",
