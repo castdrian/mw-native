@@ -6,6 +6,7 @@ import { usePlayerStore } from "~/stores/player/store";
 import { AudioTrackSelector } from "./AudioTrackSelector";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
+import { DownloadButton } from "./DownloadButton";
 import { PlaybackSpeedSelector } from "./PlaybackSpeedSelector";
 import { ProgressBar } from "./ProgressBar";
 import { SeasonSelector } from "./SeasonEpisodeSelector";
@@ -79,6 +80,7 @@ export const BottomControls = () => {
           <SourceSelector />
           <AudioTrackSelector />
           <PlaybackSpeedSelector />
+          <DownloadButton />
         </View>
       </View>
     );
