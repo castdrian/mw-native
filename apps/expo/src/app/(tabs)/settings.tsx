@@ -1,5 +1,5 @@
 import type { SelectProps } from "tamagui";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import {
   Adapt,
@@ -17,6 +17,7 @@ import {
 
 import type { ThemeStoreOption } from "~/stores/theme";
 import ScreenLayout from "~/components/layout/ScreenLayout";
+import { getGestureControls, saveGestureControls } from "~/settings";
 import { useThemeStore } from "~/stores/theme";
 
 const themeOptions: ThemeStoreOption[] = [
@@ -28,6 +29,19 @@ const themeOptions: ThemeStoreOption[] = [
 ];
 
 export default function SettingsScreen() {
+  const [gestureControlsEnabled, setGestureControlsEnabled] = useState(true);
+
+  useEffect(() => {
+    void getGestureControls().then((enabled) => {
+      setGestureControlsEnabled(enabled);
+    });
+  }, []);
+
+  const handleGestureControlsToggle = async (isEnabled: boolean) => {
+    setGestureControlsEnabled(isEnabled);
+    await saveGestureControls(isEnabled);
+  };
+
   return (
     <ScreenLayout title="Settings">
       <View padding={4}>
@@ -38,7 +52,12 @@ export default function SettingsScreen() {
           <XStack width={200} alignItems="center" gap="$4">
             <Label minWidth={110}>Gesture controls</Label>
             <Separator minHeight={20} vertical />
-            <Switch size="$4" native>
+            <Switch
+              size="$4"
+              native
+              checked={gestureControlsEnabled}
+              onCheckedChange={handleGestureControlsToggle}
+            >
               <Switch.Thumb animation="quicker" />
             </Switch>
           </XStack>

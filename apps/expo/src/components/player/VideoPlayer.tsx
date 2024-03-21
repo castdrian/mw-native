@@ -17,6 +17,7 @@ import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
 import { usePlayer } from "~/hooks/player/usePlayer";
 import { useVolume } from "~/hooks/player/useVolume";
+import { getGestureControls } from "~/settings";
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
 import { CaptionRenderer } from "./CaptionRenderer";
@@ -61,6 +62,14 @@ export const VideoPlayer = () => {
   const playAudio = usePlayerStore((state) => state.playAudio);
   const pauseAudio = usePlayerStore((state) => state.pauseAudio);
 
+  const [gestureControlsEnabled, setGestureControlsEnabled] = useState(true);
+
+  useEffect(() => {
+    void getGestureControls().then((enabled) => {
+      setGestureControlsEnabled(enabled);
+    });
+  }, []);
+
   const checkGestureInSliderVicinity = (x: number, y: number) => {
     isGestureInSliderVicinity.value = isPointInSliderVicinity(x, y);
   };
@@ -89,6 +98,7 @@ export const VideoPlayer = () => {
   };
 
   const doubleTapGesture = Gesture.Tap()
+    .enabled(gestureControlsEnabled)
     .numberOfTaps(2)
     .onEnd(() => {
       runOnJS(togglePlayback)();
@@ -97,6 +107,7 @@ export const VideoPlayer = () => {
   const screenHalfWidth = Dimensions.get("window").width / 2;
 
   const panGesture = Gesture.Pan()
+    .enabled(gestureControlsEnabled)
     .onStart((event) => {
       runOnJS(checkGestureInSliderVicinity)(event.x, event.y);
       if (isGestureInSliderVicinity.value) {
