@@ -1,3 +1,4 @@
+import type { Asset } from "expo-media-library";
 import type { ReactNode } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
@@ -17,6 +18,7 @@ export interface DownloadItem {
   type: "mp4" | "hls";
   isFinished: boolean;
   statusText?: string;
+  asset?: Asset;
 }
 
 interface DownloadManagerContextType {
@@ -168,11 +170,12 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
         throw new Error("MediaLibrary permission not granted");
       }
 
-      await MediaLibrary.saveToLibraryAsync(fileUri);
+      const asset = await MediaLibrary.createAssetAsync(fileUri);
       await FileSystem.deleteAsync(fileUri);
 
       updateDownloadItem(downloadId, {
         statusText: undefined,
+        asset,
         isFinished: true,
       });
       console.log("File saved to media library and original deleted");

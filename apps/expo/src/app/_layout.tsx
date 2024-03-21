@@ -61,11 +61,9 @@ export default function RootLayout() {
   }
 
   return (
-    <DownloadManagerProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <RootLayoutNav />
-      </GestureHandlerRootView>
-    </DownloadManagerProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <RootLayoutNav />
+    </GestureHandlerRootView>
   );
 }
 
@@ -108,11 +106,13 @@ function RootLayoutNav() {
     <QueryClientProvider client={queryClient}>
       <TamaguiProvider config={tamaguiConfig} defaultTheme="main">
         <ToastProvider>
-          <ThemeProvider value={DarkTheme}>
-            <Theme name={themeStore}>
-              <ScreenStacks />
-            </Theme>
-          </ThemeProvider>
+          <DownloadManagerProvider>
+            <ThemeProvider value={DarkTheme}>
+              <Theme name={themeStore}>
+                <ScreenStacks />
+              </Theme>
+            </ThemeProvider>
+          </DownloadManagerProvider>
           <ToastViewport />
         </ToastProvider>
       </TamaguiProvider>

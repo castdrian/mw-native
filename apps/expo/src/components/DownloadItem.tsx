@@ -1,3 +1,4 @@
+import type { Asset } from "expo-media-library";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Progress, Spinner, Text, View } from "tamagui";
@@ -12,6 +13,8 @@ export interface DownloadItemProps {
   isFinished: boolean;
   onLongPress: (id: string) => void;
   statusText?: string;
+  asset?: Asset;
+  onPress: (asset?: Asset) => void;
 }
 
 const formatBytes = (bytes: number, decimals = 2) => {
@@ -33,6 +36,8 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   isFinished,
   onLongPress,
   statusText,
+  asset,
+  onPress,
 }) => {
   const percentage = progress * 100;
   const formattedFileSize = formatBytes(fileSize);
@@ -64,7 +69,11 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   };
 
   return (
-    <TouchableOpacity onLongPress={() => onLongPress(id)} activeOpacity={0.7}>
+    <TouchableOpacity
+      onPress={() => onPress(asset)}
+      onLongPress={() => onLongPress(id)}
+      activeOpacity={0.7}
+    >
       <View marginBottom={16} borderRadius={8} borderColor="white" padding={16}>
         <Text marginBottom={4} fontSize={16}>
           {filename}

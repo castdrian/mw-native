@@ -9,6 +9,7 @@ import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
   const playerStatus = usePlayerStore((state) => state.interface.playerStatus);
+  const asset = usePlayerStore((state) => state.asset);
   const { presentFullscreenPlayer } = usePlayer();
 
   const router = useRouter();
@@ -21,8 +22,15 @@ export default function VideoPlayerWrapper() {
 
   void presentFullscreenPlayer();
 
-  if (playerStatus === PlayerStatus.SCRAPING)
-    return <ScraperProcess data={data} />;
+  if (asset) {
+    return <VideoPlayer />;
+  }
 
-  if (playerStatus === PlayerStatus.READY) return <VideoPlayer />;
+  if (playerStatus === PlayerStatus.SCRAPING) {
+    return <ScraperProcess data={data} />;
+  }
+
+  if (playerStatus === PlayerStatus.READY) {
+    return <VideoPlayer />;
+  }
 }

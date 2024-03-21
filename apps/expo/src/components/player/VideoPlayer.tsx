@@ -56,6 +56,7 @@ export const VideoPlayer = () => {
   const stream = usePlayerStore((state) => state.interface.currentStream);
   const selectedAudioTrack = useAudioTrackStore((state) => state.selectedTrack);
   const videoRef = usePlayerStore((state) => state.videoRef);
+  const asset = usePlayerStore((state) => state.asset);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
@@ -167,6 +168,12 @@ export const VideoPlayer = () => {
 
   useEffect(() => {
     const initializePlayer = async () => {
+      if (asset) {
+        setVideoSrc(asset);
+        setIsLoading(false);
+        return;
+      }
+
       if (!stream) {
         await dismissFullscreenPlayer();
         return router.back();
@@ -214,6 +221,7 @@ export const VideoPlayer = () => {
       void synchronizePlayback();
     };
   }, [
+    asset,
     dismissFullscreenPlayer,
     hasStartedPlaying,
     router,
