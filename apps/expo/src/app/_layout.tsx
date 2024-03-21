@@ -5,6 +5,7 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
+import { ToastProvider, ToastViewport } from "@tamagui/toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TamaguiProvider, Theme, useTheme } from "tamagui";
 import tamaguiConfig from "tamagui.config";
@@ -106,11 +107,14 @@ function RootLayoutNav() {
   return (
     <QueryClientProvider client={queryClient}>
       <TamaguiProvider config={tamaguiConfig} defaultTheme="main">
-        <ThemeProvider value={DarkTheme}>
-          <Theme name={themeStore}>
-            <ScreenStacks />
-          </Theme>
-        </ThemeProvider>
+        <ToastProvider>
+          <ThemeProvider value={DarkTheme}>
+            <Theme name={themeStore}>
+              <ScreenStacks />
+            </Theme>
+          </ThemeProvider>
+          <ToastViewport />
+        </ToastProvider>
       </TamaguiProvider>
     </QueryClientProvider>
   );

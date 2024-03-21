@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import { useToastController } from "@tamagui/toast";
 
 import { loadDownloadHistory, saveDownloadHistory } from "~/settings";
 
@@ -42,6 +43,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [downloads, setDownloads] = useState<DownloadItem[]>([]);
+  const toastController = useToastController();
 
   useEffect(() => {
     const initializeDownloads = async () => {
@@ -58,7 +60,16 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     void saveDownloadHistory(downloads.slice(0, 10));
   }, [downloads]);
 
-  const startDownload = async (url: string, type: "mp4" | "hls") => {
+  const startDownload = async (
+    url: string,
+    type: "mp4" | "hls",
+    headers?: Record<string, string>,
+  ) => {
+    toastController.show("Download started", {
+      burntOptions: { preset: "none" },
+      native: true,
+    });
+
     const newDownload: DownloadItem = {
       id: `download-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       filename: url.split("/").pop() ?? "unknown",
@@ -74,7 +85,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
 
     if (type === "mp4") {
-      await downloadMP4(url, newDownload.id);
+      await downloadMP4(url, newDownload.id, headers ?? {});
     } else if (type === "hls") {
       // HLS stuff later
     }
@@ -88,7 +99,11 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     );
   };
 
-  const downloadMP4 = async (url: string, downloadId: string) => {
+  const downloadMP4 = async (
+    url: string,
+    downloadId: string,
+    headers: Record<string, string>,
+  ) => {
     let lastBytesWritten = 0;
     let lastTimestamp = Date.now();
 
@@ -126,7 +141,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     const downloadResumable = FileSystem.createDownloadResumable(
       url,
       fileUri,
-      {},
+      { headers },
       callback,
     );
 
@@ -161,8 +176,16 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
         isFinished: true,
       });
       console.log("File saved to media library and original deleted");
+      toastController.show("Download finished", {
+        burntOptions: { preset: "done" },
+        native: true,
+      });
     } catch (error) {
       console.error("Error saving file to media library:", error);
+      toastController.show("Download failed", {
+        burntOptions: { preset: "error" },
+        native: true,
+      });
     }
   };
 
