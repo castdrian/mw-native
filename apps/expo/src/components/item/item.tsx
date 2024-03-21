@@ -3,6 +3,7 @@ import type { ContextMenuOnPressNativeEvent } from "react-native-context-menu-vi
 import { Keyboard, TouchableOpacity } from "react-native";
 import ContextMenu from "react-native-context-menu-view";
 import { useRouter } from "expo-router";
+import { useToastController } from "@tamagui/toast";
 import { Image, Text, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
@@ -18,6 +19,7 @@ export interface ItemData {
 export default function Item({ data }: { data: ItemData }) {
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const router = useRouter();
+  const toastController = useToastController();
 
   const { title, type, year, posterUrl } = data;
 
@@ -38,7 +40,12 @@ export default function Item({ data }: { data: ItemData }) {
   const onContextMenuPress = (
     e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
   ) => {
-    if (e.nativeEvent.name === "Download") {
+    if (e.nativeEvent.name === "Bookmark") {
+      toastController.show("Added to bookmarks", {
+        burntOptions: { preset: "done" },
+        native: true,
+      });
+    } else if (e.nativeEvent.name === "Download") {
       router.push({
         pathname: "/videoPlayer",
         params: { data: JSON.stringify(data), download: "true" },
