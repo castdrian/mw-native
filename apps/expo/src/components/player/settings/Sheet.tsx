@@ -19,7 +19,7 @@ const PlayerText = styled(Text, {
 function SettingsSheet(props: SheetProps) {
   return (
     <Sheet
-      snapPoints={[80]}
+      snapPoints={[90]}
       dismissOnSnapToBottom
       modal
       animation="spring"

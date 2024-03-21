@@ -53,6 +53,7 @@ const defineConfig = (): ExpoConfig => ({
       "expo-build-properties",
       {
         android: {
+          minSdkVersion: 24,
           packagingOptions: {
             pickFirst: [
               "lib/x86/libcrypto.so",

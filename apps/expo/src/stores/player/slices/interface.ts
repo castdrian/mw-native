@@ -10,8 +10,11 @@ export enum PlayerStatus {
   READY,
 }
 
+type PlayerState = "playing" | "paused";
+
 export interface InterfaceSlice {
   interface: {
+    state: PlayerState;
     isIdle: boolean;
     idleTimeout: NodeJS.Timeout | null;
     currentStream: Stream | null;
@@ -24,6 +27,7 @@ export interface InterfaceSlice {
     audioTracks: AudioTrack[] | null;
     playerStatus: PlayerStatus;
   };
+  toggleState(): void;
   setIsIdle(state: boolean): void;
   setCurrentStream(stream: Stream): void;
   setAvailableStreams(streams: Stream[]): void;
@@ -38,6 +42,7 @@ export interface InterfaceSlice {
 
 export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
   interface: {
+    state: "playing",
     isIdle: true,
     idleTimeout: null,
     currentStream: null,
@@ -49,6 +54,12 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
     hlsTracks: null,
     audioTracks: null,
     playerStatus: PlayerStatus.SCRAPING,
+  },
+  toggleState: () => {
+    set((s) => {
+      s.interface.state =
+        s.interface.state === "playing" ? "paused" : "playing";
+    });
   },
   setIsIdle: (state) => {
     set((s) => {
@@ -108,6 +119,7 @@ export const createInterfaceSlice: MakeSlice<InterfaceSlice> = (set, get) => ({
   reset: () => {
     set(() => ({
       interface: {
+        state: "playing",
         isIdle: true,
         idleTimeout: null,
         currentStream: null,

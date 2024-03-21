@@ -27,31 +27,25 @@ import { isPointInSliderVicinity } from "./VideoSlider";
 export const VideoPlayer = () => {
   const {
     brightness,
-    debouncedBrightness,
     showBrightnessOverlay,
+    currentBrightness,
     setShowBrightnessOverlay,
     handleBrightnessChange,
   } = useBrightness();
-  const {
-    currentVolume,
-    debouncedVolume,
-    showVolumeOverlay,
-    setShowVolumeOverlay,
-    handleVolumeChange,
-  } = useVolume();
+  const { showVolumeOverlay, setShowVolumeOverlay, volume, currentVolume } =
+    useVolume();
   const { currentSpeed } = usePlaybackSpeed();
   const { synchronizePlayback } = useAudioTrack();
   const { dismissFullscreenPlayer } = usePlayer();
   const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
-  const [shouldPlay, setShouldPlay] = useState(true);
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
   const isGestureInSliderVicinity = useSharedValue(false);
   const router = useRouter();
   const scale = useSharedValue(1);
-  const [lastVelocityY, setLastVelocityY] = useState(0);
 
+  const state = usePlayerStore((state) => state.interface.state);
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const stream = usePlayerStore((state) => state.interface.currentStream);
   const selectedAudioTrack = useAudioTrackStore((state) => state.selectedTrack);
@@ -60,8 +54,8 @@ export const VideoPlayer = () => {
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
-  const playAudio = usePlayerStore((state) => state.playAudio);
-  const pauseAudio = usePlayerStore((state) => state.pauseAudio);
+  const toggleAudio = usePlayerStore((state) => state.toggleAudio);
+  const toggleState = usePlayerStore((state) => state.toggleState);
 
   const [gestureControlsEnabled, setGestureControlsEnabled] = useState(true);
 
@@ -89,20 +83,12 @@ export const VideoPlayer = () => {
     }
   });
 
-  const togglePlayback = () => {
-    setShouldPlay(!shouldPlay);
-    if (shouldPlay) {
-      void playAudio();
-    } else {
-      void pauseAudio();
-    }
-  };
-
   const doubleTapGesture = Gesture.Tap()
     .enabled(gestureControlsEnabled)
     .numberOfTaps(2)
     .onEnd(() => {
-      runOnJS(togglePlayback)();
+      runOnJS(toggleAudio)();
+      runOnJS(toggleState)();
     });
 
   const screenHalfWidth = Dimensions.get("window").width / 2;
@@ -114,6 +100,11 @@ export const VideoPlayer = () => {
       if (isGestureInSliderVicinity.value) {
         return;
       }
+      if (event.x > screenHalfWidth) {
+        runOnJS(setShowVolumeOverlay)(true);
+      } else {
+        runOnJS(setShowBrightnessOverlay)(true);
+      }
     })
     .onUpdate((event) => {
       const divisor = 5000;
@@ -123,35 +114,25 @@ export const VideoPlayer = () => {
       const directionMultiplier = event.velocityY < 0 ? 1 : -1;
 
       const change = directionMultiplier * Math.abs(event.velocityY / divisor);
-      const newVolume = Math.max(0, Math.min(1, currentVolume.value + change));
-      const newBrightness = Math.max(0, Math.min(1, brightness.value + change));
 
       if (event.x > screenHalfWidth) {
-        runOnJS(handleVolumeChange)(newVolume);
+        const newVolume = Math.max(0, Math.min(1, volume.value + change));
+        volume.value = newVolume;
       } else {
+        const newBrightness = Math.max(
+          0,
+          Math.min(1, brightness.value + change),
+        );
         brightness.value = newBrightness;
         runOnJS(handleBrightnessChange)(newBrightness);
       }
-
-      if (
-        (event.velocityY < 0 && lastVelocityY >= 0) ||
-        (event.velocityY >= 0 && lastVelocityY < 0)
-      ) {
-        runOnJS(setLastVelocityY)(event.velocityY);
-      }
-
-      if (event.x > screenHalfWidth) {
-        runOnJS(handleVolumeChange)(newVolume);
-        runOnJS(setShowVolumeOverlay)(true);
-      } else {
-        runOnJS(handleBrightnessChange)(newBrightness);
-        runOnJS(setShowBrightnessOverlay)(true);
-      }
     })
-    .onEnd(() => {
-      runOnJS(setLastVelocityY)(0);
-      runOnJS(setShowVolumeOverlay)(false);
-      runOnJS(setShowBrightnessOverlay)(false);
+    .onEnd((event) => {
+      if (event.x > screenHalfWidth) {
+        runOnJS(setShowVolumeOverlay)(false);
+      } else {
+        runOnJS(setShowBrightnessOverlay)(false);
+      }
     });
 
   const composedGesture = Gesture.Race(
@@ -254,9 +235,9 @@ export const VideoPlayer = () => {
         <Video
           ref={setVideoRef}
           source={videoSrc}
-          shouldPlay={shouldPlay}
+          shouldPlay={state === "playing"}
           resizeMode={resizeMode}
-          volume={currentVolume.value}
+          volume={volume.value}
           rate={currentSpeed}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
@@ -285,41 +266,51 @@ export const VideoPlayer = () => {
             <Spinner
               size="large"
               color="$loadingIndicator"
-              style={{
-                position: "absolute",
-              }}
+              position="absolute"
             />
           )}
           <ControlsOverlay isLoading={isLoading} />
         </View>
-        {showVolumeOverlay && (
-          <View
-            position="absolute"
-            bottom={48}
-            alignSelf="center"
-            borderRadius={999}
-            backgroundColor="black"
-            padding={12}
-            opacity={0.5}
-          >
-            <Text fontWeight="bold">Volume: {debouncedVolume}</Text>
-          </View>
-        )}
+        {showVolumeOverlay && <VolumeOverlay volume={currentVolume} />}
         {showBrightnessOverlay && (
-          <View
-            position="absolute"
-            bottom={48}
-            alignSelf="center"
-            borderRadius={999}
-            backgroundColor="black"
-            padding={12}
-            opacity={0.5}
-          >
-            <Text fontWeight="bold">Brightness: {debouncedBrightness}</Text>
-          </View>
+          <BrightnessOverlay brightness={currentBrightness} />
         )}
         <CaptionRenderer />
       </View>
     </GestureDetector>
   );
 };
+
+function BrightnessOverlay(props: { brightness: number }) {
+  return (
+    <View
+      position="absolute"
+      bottom={48}
+      alignSelf="center"
+      borderRadius={999}
+      backgroundColor="black"
+      padding={12}
+      opacity={0.5}
+    >
+      <Text fontWeight="bold">
+        Brightness: {Math.round(props.brightness * 100)}%
+      </Text>
+    </View>
+  );
+}
+
+function VolumeOverlay(props: { volume: number }) {
+  return (
+    <View
+      position="absolute"
+      bottom={48}
+      alignSelf="center"
+      borderRadius={999}
+      backgroundColor="black"
+      padding={12}
+      opacity={0.5}
+    >
+      <Text fontWeight="bold">Volume: {Math.round(props.volume * 100)}%</Text>
+    </View>
+  );
+}

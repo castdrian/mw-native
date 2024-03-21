@@ -1,27 +1,19 @@
-import { useCallback, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSharedValue } from "react-native-reanimated";
-
-import { useDebounce } from "../useDebounce";
+import { useDebounceValue } from "tamagui";
 
 export const useVolume = () => {
   const [showVolumeOverlay, setShowVolumeOverlay] = useState(false);
-  const debouncedShowVolumeOverlay = useDebounce(showVolumeOverlay, 20);
-  const volume = useSharedValue(1);
-  const debouncedVolume = useDebounce(volume.value, 20);
 
-  const handleVolumeChange = useCallback(
-    (newValue: number) => {
-      volume.value = newValue;
-      setShowVolumeOverlay(true);
-    },
-    [volume],
-  );
+  const volume = useSharedValue(1);
+
+  const currentVolume = useDebounceValue(volume.value, 20);
+  const memoizedVolume = useMemo(() => currentVolume, [currentVolume]);
 
   return {
-    showVolumeOverlay: debouncedShowVolumeOverlay,
-    currentVolume: volume,
-    debouncedVolume: `${Math.round(debouncedVolume * 100)}%`,
+    showVolumeOverlay,
     setShowVolumeOverlay,
-    handleVolumeChange,
+    volume,
+    currentVolume: memoizedVolume,
   } as const;
 };

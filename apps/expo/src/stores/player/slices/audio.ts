@@ -11,6 +11,7 @@ export interface AudioSlice {
   setCurrentAudioTrack(track: AudioTrack | null): void;
   playAudio(): Promise<void>;
   pauseAudio(): Promise<void>;
+  toggleAudio(): Promise<void>;
   setAudioPositionAsync(positionMillis: number): Promise<void>;
 }
 
@@ -34,6 +35,18 @@ export const createAudioSlice: MakeSlice<AudioSlice> = (set, get) => ({
     const { audioObject } = get();
     if (audioObject) {
       await audioObject.pauseAsync();
+    }
+  },
+  toggleAudio: async () => {
+    const { audioObject } = get();
+    if (audioObject) {
+      const status = await audioObject.getStatusAsync();
+      if (!status.isLoaded) return;
+      if (status.isPlaying) {
+        await audioObject.pauseAsync();
+      } else {
+        await audioObject.playAsync();
+      }
     }
   },
   setAudioPositionAsync: async (positionMillis) => {
