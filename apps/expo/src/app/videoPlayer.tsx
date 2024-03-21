@@ -17,6 +17,7 @@ export default function VideoPlayerWrapper() {
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
     : null;
+  const download = params.download === "true";
 
   if (!data) return router.back();
 
@@ -24,6 +25,10 @@ export default function VideoPlayerWrapper() {
 
   if (asset) {
     return <VideoPlayer />;
+  }
+
+  if (download) {
+    return <ScraperProcess data={data} download />;
   }
 
   if (playerStatus === PlayerStatus.SCRAPING) {

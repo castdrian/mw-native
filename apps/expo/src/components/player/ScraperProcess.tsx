@@ -5,10 +5,14 @@ import { useRouter } from "expo-router";
 import { View } from "tamagui";
 
 import type { HlsBasedStream } from "@movie-web/provider-utils";
-import { extractTracksFromHLS } from "@movie-web/provider-utils";
+import {
+  extractTracksFromHLS,
+  findHighestQuality,
+} from "@movie-web/provider-utils";
 
 import type { ItemData } from "../item/item";
 import type { AudioTrack } from "./AudioTrackSelector";
+import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 import { useMeta } from "~/hooks/player/useMeta";
 import { useScrape } from "~/hooks/player/useSourceScrape";
 import { constructFullUrl } from "~/lib/url";
@@ -19,10 +23,12 @@ import { ScrapeCard, ScrapeItem } from "./ScrapeCard";
 
 interface ScraperProcessProps {
   data: ItemData;
+  download?: boolean;
 }
 
-export const ScraperProcess = ({ data }: ScraperProcessProps) => {
+export const ScraperProcess = ({ data, download }: ScraperProcessProps) => {
   const router = useRouter();
+  const { startDownload } = useDownloadManager();
 
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -43,6 +49,17 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
       const streamResult = await startScraping(convertMetaToScrapeMedia(meta));
 
       if (!streamResult) return router.back();
+      if (download) {
+        if (streamResult.stream.type === "file") {
+          const highestQuality = findHighestQuality(streamResult.stream);
+          const url = highestQuality
+            ? streamResult.stream.qualities[highestQuality]?.url
+            : null;
+          if (!url) return;
+          startDownload(url, "mp4").catch(console.error);
+        }
+        return router.back();
+      }
       setStream(streamResult.stream);
 
       if (streamResult.stream.type === "hls") {
@@ -88,12 +105,14 @@ export const ScraperProcess = ({ data }: ScraperProcessProps) => {
   }, [
     convertMovieIdToMeta,
     data,
+    download,
     router,
     setAudioTracks,
     setHlsTracks,
     setPlayerStatus,
     setSourceId,
     setStream,
+    startDownload,
     startScraping,
   ]);
 

@@ -5,7 +5,6 @@ import ContextMenu from "react-native-context-menu-view";
 import { useRouter } from "expo-router";
 import { Image, Text, View } from "tamagui";
 
-import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 import { usePlayerStore } from "~/stores/player/store";
 
 export interface ItemData {
@@ -19,7 +18,6 @@ export interface ItemData {
 export default function Item({ data }: { data: ItemData }) {
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const router = useRouter();
-  const { startDownload } = useDownloadManager();
 
   const { title, type, year, posterUrl } = data;
 
@@ -40,11 +38,12 @@ export default function Item({ data }: { data: ItemData }) {
   const onContextMenuPress = (
     e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
   ) => {
-    console.log(e.nativeEvent.name);
-    startDownload(
-      "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-      "mp4",
-    ).catch(console.error);
+    if (e.nativeEvent.name === "Download") {
+      router.push({
+        pathname: "/videoPlayer",
+        params: { data: JSON.stringify(data), download: "true" },
+      });
+    }
   };
 
   return (
