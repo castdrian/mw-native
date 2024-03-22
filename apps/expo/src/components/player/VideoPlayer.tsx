@@ -5,11 +5,8 @@ import { Dimensions, Platform } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
-  useAnimatedProps,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
-  withTiming,
 } from "react-native-reanimated";
 import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
@@ -17,7 +14,7 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
-import { Progress, Spinner, Text, useTheme, View } from "tamagui";
+import { Spinner, useTheme, View } from "tamagui";
 
 import { findHighestQuality } from "@movie-web/provider-utils";
 

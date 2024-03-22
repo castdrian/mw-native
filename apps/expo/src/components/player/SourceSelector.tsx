@@ -81,14 +81,12 @@ const EmbedsPart = ({
   const theme = useTheme();
   const { data, isPending, isError, error, status } = useSourceScrape(sourceId);
 
-  console.log(data);
-
   useEffect(() => {
     if (status === "success" && !isError && data && data?.length <= 1) {
       props.onOpenChange?.(false);
       closeParent?.(false);
     }
-  }, [props.onOpenChange, status, data, isError]);
+  }, [status, data, isError, props, closeParent]);
 
   return (
     <Settings.Sheet
