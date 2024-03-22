@@ -36,7 +36,7 @@ const VideoSlider = ({ onSlidingComplete }: VideoSliderProps) => {
   const status = usePlayerStore((state) => state.status);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
 
-  const width = Dimensions.get("screen").width - 40;
+  const width = Dimensions.get("screen").width - 120;
   const knobSize_ = 20;
   const trackSize_ = 8;
   const minimumValue = 0;

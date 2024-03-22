@@ -4,21 +4,21 @@ import { useState } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { parse } from "subsrt-ts";
-import { useTheme, View } from "tamagui";
+import { Spinner, useTheme, View } from "tamagui";
 
 import type { Stream } from "@movie-web/provider-utils";
 
 import type { CaptionWithData } from "~/stores/captions";
+import {
+  getCountryCodeFromLanguage,
+  getPrettyLanguageNameFromLocale,
+} from "~/lib/language";
 import { useCaptionsStore } from "~/stores/captions";
 import { usePlayerStore } from "~/stores/player/store";
 import { FlagIcon } from "../FlagIcon";
 import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
 import { Settings } from "./settings/Sheet";
-import {
-  getCountryCodeFromLanguage,
-  getPrettyLanguageNameFromLocale,
-} from "./utils";
 
 const parseCaption = async (
   caption: Stream["captions"][0],
@@ -111,13 +111,15 @@ export const CaptionsSelector = () => {
               }
               title={"Off"}
               iconRight={
-                !selectedCaption?.id && (
-                  <MaterialIcons
-                    name="check-circle"
-                    size={24}
-                    color={theme.sheetItemSelected.val}
-                  />
-                )
+                <>
+                  {!selectedCaption?.id && (
+                    <MaterialIcons
+                      name="check-circle"
+                      size={24}
+                      color={theme.sheetItemSelected.val}
+                    />
+                  )}
+                </>
               }
               onPress={() => setSelectedCaption(null)}
             />
@@ -141,13 +143,19 @@ export const CaptionsSelector = () => {
                 }
                 title={getPrettyLanguageNameFromLocale(caption.language) ?? ""}
                 iconRight={
-                  selectedCaption?.id === caption.id && (
-                    <MaterialIcons
-                      name="check-circle"
-                      size={24}
-                      color={theme.sheetItemSelected.val}
-                    />
-                  )
+                  <>
+                    {selectedCaption?.id === caption.id && (
+                      <MaterialIcons
+                        name="check-circle"
+                        size={24}
+                        color={theme.sheetItemSelected.val}
+                      />
+                    )}
+                    {downloadCaption.isPending &&
+                      downloadCaption.variables.id === caption.id && (
+                        <Spinner size="small" color="$loadingIndicator" />
+                      )}
+                  </>
                 }
                 onPress={() => downloadCaption.mutate(caption)}
                 key={caption.id}

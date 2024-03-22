@@ -287,6 +287,7 @@ function GestureOverlay(props: {
       borderTopRightRadius: props.value.value >= 0.98 ? 44 : 0,
     };
   });
+
   return (
     <View
       position="absolute"
