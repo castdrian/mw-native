@@ -67,14 +67,11 @@ jobs:
       - name: Build Android app
         run: cd apps/expo && pnpm apk
 
-      - name: Rename apk
-        run: cd apps/expo && mv android/app/build/outputs/apk/release/app-release.apk android/app/build/outputs/apk/release/movie-web.apk
-
       - name: Upload movie-web.apk as artifact
         uses: actions/upload-artifact@v4
         with:
           name: apk
-          path: ./apps/expo/android/app/build/outputs/apk/release/movie-web.apk
+          path: ./apps/expo/android/app/build/movie-web.apk
 
   build-ios:
     runs-on: macos-14
@@ -108,14 +105,6 @@ jobs:
 
       - name: Build iOS app
         run: cd apps/expo && pnpm ipa
-          
-      - name: Pack .ipa from .app
-        run: |
-          cd apps/expo
-          mkdir -p ios/build/Build/Products/Release-iphoneos/Payload
-          mv ios/build/Build/Products/Release-iphoneos/movieweb.app ios/build/Build/Products/Release-iphoneos/Payload/
-          cd ios/build/Build/Products/Release-iphoneos
-          zip -r ../../../movie-web.ipa Payload
 
       - name: Upload movie-web.ipa as artifact
         uses: actions/upload-artifact@v4
