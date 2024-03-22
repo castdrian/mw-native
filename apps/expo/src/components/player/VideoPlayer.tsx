@@ -293,9 +293,7 @@ function GestureOverlay(props: {
   return (
     <View
       position="absolute"
-      // left={props.type === "brightness" ? "$7" : undefined}
       left={props.type === "brightness" ? insets.left + 20 : undefined}
-      // right={props.type === "volume" ? "$7" : undefined}
       right={props.type === "volume" ? insets.right + 20 : undefined}
       borderRadius="$4"
       gap={8}
