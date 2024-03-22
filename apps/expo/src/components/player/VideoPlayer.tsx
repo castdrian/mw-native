@@ -1,14 +1,23 @@
 import type { AVPlaybackSource } from "expo-av";
+import type { SharedValue } from "react-native-reanimated";
 import { useEffect, useState } from "react";
 import { Dimensions, Platform } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { runOnJS, useSharedValue } from "react-native-reanimated";
+import Animated, {
+  runOnJS,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
 import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
-import { Spinner, Text, View } from "tamagui";
+import { Feather } from "@expo/vector-icons";
+import { Progress, Spinner, Text, useTheme, View } from "tamagui";
 
 import { findHighestQuality } from "@movie-web/provider-utils";
 
@@ -22,18 +31,16 @@ import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
 import { CaptionRenderer } from "./CaptionRenderer";
 import { ControlsOverlay } from "./ControlsOverlay";
-import { isPointInSliderVicinity } from "./VideoSlider";
 
 export const VideoPlayer = () => {
   const {
     brightness,
     showBrightnessOverlay,
-    currentBrightness,
     setShowBrightnessOverlay,
     handleBrightnessChange,
   } = useBrightness();
-  const { showVolumeOverlay, setShowVolumeOverlay, volume, currentVolume } =
-    useVolume();
+  const { volume, showVolumeOverlay, setShowVolumeOverlay } = useVolume();
+
   const { currentSpeed } = usePlaybackSpeed();
   const { synchronizePlayback } = useAudioTrack();
   const { dismissFullscreenPlayer } = usePlayer();
@@ -41,8 +48,8 @@ export const VideoPlayer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
-  const isGestureInSliderVicinity = useSharedValue(false);
   const router = useRouter();
+
   const scale = useSharedValue(1);
 
   const state = usePlayerStore((state) => state.interface.state);
@@ -65,10 +72,6 @@ export const VideoPlayer = () => {
     });
   }, []);
 
-  const checkGestureInSliderVicinity = (x: number, y: number) => {
-    isGestureInSliderVicinity.value = isPointInSliderVicinity(x, y);
-  };
-
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -84,7 +87,7 @@ export const VideoPlayer = () => {
   });
 
   const doubleTapGesture = Gesture.Tap()
-    .enabled(gestureControlsEnabled)
+    .enabled(gestureControlsEnabled && isIdle)
     .numberOfTaps(2)
     .onEnd(() => {
       runOnJS(toggleAudio)();
@@ -94,12 +97,8 @@ export const VideoPlayer = () => {
   const screenHalfWidth = Dimensions.get("window").width / 2;
 
   const panGesture = Gesture.Pan()
-    .enabled(gestureControlsEnabled)
+    .enabled(gestureControlsEnabled && isIdle)
     .onStart((event) => {
-      runOnJS(checkGestureInSliderVicinity)(event.x, event.y);
-      if (isGestureInSliderVicinity.value) {
-        return;
-      }
       if (event.x > screenHalfWidth) {
         runOnJS(setShowVolumeOverlay)(true);
       } else {
@@ -108,9 +107,6 @@ export const VideoPlayer = () => {
     })
     .onUpdate((event) => {
       const divisor = 5000;
-      const panIsInHeaderOrFooter = event.y < 100 || event.y > 400;
-      if (panIsInHeaderOrFooter) return;
-
       const directionMultiplier = event.velocityY < 0 ? 1 : -1;
 
       const change = directionMultiplier * Math.abs(event.velocityY / divisor);
@@ -271,9 +267,9 @@ export const VideoPlayer = () => {
           )}
           <ControlsOverlay isLoading={isLoading} />
         </View>
-        {showVolumeOverlay && <VolumeOverlay volume={currentVolume} />}
+        {showVolumeOverlay && <GestureOverlay value={volume} type="volume" />}
         {showBrightnessOverlay && (
-          <BrightnessOverlay brightness={currentBrightness} />
+          <GestureOverlay value={brightness} type="brightness" />
         )}
         <CaptionRenderer />
       </View>
@@ -281,36 +277,57 @@ export const VideoPlayer = () => {
   );
 };
 
-function BrightnessOverlay(props: { brightness: number }) {
-  return (
-    <View
-      position="absolute"
-      bottom={48}
-      alignSelf="center"
-      borderRadius={999}
-      backgroundColor="black"
-      padding={12}
-      opacity={0.5}
-    >
-      <Text fontWeight="bold">
-        Brightness: {Math.round(props.brightness * 100)}%
-      </Text>
-    </View>
-  );
-}
+function GestureOverlay(props: {
+  value: SharedValue<number>;
+  type: "brightness" | "volume";
+}) {
+  const theme = useTheme();
 
-function VolumeOverlay(props: { volume: number }) {
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: `${props.value.value * 100}%`,
+      borderTopLeftRadius: props.value.value >= 0.98 ? 44 : 0,
+      borderTopRightRadius: props.value.value >= 0.98 ? 44 : 0,
+    };
+  });
   return (
     <View
       position="absolute"
-      bottom={48}
-      alignSelf="center"
-      borderRadius={999}
-      backgroundColor="black"
-      padding={12}
-      opacity={0.5}
+      left={props.type === "brightness" ? "$7" : undefined}
+      right={props.type === "volume" ? "$7" : undefined}
+      borderRadius="$4"
+      gap={8}
+      height="50%"
     >
-      <Text fontWeight="bold">Volume: {Math.round(props.volume * 100)}%</Text>
+      <Feather
+        size={24}
+        color="white"
+        style={{
+          bottom: 20,
+        }}
+        name={props.type === "brightness" ? "sun" : "volume-2"}
+      />
+      <View
+        width={14}
+        backgroundColor={theme.progressBackground}
+        justifyContent="flex-end"
+        borderRadius="$4"
+        left={4}
+        bottom={20}
+        height="100%"
+      >
+        <Animated.View
+          style={[
+            animatedStyle,
+            {
+              width: "100%",
+              backgroundColor: theme.progressFilled.val,
+              borderBottomRightRadius: 44,
+              borderBottomLeftRadius: 44,
+            },
+          ]}
+        />
+      </View>
     </View>
   );
 }

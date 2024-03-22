@@ -38,14 +38,14 @@ export const Header = () => {
             : ""}
         </Text>
         <View
-          height={48}
-          width={144}
+          height="$3.5"
+          width="$11"
           flexDirection="row"
           alignItems="center"
           justifyContent="center"
           gap={2}
-          paddingHorizontal={16}
-          paddingVertical={8}
+          paddingHorizontal="$4"
+          paddingVertical="$1"
           opacity={0.8}
           backgroundColor="$pillBackground"
           borderRadius={24}

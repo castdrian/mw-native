@@ -1,18 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSharedValue } from "react-native-reanimated";
 import * as Brightness from "expo-brightness";
-import { useDebounceValue } from "tamagui";
 
 export const useBrightness = () => {
   const [showBrightnessOverlay, setShowBrightnessOverlay] = useState(false);
 
   const brightness = useSharedValue(0.5);
-
-  const currentBrightness = useDebounceValue(brightness.value, 20);
-  const memoizedBrightness = useMemo(
-    () => currentBrightness,
-    [currentBrightness],
-  );
 
   useEffect(() => {
     async function init() {
@@ -42,7 +35,6 @@ export const useBrightness = () => {
     showBrightnessOverlay,
     setShowBrightnessOverlay,
     brightness,
-    currentBrightness: memoizedBrightness,
     handleBrightnessChange,
   } as const;
 };
