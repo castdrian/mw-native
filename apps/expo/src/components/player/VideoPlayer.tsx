@@ -8,6 +8,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
 import * as NavigationBar from "expo-navigation-bar";
@@ -279,6 +280,7 @@ function GestureOverlay(props: {
   type: "brightness" | "volume";
 }) {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -291,8 +293,10 @@ function GestureOverlay(props: {
   return (
     <View
       position="absolute"
-      left={props.type === "brightness" ? "$7" : undefined}
-      right={props.type === "volume" ? "$7" : undefined}
+      // left={props.type === "brightness" ? "$7" : undefined}
+      left={props.type === "brightness" ? insets.left + 20 : undefined}
+      // right={props.type === "volume" ? "$7" : undefined}
+      right={props.type === "volume" ? insets.right + 20 : undefined}
       borderRadius="$4"
       gap={8}
       height="50%"
