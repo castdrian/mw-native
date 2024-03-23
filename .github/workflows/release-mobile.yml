@@ -103,9 +103,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install xcbeautify
-        run: brew install xcbeautify
-
       - name: Build iOS app
         run: cd apps/expo && pnpm ipa
 
