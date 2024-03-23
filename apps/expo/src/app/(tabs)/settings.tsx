@@ -1,6 +1,10 @@
 import type { SelectProps } from "tamagui";
 import React, { useEffect, useState } from "react";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Application from "expo-application";
+import * as Linking from "expo-linking";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { useToastController } from "@tamagui/toast";
 import {
   Adapt,
   Label,
@@ -17,6 +21,7 @@ import {
 
 import type { ThemeStoreOption } from "~/stores/theme";
 import ScreenLayout from "~/components/layout/ScreenLayout";
+import { checkForUpdate } from "~/lib/update";
 import { getGestureControls, saveGestureControls } from "~/settings";
 import { useThemeStore } from "~/stores/theme";
 
@@ -30,6 +35,7 @@ const themeOptions: ThemeStoreOption[] = [
 
 export default function SettingsScreen() {
   const [gestureControlsEnabled, setGestureControlsEnabled] = useState(true);
+  const toastController = useToastController();
 
   useEffect(() => {
     void getGestureControls().then((enabled) => {
@@ -42,13 +48,31 @@ export default function SettingsScreen() {
     await saveGestureControls(isEnabled);
   };
 
+  const handleVersionPress = async () => {
+    const url = await checkForUpdate();
+    if (url) {
+      toastController.show("Update available", {
+        burntOptions: { preset: "none" },
+        native: true,
+      });
+      await Linking.openURL(url);
+    } else {
+      toastController.show("No updates available", {
+        burntOptions: { preset: "none" },
+        native: true,
+      });
+    }
+  };
+
   return (
     <ScreenLayout title="Settings">
       <View padding={4}>
-        <Text marginBottom={4} fontSize={16} fontWeight="bold" color="white">
-          Player
-        </Text>
         <YStack>
+          <XStack width={200} alignItems="center" gap="$4">
+            <Label minWidth={110}>Theme</Label>
+            <Separator minHeight={20} vertical />
+            <ThemeSelector />
+          </XStack>
           <XStack width={200} alignItems="center" gap="$4">
             <Label minWidth={110}>Gesture controls</Label>
             <Separator minHeight={20} vertical />
@@ -61,13 +85,14 @@ export default function SettingsScreen() {
               <Switch.Thumb animation="quicker" />
             </Switch>
           </XStack>
-
-          <XStack width={200} alignItems="center" gap="$4">
-            <Label minWidth={110}>Theme</Label>
-            <Separator minHeight={20} vertical />
-            <ThemeSelector />
-          </XStack>
         </YStack>
+      </View>
+      <View justifyContent="center" alignItems="center">
+        <TouchableOpacity onPress={handleVersionPress}>
+          <Text fontSize={14} color="white">
+            v{Application.nativeApplicationVersion}
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScreenLayout>
   );
