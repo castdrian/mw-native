@@ -76,9 +76,7 @@ jobs:
         run: pnpm install
 
       - name: Install xcbeautify
-        uses: Cyberbeni/install-swift-tool@v2
-        with:
-          url: https://github.com/cpisciotta/xcbeautify
+        run: brew install xcbeautify
 
       - name: Build iOS app
         run: cd apps/expo && pnpm ipa
