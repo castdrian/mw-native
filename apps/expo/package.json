@@ -11,8 +11,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "apk": "expo prebuild --platform=android && cd android && ./gradlew assembleRelease && mv app/build/outputs/apk/release/app-release.apk app/build/movie-web.apk",
-    "ipa": "expo prebuild --platform=ios && cd ios && xcodebuild clean archive -workspace movieweb.xcworkspace -scheme movieweb -configuration Release -destination generic/platform=iOS -archivePath build/movieweb.xcarchive CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_ALLOWED=NO | xcpretty && cd build/movieweb.xcarchive/Products && mv Applications Payload && zip -r movie-web.ipa Payload && mv movie-web.ipa ../..",
-    "ipa:sim": "expo prebuild --platform=ios && cd ios && xcodebuild clean archive -workspace movieweb.xcworkspace -scheme movieweb -configuration Release -destination \"generic/platform=iOS Simulator\" -archivePath build/movieweb.xcarchive CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_ALLOWED=NO | xcpretty && cd build/movieweb.xcarchive/Products && mv Applications Payload && zip -r movie-web.ipa Payload && mv movie-web.ipa ../..",
+    "ipa": "expo prebuild --platform=ios && cd ios && xcodebuild clean archive -workspace movieweb.xcworkspace -scheme movieweb -configuration Release -destination generic/platform=iOS -archivePath build/movieweb.xcarchive CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_ALLOWED=NO | xcbeautify && cd build/movieweb.xcarchive/Products && mv Applications Payload && zip -r movie-web.ipa Payload && mv movie-web.ipa ../..",
+    "ipa:sim": "expo prebuild --platform=ios && cd ios && xcodebuild clean archive -workspace movieweb.xcworkspace -scheme movieweb -configuration Release -destination \"generic/platform=iOS Simulator\" -archivePath build/movieweb.xcarchive CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_ALLOWED=NO | xcbeautify && cd build/movieweb.xcarchive/Products && mv Applications Payload && zip -r movie-web.ipa Payload && mv movie-web.ipa ../..",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
