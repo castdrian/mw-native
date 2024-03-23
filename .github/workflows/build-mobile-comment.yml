@@ -101,11 +101,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Generate Podfile.lock hash
+        id: podfile_hash
+        run: echo "PODFILE_HASH=$(shasum apps/expo/ios/Podfile.lock | awk '{ print $1 }')" >> $GITHUB_ENV
+
       - name: Cache Pods
         uses: actions/cache@v4
         with:
-          path: '**/Pods'
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          path: apps/expo/ios/Pods
+          key: ${{ runner.os }}-pods-${{ env.PODFILE_HASH }}
           restore-keys: |
             ${{ runner.os }}-pods-
 
