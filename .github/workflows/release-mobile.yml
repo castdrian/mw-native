@@ -45,6 +45,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 21
+          cache: "pnpm"
 
       - uses: pnpm/action-setup@v3
         name: Install pnpm
@@ -61,8 +62,26 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Cache Gradle Wrapper
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+      - name: Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
       - name: Build Android app
         run: cd apps/expo && pnpm apk
@@ -89,10 +108,14 @@ jobs:
         with:
           xcode-version: "15.1.0"
 
+      - name: Update xcbeautify
+        run: brew upgrade xcbeautify
+
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 21
+          cache: "pnpm"
 
       - uses: pnpm/action-setup@v3
         name: Install pnpm
@@ -100,8 +123,20 @@ jobs:
           version: 8
           run_install: false
 
+      - name: Cache Node Modules
+        uses: actions/cache@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Cache Pods
+        uses: actions/cache@v4
+        with:
+         path: ./apps/expo/ios/Pods
+         key: ${{ runner.os }}-pods-${{ hashFiles('apps/expo/ios/Podfile.lock') }}
 
       - name: Build iOS app
         run: cd apps/expo && pnpm ipa
