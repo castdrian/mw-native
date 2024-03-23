@@ -21,17 +21,17 @@ jobs:
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
-
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
           version: 8
           run_install: false
+  
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+            node-version: 21
+            cache: "pnpm"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -89,20 +89,17 @@ jobs:
         with:
           xcode-version: "15.1.0"
 
-      - name: Update xcbeautify
-        run: brew upgrade xcbeautify
-
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
-
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
           version: 8
           run_install: false
+  
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: "pnpm"
 
       - name: Cache Node Modules
         uses: actions/cache@v4
