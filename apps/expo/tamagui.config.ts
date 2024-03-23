@@ -73,6 +73,10 @@ const createThemeConfig = (tokens: Tokens) => ({
   buttonPurpleBackgroundHover: tokens.purple.c400,
   buttonCancelBackground: tokens.ash.c500,
   buttonCancelBackgroundHover: tokens.ash.c300,
+
+  switchActiveTrackColor: tokens.purple.c300,
+  switchInactiveTrackColor: tokens.ash.c500,
+  switchThumbColor: tokens.white,
 });
 
 const openSansFace = {

@@ -235,8 +235,8 @@ importers:
   packages/provider-utils:
     dependencies:
       '@movie-web/providers':
-        specifier: ^2.2.2
-        version: 2.2.2
+        specifier: ^2.2.4
+        version: 2.2.4
       parse-hls:
         specifier: ^1.0.7
         version: 1.0.7
@@ -2865,8 +2865,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@movie-web/providers@2.2.2:
-    resolution: {integrity: sha512-pTlErE5bdu+b68mUW2YAKOJKz2hwSx63auGAfTkGQ+0SHDMlCV9QQ8S8O9IoSsvdXps7/YlWJWOMX8pmKuYbPQ==}
+  /@movie-web/providers@2.2.4:
+    resolution: {integrity: sha512-c10ffR7/oPMbVwpD+Lw0/k5jvx51NbywGJtogzRjeXqDr01o5+pitPeN1qSGaqTg5FBlipn7NSesrd+cczDDQw==}
     dependencies:
       cheerio: 1.0.0-rc.12
       cookie: 0.6.0

@@ -36,9 +36,8 @@ export async function checkForUpdate(): Promise<string | undefined> {
 
   if (!res) return;
 
-  const latestVersion: string = res.data.tag_name;
-  const currentVersion: string =
-    Application.nativeApplicationVersion ?? "0.0.0";
+  const latestVersion = res.data.tag_name;
+  const currentVersion = Application.nativeApplicationVersion ?? "0.0.0";
 
   if (isVersionHigher(latestVersion, currentVersion)) {
     return res.data.html_url;

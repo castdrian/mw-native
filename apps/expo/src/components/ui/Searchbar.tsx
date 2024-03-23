@@ -1,9 +1,8 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Keyboard } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 import { Input, styled, useTheme, View } from "tamagui";
-
-import SearchTabContext from "./SearchTabContext";
 
 const SearchInput = styled(Input, {
   backgroundColor: "$searchBackground",
@@ -22,17 +21,16 @@ export function SearchBar({
   onSearchChange: (text: string) => void;
 }) {
   const theme = useTheme();
+  const pageIsFocused = useIsFocused();
   const [keyword, setKeyword] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<Input>(null);
 
-  const { focusSearchInputRef } = useContext(SearchTabContext);
-
   useEffect(() => {
-    focusSearchInputRef.current = () => {
+    if (pageIsFocused) {
       inputRef.current?.focus();
-    };
-  }, [focusSearchInputRef]);
+    }
+  }, [pageIsFocused]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(

@@ -11,7 +11,6 @@ import {
   Select,
   Separator,
   Sheet,
-  Switch,
   Text,
   useTheme,
   View,
@@ -21,6 +20,7 @@ import {
 
 import type { ThemeStoreOption } from "~/stores/theme";
 import ScreenLayout from "~/components/layout/ScreenLayout";
+import { MWSwitch } from "~/components/ui/Switch";
 import { checkForUpdate } from "~/lib/update";
 import { getGestureControls, saveGestureControls } from "~/settings";
 import { useThemeStore } from "~/stores/theme";
@@ -76,14 +76,12 @@ export default function SettingsScreen() {
           <XStack width={200} alignItems="center" gap="$4">
             <Label minWidth={110}>Gesture controls</Label>
             <Separator minHeight={20} vertical />
-            <Switch
-              size="$4"
-              native
+            <MWSwitch
               checked={gestureControlsEnabled}
               onCheckedChange={handleGestureControlsToggle}
             >
-              <Switch.Thumb animation="quicker" />
-            </Switch>
+              <MWSwitch.Thumb animation="quicker" />
+            </MWSwitch>
           </XStack>
         </YStack>
       </View>
