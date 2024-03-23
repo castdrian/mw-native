@@ -54,8 +54,6 @@ const defineConfig = (): ExpoConfig => ({
       {
         android: {
           minSdkVersion: 24,
-          enableProguardInReleaseBuilds: true,
-          enableShrinkResourcesInReleaseBuilds: true,
           packagingOptions: {
             pickFirst: [
               "lib/x86/libcrypto.so",
