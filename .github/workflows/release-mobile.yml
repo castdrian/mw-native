@@ -125,8 +125,6 @@ jobs:
         with:
           path: apps/expo/ios
           key: ${{ runner.os }}-pods-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
 
       - name: Build iOS app
         run: cd apps/expo && pnpm ipa
