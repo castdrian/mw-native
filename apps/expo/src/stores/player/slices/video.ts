@@ -1,4 +1,4 @@
-import type { AVPlaybackStatus, Video } from "expo-av";
+import type { AVPlaybackSourceObject, AVPlaybackStatus, Video } from "expo-av";
 import type { Asset } from "expo-media-library";
 
 import type { ScrapeMedia } from "@movie-web/provider-utils";
@@ -30,11 +30,13 @@ export interface PlayerMeta {
 
 export interface VideoSlice {
   videoRef: Video | null;
+  videoSrc: AVPlaybackSourceObject | null;
   status: AVPlaybackStatus | null;
   meta: PlayerMeta | null;
   asset: Asset | null;
 
   setVideoRef(ref: Video | null): void;
+  setVideoSrc(src: AVPlaybackSourceObject | null): void;
   setStatus(status: AVPlaybackStatus | null): void;
   setMeta(meta: PlayerMeta | null): void;
   setAsset(asset: Asset | null): void;
@@ -67,12 +69,18 @@ export const convertMetaToScrapeMedia = (meta: PlayerMeta): ScrapeMedia => {
 
 export const createVideoSlice: MakeSlice<VideoSlice> = (set) => ({
   videoRef: null,
+  videoSrc: null,
   status: null,
   meta: null,
   asset: null,
 
   setVideoRef: (ref) => {
     set({ videoRef: ref });
+  },
+  setVideoSrc: (src) => {
+    set((s) => {
+      s.videoSrc = src;
+    });
   },
   setStatus: (status) => {
     set((s) => {

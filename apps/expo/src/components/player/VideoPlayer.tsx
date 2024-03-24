@@ -1,4 +1,3 @@
-import type { AVPlaybackSource } from "expo-av";
 import type { SharedValue } from "react-native-reanimated";
 import { useEffect, useState } from "react";
 import { Dimensions, Platform } from "react-native";
@@ -42,7 +41,6 @@ export const VideoPlayer = () => {
   const { currentSpeed } = usePlaybackSpeed();
   const { synchronizePlayback } = useAudioTrack();
   const { dismissFullscreenPlayer } = usePlayer();
-  const [videoSrc, setVideoSrc] = useState<AVPlaybackSource>();
   const [isLoading, setIsLoading] = useState(true);
   const [resizeMode, setResizeMode] = useState(ResizeMode.CONTAIN);
   const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
@@ -57,6 +55,8 @@ export const VideoPlayer = () => {
   const videoRef = usePlayerStore((state) => state.videoRef);
   const asset = usePlayerStore((state) => state.asset);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
+  const videoSrc = usePlayerStore((state) => state.videoSrc) ?? undefined;
+  const setVideoSrc = usePlayerStore((state) => state.setVideoSrc);
   const setStatus = usePlayerStore((state) => state.setStatus);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const toggleAudio = usePlayerStore((state) => state.toggleAudio);
@@ -201,6 +201,7 @@ export const VideoPlayer = () => {
     hasStartedPlaying,
     router,
     selectedAudioTrack,
+    setVideoSrc,
     stream,
     synchronizePlayback,
   ]);
