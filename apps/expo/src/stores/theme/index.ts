@@ -1,6 +1,7 @@
+import { setAlternateAppIcon } from "expo-alternate-app-icons";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { setAlternateAppIcon } from "expo-alternate-app-icons";
+
 import { getTheme, saveTheme } from "~/settings";
 
 export type ThemeStoreOption = "main" | "blue" | "gray" | "red" | "teal";
@@ -25,7 +26,7 @@ export const useThemeStore = create(
           .then(() => {
             set((s) => {
               s.theme = newTheme;
-              void setAlternateAppIcon(newTheme)
+              void setAlternateAppIcon(newTheme);
             });
           })
           .catch((error) => {

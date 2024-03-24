@@ -65,16 +65,16 @@ const defineConfig = (): ExpoConfig => ({
         },
       },
     ],
-	[
-		"expo-alternate-app-icons",
-		[
-		  "./assets/images/main.png",
-		  "./assets/images/blue.png",
-		  "./assets/images/gray.png",
-		  "./assets/images/red.png",
-		  "./assets/images/teal.png",
-		],
-	  ],	  
+    [
+      "expo-alternate-app-icons",
+      [
+        "./assets/images/main.png",
+        "./assets/images/blue.png",
+        "./assets/images/gray.png",
+        "./assets/images/red.png",
+        "./assets/images/teal.png",
+      ],
+    ],
     [
       "expo-media-library",
       {
