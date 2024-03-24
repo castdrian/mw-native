@@ -68,6 +68,10 @@ export function SearchBar({
         ref={inputRef}
         placeholder="What are you looking for?"
         width="80%"
+        borderColor={isFocused ? theme.colorTransparent : theme.inputBorder}
+        backgroundColor={
+          isFocused ? theme.searchFocused : theme.searchBackground
+        }
       />
     </View>
   );
