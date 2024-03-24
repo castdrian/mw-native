@@ -1,5 +1,5 @@
 import type { SheetProps, ViewProps } from "tamagui";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   ScrollView,
   Separator,
@@ -22,6 +22,7 @@ function SettingsSheet(props: SheetProps) {
       snapPoints={[90]}
       dismissOnSnapToBottom
       modal
+      native
       animation="spring"
       {...props}
     >
@@ -52,27 +53,29 @@ function SettingsSheetFrame({
   children: React.ReactNode;
   isLoading?: boolean;
 }) {
+	const insets = useSafeAreaInsets();
+
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Sheet.Frame
-          backgroundColor="$playerSettingsBackground"
-          padding="$5"
-          gap="$4"
-        >
-          {isLoading && (
-            <Spinner
-              size="large"
-              color="$loadingIndicator"
-              style={{
-                position: "absolute",
-              }}
-            />
-          )}
-          {!isLoading && children}
-        </Sheet.Frame>
-      </SafeAreaView>
-    </SafeAreaProvider>
+	<View style={{flex: 1}} backgroundColor='black'>
+    <Sheet.Frame
+      backgroundColor="$playerSettingsBackground"
+      padding="$5"
+	  left={insets.left}
+	  right={insets.right}
+      gap="$4"
+    >
+      {isLoading && (
+        <Spinner
+          size="large"
+          color="$loadingIndicator"
+          style={{
+            position: "absolute",
+          }}
+        />
+      )}
+      {!isLoading && children}
+    </Sheet.Frame>
+	</View>
   );
 }
 
@@ -85,9 +88,11 @@ function SettingsHeader({
   title: string;
   rightButton?: React.ReactNode;
 }) {
+	const insets = useSafeAreaInsets();
+
   return (
     <>
-      <View flexDirection="row" alignItems="center" gap="$4">
+	<View style={{ paddingRight: insets.right }} flexDirection="row" alignItems="center" gap="$4">
         {icon}
         <PlayerText flexGrow={1}>{title}</PlayerText>
         {rightButton}
