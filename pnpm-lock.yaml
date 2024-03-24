@@ -26,9 +26,6 @@ importers:
 
   apps/expo:
     dependencies:
-      '@config-plugins/react-native-dynamic-app-icon':
-        specifier: ^7.0.0
-        version: 7.0.0(expo@50.0.14)
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.21)
@@ -80,6 +77,9 @@ importers:
       expo:
         specifier: ~50.0.14
         version: 50.0.14(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
+      expo-alternate-app-icons:
+        specifier: ^0.1.7
+        version: 0.1.7(expo@50.0.14)(react-native@0.73.6)(react@18.2.0)
       expo-application:
         specifier: ~5.8.3
         version: 5.8.3(expo@50.0.14)
@@ -149,9 +149,6 @@ importers:
       react-native:
         specifier: 0.73.6
         version: 0.73.6(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-      react-native-change-icon:
-        specifier: ^5.0.0
-        version: 5.0.0(react-native@0.73.6)
       react-native-context-menu-view:
         specifier: ^1.14.1
         version: 1.14.1(react-native@0.73.6)(react@18.2.0)
@@ -1864,15 +1861,6 @@ packages:
       '@babel/helper-string-parser': 7.23.4
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
-
-  /@config-plugins/react-native-dynamic-app-icon@7.0.0(expo@50.0.14):
-    resolution: {integrity: sha512-ujNXdDCso8HI9KHJIanDMP558mQ43w3YT7mVD82kBxL/WTWQ9tZav7Qu12fzipZkVL4oLDQNrPgbzYRCfZpN6g==}
-    peerDependencies:
-      expo: ^50
-    dependencies:
-      expo: 50.0.14(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
-      xcode: 3.0.1
-    dev: false
 
   /@craftzdog/react-native-buffer@6.0.5(react-native@0.73.6)(react@18.2.0):
     resolution: {integrity: sha512-Av+YqfwA9e7jhgI9GFE/gTpwl/H+dRRLmZyJPOpKTy107j9Oj7oXlm3/YiMNz+C/CEGqcKAOqnXDLs4OL6AAFw==}
@@ -7711,6 +7699,18 @@ packages:
       signal-exit: 3.0.7
       strip-final-newline: 2.0.0
 
+  /expo-alternate-app-icons@0.1.7(expo@50.0.14)(react-native@0.73.6)(react@18.2.0):
+    resolution: {integrity: sha512-4hIIGVRaNSedreT2GbujpR+vyz7x+/j8GPfGn/WHFYy8V0lmAOa8KgT2JeXuK1nB6s4Ler4yahrxUhcSI/lmqQ==}
+    peerDependencies:
+      expo: '*'
+      react: '*'
+      react-native: '*'
+    dependencies:
+      expo: 50.0.14(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
+      react: 18.2.0
+      react-native: 0.73.6(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
+    dev: false
+
   /expo-application@5.8.3(expo@50.0.14):
     resolution: {integrity: sha512-IISxzpPX+Xe4ynnwX8yY52T6dm1g9sME1GCj4lvUlrdc5xeTPM6U35x7Wj82V7lLWBaVGe+/Tg9EeKqfylCEwA==}
     peerDependencies:
@@ -11474,14 +11474,6 @@ packages:
     resolution: {integrity: sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==}
     dependencies:
       prop-types: 15.8.1
-    dev: false
-
-  /react-native-change-icon@5.0.0(react-native@0.73.6):
-    resolution: {integrity: sha512-pq2SlMeaRlgEDDlJQL2dAa2P6YpgXpKMmZ4CsXHRnmXBVjpG7SBSI9tbP85grxqZSj6b6EBuP9u1oyfZm2b+JA==}
-    peerDependencies:
-      react-native: '*'
-    dependencies:
-      react-native: 0.73.6(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
     dev: false
 
   /react-native-context-menu-view@1.14.1(react-native@0.73.6)(react@18.2.0):
