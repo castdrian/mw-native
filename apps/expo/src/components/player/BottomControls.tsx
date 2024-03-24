@@ -9,6 +9,7 @@ import { Controls } from "./Controls";
 import { DownloadButton } from "./DownloadButton";
 import { PlaybackSpeedSelector } from "./PlaybackSpeedSelector";
 import { ProgressBar } from "./ProgressBar";
+import { QualitySelector } from "./QualitySelector";
 import { SeasonSelector } from "./SeasonEpisodeSelector";
 import { SourceSelector } from "./SourceSelector";
 import { mapMillisecondsToTime } from "./utils";
@@ -80,6 +81,7 @@ export const BottomControls = () => {
           <SourceSelector />
           <AudioTrackSelector />
           <PlaybackSpeedSelector />
+          <QualitySelector />
           <DownloadButton />
         </View>
       </View>
