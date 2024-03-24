@@ -1,19 +1,11 @@
+import type { Input } from "tamagui";
 import { useEffect, useRef, useState } from "react";
 import { Keyboard } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/native";
-import { Input, styled, useTheme, View } from "tamagui";
+import { useTheme, View } from "tamagui";
 
-const SearchInput = styled(Input, {
-  backgroundColor: "$searchBackground",
-  borderColor: "$colorTransparent",
-  placeholderTextColor: "$searchPlaceholder",
-  outlineStyle: "none",
-  focusStyle: {
-    borderColor: "$colorTransparent",
-    backgroundColor: "$searchFocused",
-  },
-});
+import { MWInput } from "./Input";
 
 export function SearchBar({
   onSearchChange,
@@ -69,7 +61,8 @@ export function SearchBar({
       <View width={48} alignItems="center" justifyContent="center">
         <FontAwesome5 name="search" size={18} color={theme.searchIcon.val} />
       </View>
-      <SearchInput
+      <MWInput
+        type="search"
         value={keyword}
         onChangeText={handleChange}
         ref={inputRef}

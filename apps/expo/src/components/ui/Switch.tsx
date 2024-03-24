@@ -1,4 +1,4 @@
-import type { SwitchProps } from "tamagui";
+import type { SwitchProps, SwitchThumbProps } from "tamagui";
 import { Switch, useTheme } from "tamagui";
 
 const MWSwitch = (props: SwitchProps) => {
@@ -18,7 +18,7 @@ const MWSwitch = (props: SwitchProps) => {
   );
 };
 
-const MWSwitchThumb = (props: any) => {
+const MWSwitchThumb = (props: SwitchThumbProps) => {
   return <Switch.Thumb animation="quicker" {...props} />;
 };
 

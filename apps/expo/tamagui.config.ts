@@ -20,12 +20,6 @@ type Tokens =
 const createThemeConfig = (tokens: Tokens) => ({
   screenBackground: tokens.shade.c900,
 
-  searchIcon: tokens.shade.c100,
-  searchBackground: tokens.shade.c600,
-  searchHoverBackground: tokens.shade.c600,
-  searchFocused: tokens.shade.c400,
-  searchPlaceholder: tokens.shade.c100,
-
   tabBarBackground: tokens.shade.c700,
   tabBarIcon: tokens.shade.c300,
   tabBarIconFocused: tokens.purple.c200,
@@ -77,6 +71,18 @@ const createThemeConfig = (tokens: Tokens) => ({
   switchActiveTrackColor: tokens.purple.c300,
   switchInactiveTrackColor: tokens.ash.c500,
   switchThumbColor: tokens.white,
+
+  searchIcon: tokens.shade.c100,
+  searchBackground: tokens.shade.c600,
+  searchHoverBackground: tokens.shade.c600,
+  searchFocused: tokens.shade.c400,
+  searchPlaceholder: tokens.shade.c100,
+
+  inputBackground: tokens.shade.c600,
+  inputBorder: tokens.shade.c600,
+  inputPlaceholderText: tokens.shade.c300,
+  inputText: tokens.white,
+  inputIconColor: tokens.shade.c50,
 });
 
 const openSansFace = {

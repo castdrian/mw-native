@@ -12,8 +12,8 @@ interface PlayerSettings {
 }
 
 interface Settings {
-  themes: ThemeSettings;
-  player: PlayerSettings;
+  themes?: ThemeSettings;
+  player?: PlayerSettings;
 }
 
 const settingsKey = "settings";
@@ -35,8 +35,12 @@ export const getTheme = async (): Promise<ThemeStoreOption> => {
 };
 
 export const saveTheme = async (newTheme: ThemeStoreOption) => {
-  const settings = (await loadSettings()) ?? { themes: { theme: newTheme } };
-  settings.themes.theme = newTheme;
+  const existingSettings = await loadSettings();
+  const settings: Settings = existingSettings?.themes?.theme
+    ? {
+        themes: { theme: newTheme },
+      }
+    : { themes: { theme: "main" } };
   await saveSettings(settings);
 };
 
@@ -69,7 +73,7 @@ export const getGestureControls = async (): Promise<boolean> => {
 };
 
 export const saveGestureControls = async (gestureControls: boolean) => {
-  const settings = (await loadSettings()) ?? ({} as Settings);
+  const settings = (await loadSettings()) ?? {};
 
   if (!settings.player) {
     settings.player = { gestureControls: true };

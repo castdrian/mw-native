@@ -20,6 +20,7 @@ import {
 
 import type { ThemeStoreOption } from "~/stores/theme";
 import ScreenLayout from "~/components/layout/ScreenLayout";
+import { MWSelect } from "~/components/ui/Select";
 import { MWSwitch } from "~/components/ui/Switch";
 import { checkForUpdate } from "~/lib/update";
 import { getGestureControls, saveGestureControls } from "~/settings";
@@ -102,19 +103,20 @@ export function ThemeSelector(props: SelectProps) {
   const setTheme = useThemeStore((s) => s.setTheme);
 
   return (
-    <Select
+    <MWSelect
       value={themeStore}
       onValueChange={setTheme}
       disablePreventBodyScroll
-      native
       {...props}
     >
-      <Select.Trigger
+      <MWSelect.Trigger
         maxWidth="$12"
-        iconAfter={<FontAwesome name="chevron-down" />}
+        iconAfter={
+          <FontAwesome name="chevron-down" color={theme.inputIconColor.val} />
+        }
       >
         <Select.Value />
-      </Select.Trigger>
+      </MWSelect.Trigger>
 
       <Adapt platform="native">
         <Sheet
@@ -130,7 +132,12 @@ export function ThemeSelector(props: SelectProps) {
           snapPoints={[35]}
         >
           <Sheet.Handle backgroundColor="$sheetHandle" />
-          <Sheet.Frame backgroundColor="$sheetBackground" padding="$5">
+          <Sheet.Frame
+            backgroundColor="$sheetBackground"
+            padding="$4"
+            alignItems="center"
+            justifyContent="center"
+          >
             <Adapt.Contents />
           </Sheet.Frame>
           <Sheet.Overlay
@@ -178,6 +185,6 @@ export function ThemeSelector(props: SelectProps) {
           })}
         </Select.Viewport>
       </Select.Content>
-    </Select>
+    </MWSelect>
   );
 }

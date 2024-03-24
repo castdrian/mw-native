@@ -2,6 +2,7 @@
   "extends": ["@movie-web/tsconfig/base.json"],
   "compilerOptions": {
     "incremental": true,
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
@@ -10,6 +11,6 @@
     "jsx": "react-native",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
   },
-  "include": ["src", "*.ts", "*.js", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "include": ["src", "*.ts", "*.js", ".expo/types/**/*.ts", "expo-env.d.ts", "config-plugins/*"],
   "exclude": ["node_modules"],
 }

@@ -232,19 +232,12 @@ export const useSourceScrape = (sourceId: string | null) => {
   const query = useQuery({
     queryKey: ["sourceScrape", meta, sourceId],
     queryFn: async () => {
-      console.log("useSourceScrape", meta, sourceId);
       if (!meta || !sourceId) return;
       const scrapeMedia = convertMetaToScrapeMedia(meta);
       const result = await getVideoStreamFromSource({
         sourceId,
         media: scrapeMedia,
-        events: {
-          update(evt) {
-            console.log("update useSourceScrape", evt);
-          },
-        },
       });
-      console.log("useSourceScrape result", result);
 
       if (result?.stream) {
         setCurrentStream(result.stream[0]!);
