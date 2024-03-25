@@ -13,7 +13,7 @@ import {
   providers,
 } from "@movie-web/provider-utils";
 
-import { convertMetaToScrapeMedia } from "~/stores/player/slices/video";
+import { convertMetaToScrapeMedia } from "~/lib/meta";
 import { usePlayerStore } from "~/stores/player/store";
 
 export interface ScrapingItems {
