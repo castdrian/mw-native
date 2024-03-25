@@ -1,8 +1,6 @@
 import type { AVPlaybackSourceObject, AVPlaybackStatus, Video } from "expo-av";
 import type { Asset } from "expo-media-library";
 
-import type { ScrapeMedia } from "@movie-web/provider-utils";
-
 import type { MakeSlice } from "./types";
 import { PlayerStatus } from "./interface";
 
@@ -42,30 +40,6 @@ export interface VideoSlice {
   setAsset(asset: Asset | null): void;
   resetVideo(): void;
 }
-
-export const convertMetaToScrapeMedia = (meta: PlayerMeta): ScrapeMedia => {
-  if (meta.type === "movie") {
-    return {
-      title: meta.title,
-      releaseYear: meta.releaseYear,
-      type: "movie",
-      tmdbId: meta.tmdbId,
-      imdbId: meta.imdbId,
-    };
-  }
-  if (meta.type === "show") {
-    return {
-      title: meta.title,
-      releaseYear: meta.releaseYear,
-      type: "show",
-      tmdbId: meta.tmdbId,
-      season: meta.season!,
-      episode: meta.episode!,
-      imdbId: meta.imdbId,
-    };
-  }
-  throw new Error("Invalid meta type");
-};
 
 export const createVideoSlice: MakeSlice<VideoSlice> = (set) => ({
   videoRef: null,

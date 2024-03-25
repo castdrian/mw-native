@@ -1,4 +1,6 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
+
+import type { ScrapeMedia } from "@movie-web/provider-utils";
 
 import type { ItemData } from "~/components/item/item";
 import { ScraperProcess } from "~/components/player/ScraperProcess";
@@ -12,14 +14,14 @@ export default function VideoPlayerWrapper() {
   const asset = usePlayerStore((state) => state.asset);
   const { presentFullscreenPlayer } = usePlayer();
 
-  const router = useRouter();
   const params = useLocalSearchParams();
   const data = params.data
     ? (JSON.parse(params.data as string) as ItemData)
-    : null;
+    : undefined;
+  const media = params.media
+    ? (JSON.parse(params.media as string) as ScrapeMedia)
+    : undefined;
   const download = params.download === "true";
-
-  if (!data) return router.back();
 
   void presentFullscreenPlayer();
 
@@ -32,7 +34,7 @@ export default function VideoPlayerWrapper() {
   }
 
   if (playerStatus === PlayerStatus.SCRAPING) {
-    return <ScraperProcess data={data} />;
+    return <ScraperProcess data={data} media={media} />;
   }
 
   if (playerStatus === PlayerStatus.READY) {

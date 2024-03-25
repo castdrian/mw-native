@@ -1,3 +1,4 @@
+import type { AVPlaybackStatus } from "expo-av";
 import type { SharedValue } from "react-native-reanimated";
 import { useEffect, useState } from "react";
 import { Dimensions, Platform } from "react-native";
@@ -23,6 +24,7 @@ import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
 import { usePlayer } from "~/hooks/player/usePlayer";
 import { useVolume } from "~/hooks/player/useVolume";
+import { convertMetaToScrapeMedia, getNextEpisode } from "~/lib/meta";
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
 import { usePlayerSettingsStore } from "~/stores/settings";
@@ -61,8 +63,10 @@ export const VideoPlayer = () => {
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const toggleAudio = usePlayerStore((state) => state.toggleAudio);
   const toggleState = usePlayerStore((state) => state.toggleState);
+  const meta = usePlayerStore((state) => state.meta);
+  const setMeta = usePlayerStore((state) => state.setMeta);
 
-  const { gestureControls } = usePlayerSettingsStore();
+  const { gestureControls, autoPlay } = usePlayerSettingsStore();
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
@@ -212,6 +216,27 @@ export const VideoPlayer = () => {
     }
   };
 
+  const onPlaybackStatusUpdate = async (status: AVPlaybackStatus) => {
+    setStatus(status);
+    if (
+      status.isLoaded &&
+      status.didJustFinish &&
+      !status.isLooping &&
+      autoPlay
+    ) {
+      if (meta?.type !== "show") return;
+      const nextEpisodeMeta = await getNextEpisode(meta);
+      if (!nextEpisodeMeta) return;
+      setMeta(nextEpisodeMeta);
+      const media = convertMetaToScrapeMedia(nextEpisodeMeta);
+
+      router.replace({
+        pathname: "/videoPlayer",
+        params: { media: JSON.stringify(media) },
+      });
+    }
+  };
+
   return (
     <GestureDetector gesture={composedGesture}>
       <View
@@ -230,7 +255,7 @@ export const VideoPlayer = () => {
           rate={currentSpeed}
           onLoadStart={onVideoLoadStart}
           onReadyForDisplay={onReadyForDisplay}
-          onPlaybackStatusUpdate={setStatus}
+          onPlaybackStatusUpdate={onPlaybackStatusUpdate}
           style={[
             {
               position: "absolute",

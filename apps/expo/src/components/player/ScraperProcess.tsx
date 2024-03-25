@@ -4,7 +4,11 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { View } from "tamagui";
 
-import type { HlsBasedStream } from "@movie-web/provider-utils";
+import type {
+  HlsBasedStream,
+  RunOutput,
+  ScrapeMedia,
+} from "@movie-web/provider-utils";
 import {
   extractTracksFromHLS,
   findHighestQuality,
@@ -12,21 +16,27 @@ import {
 
 import type { ItemData } from "../item/item";
 import type { AudioTrack } from "./AudioTrackSelector";
+import type { PlayerMeta } from "~/stores/player/slices/video";
 import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 import { useMeta } from "~/hooks/player/useMeta";
 import { useScrape } from "~/hooks/player/useSourceScrape";
+import { convertMetaToScrapeMedia } from "~/lib/meta";
 import { constructFullUrl } from "~/lib/url";
 import { PlayerStatus } from "~/stores/player/slices/interface";
-import { convertMetaToScrapeMedia } from "~/stores/player/slices/video";
 import { usePlayerStore } from "~/stores/player/store";
 import { ScrapeCard, ScrapeItem } from "./ScrapeCard";
 
 interface ScraperProcessProps {
-  data: ItemData;
+  data?: ItemData;
+  media?: ScrapeMedia;
   download?: boolean;
 }
 
-export const ScraperProcess = ({ data, download }: ScraperProcessProps) => {
+export const ScraperProcess = ({
+  data,
+  media,
+  download,
+}: ScraperProcessProps) => {
   const router = useRouter();
   const { startDownload } = useDownloadManager();
 
@@ -43,10 +53,19 @@ export const ScraperProcess = ({ data, download }: ScraperProcessProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!data) return router.back();
-      const meta = await convertMovieIdToMeta(data.id, data.type);
-      if (!meta) return;
-      const streamResult = await startScraping(convertMetaToScrapeMedia(meta));
+      if (!data && !media) return router.back();
+
+      let streamResult: RunOutput | null = null;
+      let meta: PlayerMeta | undefined = undefined;
+
+      if (!media && data) {
+        meta = await convertMovieIdToMeta(data.id, data.type);
+        if (!meta) return router.back();
+      }
+
+      const scrapeMedia = media ?? (meta && convertMetaToScrapeMedia(meta));
+      if (!scrapeMedia) return router.back();
+      streamResult = await startScraping(scrapeMedia);
 
       if (!streamResult) return router.back();
       if (download) {
@@ -76,7 +95,7 @@ export const ScraperProcess = ({ data, download }: ScraperProcessProps) => {
         if (tracks?.audio.length) {
           const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
             uri: constructFullUrl(
-              (streamResult.stream as HlsBasedStream).playlist,
+              (streamResult?.stream as HlsBasedStream).playlist,
               track.uri,
             ),
             name: track.properties[0]?.attributes.name?.toString() ?? "Unknown",
@@ -106,6 +125,7 @@ export const ScraperProcess = ({ data, download }: ScraperProcessProps) => {
     convertMovieIdToMeta,
     data,
     download,
+    media,
     router,
     setAudioTracks,
     setHlsTracks,
