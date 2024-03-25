@@ -181,7 +181,9 @@ export function ThemeSelector(props: SelectProps) {
                   i === themeOptions.length - 1 ? "$8" : 0
                 }
               >
-                <Select.ItemText>{item}</Select.ItemText>
+                <Select.ItemText>
+                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                </Select.ItemText>
                 <Select.ItemIndicator ml="auto">
                   <MaterialIcons
                     name="check-circle"
