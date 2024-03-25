@@ -1,10 +1,14 @@
 import type { SelectProps } from "tamagui";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Platform } from "react-native";
 import * as Application from "expo-application";
 import * as Brightness from "expo-brightness";
 import * as Linking from "expo-linking";
-import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useToastController } from "@tamagui/toast";
 import {
   Adapt,
@@ -12,7 +16,6 @@ import {
   Select,
   Separator,
   Sheet,
-  Text,
   useTheme,
   View,
   XStack,
@@ -21,6 +24,7 @@ import {
 
 import type { ThemeStoreOption } from "~/stores/theme";
 import ScreenLayout from "~/components/layout/ScreenLayout";
+import { MWButton } from "~/components/ui/Button";
 import { MWSelect } from "~/components/ui/Select";
 import { MWSwitch } from "~/components/ui/Switch";
 import { checkForUpdate } from "~/lib/update";
@@ -36,6 +40,7 @@ const themeOptions: ThemeStoreOption[] = [
 ];
 
 export default function SettingsScreen() {
+  const theme = useTheme();
   const { gestureControls, setGestureControls, autoPlay, setAutoPlay } =
     usePlayerSettingsStore();
   const toastController = useToastController();
@@ -93,14 +98,26 @@ export default function SettingsScreen() {
               <MWSwitch.Thumb animation="quicker" />
             </MWSwitch>
           </XStack>
+          <XStack width={200} alignItems="center" gap="$4">
+            <Label minWidth={110}>
+              v{Application.nativeApplicationVersion}
+            </Label>
+            <Separator minHeight={20} vertical />
+            <MWButton
+              type="secondary"
+              icon={
+                <MaterialCommunityIcons
+                  name={Platform.select({ ios: "apple", android: "android" })}
+                  size={24}
+                  color={theme.buttonSecondaryText.val}
+                />
+              }
+              onPress={handleVersionPress}
+            >
+              Update
+            </MWButton>
+          </XStack>
         </YStack>
-      </View>
-      <View justifyContent="center" alignItems="center">
-        <TouchableOpacity onPress={handleVersionPress}>
-          <Text fontSize={14} color="white">
-            v{Application.nativeApplicationVersion}
-          </Text>
-        </TouchableOpacity>
       </View>
     </ScreenLayout>
   );

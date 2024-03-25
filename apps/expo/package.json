@@ -1,6 +1,6 @@
 {
   "name": "@movie-web/mobile",
-  "version": "0.0.9",
+  "version": "0.0.1",
   "private": true,
   "main": "index.js",
   "scripts": {
