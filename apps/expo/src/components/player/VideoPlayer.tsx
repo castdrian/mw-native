@@ -23,9 +23,9 @@ import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
 import { usePlayer } from "~/hooks/player/usePlayer";
 import { useVolume } from "~/hooks/player/useVolume";
-import { getGestureControls } from "~/settings";
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
+import { usePlayerSettingsStore } from "~/stores/settings";
 import { CaptionRenderer } from "./CaptionRenderer";
 import { ControlsOverlay } from "./ControlsOverlay";
 
@@ -62,13 +62,7 @@ export const VideoPlayer = () => {
   const toggleAudio = usePlayerStore((state) => state.toggleAudio);
   const toggleState = usePlayerStore((state) => state.toggleState);
 
-  const [gestureControlsEnabled, setGestureControlsEnabled] = useState(true);
-
-  useEffect(() => {
-    void getGestureControls().then((enabled) => {
-      setGestureControlsEnabled(enabled);
-    });
-  }, []);
+  const { gestureControls } = usePlayerSettingsStore();
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
@@ -85,7 +79,7 @@ export const VideoPlayer = () => {
   });
 
   const doubleTapGesture = Gesture.Tap()
-    .enabled(gestureControlsEnabled && isIdle)
+    .enabled(gestureControls && isIdle)
     .numberOfTaps(2)
     .onEnd(() => {
       runOnJS(toggleAudio)();
@@ -95,7 +89,7 @@ export const VideoPlayer = () => {
   const screenHalfWidth = Dimensions.get("window").width / 2;
 
   const panGesture = Gesture.Pan()
-    .enabled(gestureControlsEnabled && isIdle)
+    .enabled(gestureControls && isIdle)
     .onStart((event) => {
       if (event.x > screenHalfWidth) {
         runOnJS(setShowVolumeOverlay)(true);

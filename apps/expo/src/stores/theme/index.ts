@@ -2,7 +2,7 @@ import { setAlternateAppIcon } from "expo-alternate-app-icons";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import { getTheme, saveTheme } from "~/settings";
+import { useThemeSettingsStore } from "~/stores/settings";
 
 export type ThemeStoreOption = "main" | "blue" | "gray" | "red" | "teal";
 
@@ -13,25 +13,16 @@ export interface ThemeStore {
 
 export const useThemeStore = create(
   immer<ThemeStore>((set) => {
-    void getTheme().then((savedTheme) => {
-      set((s) => {
-        s.theme = savedTheme;
-      });
-    });
+    const { theme, setTheme: updateTheme } = useThemeSettingsStore.getState();
 
     return {
-      theme: "main",
+      theme,
       setTheme: (newTheme) => {
-        saveTheme(newTheme)
-          .then(() => {
-            set((s) => {
-              s.theme = newTheme;
-              void setAlternateAppIcon(newTheme);
-            });
-          })
-          .catch((error) => {
-            console.error("Failed to save theme:", error);
-          });
+        updateTheme(newTheme);
+        set((state) => {
+          state.theme = newTheme;
+          void setAlternateAppIcon(newTheme);
+        });
       },
     };
   }),

@@ -5,7 +5,7 @@ import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { useToastController } from "@tamagui/toast";
 
-import { loadDownloadHistory, saveDownloadHistory } from "~/settings";
+import { useDownloadHistoryStore } from "~/stores/settings";
 
 export interface DownloadItem {
   id: string;
@@ -48,8 +48,8 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   const toastController = useToastController();
 
   useEffect(() => {
-    const initializeDownloads = async () => {
-      const storedDownloads = await loadDownloadHistory();
+    const initializeDownloads = () => {
+      const { downloads: storedDownloads } = useDownloadHistoryStore.getState();
       if (storedDownloads) {
         setDownloads(storedDownloads);
       }
@@ -59,7 +59,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   useEffect(() => {
-    void saveDownloadHistory(downloads.slice(0, 10));
+    useDownloadHistoryStore.setState({ downloads });
   }, [downloads]);
 
   const startDownload = async (
@@ -195,7 +195,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   const removeDownload = (id: string) => {
     const updatedDownloads = downloads.filter((download) => download.id !== id);
     setDownloads(updatedDownloads);
-    void saveDownloadHistory(updatedDownloads);
+    useDownloadHistoryStore.setState({ downloads: updatedDownloads });
   };
 
   return (

@@ -1,5 +1,5 @@
 import type { SelectProps } from "tamagui";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Application from "expo-application";
 import * as Linking from "expo-linking";
@@ -23,7 +23,7 @@ import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWSelect } from "~/components/ui/Select";
 import { MWSwitch } from "~/components/ui/Switch";
 import { checkForUpdate } from "~/lib/update";
-import { getGestureControls, saveGestureControls } from "~/settings";
+import { usePlayerSettingsStore } from "~/stores/settings";
 import { useThemeStore } from "~/stores/theme";
 
 const themeOptions: ThemeStoreOption[] = [
@@ -35,18 +35,11 @@ const themeOptions: ThemeStoreOption[] = [
 ];
 
 export default function SettingsScreen() {
-  const [gestureControlsEnabled, setGestureControlsEnabled] = useState(true);
+  const { gestureControls, setGestureControls } = usePlayerSettingsStore();
   const toastController = useToastController();
 
-  useEffect(() => {
-    void getGestureControls().then((enabled) => {
-      setGestureControlsEnabled(enabled);
-    });
-  }, []);
-
-  const handleGestureControlsToggle = async (isEnabled: boolean) => {
-    setGestureControlsEnabled(isEnabled);
-    await saveGestureControls(isEnabled);
+  const handleGestureControlsToggle = (isEnabled: boolean) => {
+    setGestureControls(isEnabled);
   };
 
   const handleVersionPress = async () => {
@@ -78,7 +71,7 @@ export default function SettingsScreen() {
             <Label minWidth={110}>Gesture controls</Label>
             <Separator minHeight={20} vertical />
             <MWSwitch
-              checked={gestureControlsEnabled}
+              checked={gestureControls}
               onCheckedChange={handleGestureControlsToggle}
             >
               <MWSwitch.Thumb animation="quicker" />
