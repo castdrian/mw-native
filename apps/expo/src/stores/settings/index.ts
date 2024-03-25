@@ -46,6 +46,8 @@ export const useThemeSettingsStore = create<
 interface PlayerStoreState {
   gestureControls: boolean;
   setGestureControls: (enabled: boolean) => void;
+  autoPlay: boolean;
+  setAutoPlay: (enabled: boolean) => void;
 }
 
 export const usePlayerSettingsStore = create<
@@ -61,6 +63,8 @@ export const usePlayerSettingsStore = create<
       }),
       setGestureControls: (enabled: boolean) =>
         set({ gestureControls: enabled }),
+      autoPlay: true,
+      setAutoPlay: (enabled: boolean) => set({ autoPlay: enabled }),
     }),
     {
       name: "player-settings",

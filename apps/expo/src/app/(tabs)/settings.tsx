@@ -36,7 +36,8 @@ const themeOptions: ThemeStoreOption[] = [
 ];
 
 export default function SettingsScreen() {
-  const { gestureControls, setGestureControls } = usePlayerSettingsStore();
+  const { gestureControls, setGestureControls, autoPlay, setAutoPlay } =
+    usePlayerSettingsStore();
   const toastController = useToastController();
 
   const handleGestureControlsToggle = async (isEnabled: boolean) => {
@@ -82,6 +83,13 @@ export default function SettingsScreen() {
               checked={gestureControls}
               onCheckedChange={handleGestureControlsToggle}
             >
+              <MWSwitch.Thumb animation="quicker" />
+            </MWSwitch>
+          </XStack>
+          <XStack width={200} alignItems="center" gap="$4">
+            <Label minWidth={110}>Autoplay</Label>
+            <Separator minHeight={20} vertical />
+            <MWSwitch checked={autoPlay} onCheckedChange={setAutoPlay}>
               <MWSwitch.Thumb animation="quicker" />
             </MWSwitch>
           </XStack>
