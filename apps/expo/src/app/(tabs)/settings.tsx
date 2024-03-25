@@ -2,6 +2,7 @@ import type { SelectProps } from "tamagui";
 import React from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Application from "expo-application";
+import * as Brightness from "expo-brightness";
 import * as Linking from "expo-linking";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useToastController } from "@tamagui/toast";
@@ -38,8 +39,15 @@ export default function SettingsScreen() {
   const { gestureControls, setGestureControls } = usePlayerSettingsStore();
   const toastController = useToastController();
 
-  const handleGestureControlsToggle = (isEnabled: boolean) => {
-    setGestureControls(isEnabled);
+  const handleGestureControlsToggle = async (isEnabled: boolean) => {
+    if (isEnabled) {
+      const { status } = await Brightness.requestPermissionsAsync();
+      if (status === Brightness.PermissionStatus.GRANTED) {
+        setGestureControls(isEnabled);
+      }
+    } else {
+      setGestureControls(isEnabled);
+    }
   };
 
   const handleVersionPress = async () => {

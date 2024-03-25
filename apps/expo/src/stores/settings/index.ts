@@ -1,4 +1,5 @@
 import type { StateStorage } from "zustand/middleware";
+import { Platform } from "react-native";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -53,7 +54,11 @@ export const usePlayerSettingsStore = create<
 >(
   persist(
     (set) => ({
-      gestureControls: true,
+      gestureControls: Platform.select({
+        ios: true,
+        android: false,
+        default: true,
+      }),
       setGestureControls: (enabled: boolean) =>
         set({ gestureControls: enabled }),
     }),
