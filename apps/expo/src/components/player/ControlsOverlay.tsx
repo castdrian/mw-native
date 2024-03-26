@@ -20,7 +20,7 @@ export const ControlsOverlay = ({
     >
       <Header />
       {!isLoading && <MiddleControls />}
-      {!isLocalAsset && <BottomControls />}
+      <BottomControls isLocalAsset={isLocalAsset} />
     </View>
   );
 };

@@ -14,7 +14,7 @@ import { SeasonSelector } from "./SeasonEpisodeSelector";
 import { SourceSelector } from "./SourceSelector";
 import { mapMillisecondsToTime } from "./utils";
 
-export const BottomControls = () => {
+export const BottomControls = ({ isLocalAsset }: { isLocalAsset: boolean }) => {
   const status = usePlayerStore((state) => state.status);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
   const [showRemaining, setShowRemaining] = useState(false);
@@ -76,13 +76,17 @@ export const BottomControls = () => {
           gap={4}
           paddingBottom={40}
         >
-          <SeasonSelector />
-          <CaptionsSelector />
-          <SourceSelector />
-          <AudioTrackSelector />
-          <PlaybackSpeedSelector />
-          <QualitySelector />
-          <DownloadButton />
+          {!isLocalAsset && (
+            <>
+              <SeasonSelector />
+              <CaptionsSelector />
+              <SourceSelector />
+              <AudioTrackSelector />
+              <PlaybackSpeedSelector />
+              <QualitySelector />
+              <DownloadButton />
+            </>
+          )}
         </View>
       </View>
     );
