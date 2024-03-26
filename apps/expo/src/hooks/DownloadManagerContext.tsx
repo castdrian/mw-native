@@ -84,6 +84,11 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     if (downloadItem?.downloadResumable) {
       await downloadItem.downloadResumable.cancelAsync();
     }
+    toastController.show("Download cancelled", {
+      burntOptions: { preset: "done" },
+      native: true,
+      duration: 500,
+    });
   };
 
   const startDownload = async (

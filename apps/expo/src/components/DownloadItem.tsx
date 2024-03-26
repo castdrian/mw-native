@@ -1,7 +1,12 @@
 import type { Asset } from "expo-media-library";
+import type { NativeSyntheticEvent } from "react-native";
+import type { ContextMenuOnPressNativeEvent } from "react-native-context-menu-view";
 import React from "react";
+import ContextMenu from "react-native-context-menu-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Progress, Spinner, Text, View } from "tamagui";
+
+import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 
 export interface DownloadItemProps {
   id: string;
@@ -16,6 +21,11 @@ export interface DownloadItemProps {
   asset?: Asset;
   onPress: (asset?: Asset) => void;
   isHLS?: boolean;
+}
+
+enum ContextMenuActions {
+  Cancel = "Cancel",
+  Remove = "Remove",
 }
 
 const formatBytes = (bytes: number, decimals = 2) => {
@@ -44,6 +54,24 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   const percentage = progress * 100;
   const formattedFileSize = formatBytes(fileSize);
   const formattedDownloaded = formatBytes(downloaded);
+  const { removeDownload, cancelDownload } = useDownloadManager();
+
+  const contextMenuActions = [
+    {
+      title: ContextMenuActions.Remove,
+    },
+    ...(!isFinished ? [{ title: ContextMenuActions.Cancel }] : []),
+  ];
+
+  const onContextMenuPress = (
+    e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
+  ) => {
+    if (e.nativeEvent.name === ContextMenuActions.Cancel) {
+      void cancelDownload(id);
+    } else if (e.nativeEvent.name === ContextMenuActions.Remove) {
+      removeDownload(id);
+    }
+  };
 
   const renderStatus = () => {
     if (statusText) {
@@ -72,39 +100,50 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   };
 
   return (
-    <TouchableOpacity
-      onPress={() => onPress(asset)}
-      onLongPress={() => onLongPress(id)}
-      activeOpacity={0.7}
+    <ContextMenu
+      actions={contextMenuActions}
+      onPress={onContextMenuPress}
+      previewBackgroundColor="transparent"
     >
-      <View marginBottom={16} borderRadius={8} borderColor="white" padding={16}>
-        <Text marginBottom={4} fontSize={16}>
-          {filename}
-        </Text>
-        <Progress
-          value={percentage}
-          height={10}
-          backgroundColor="$progressBackground"
-        >
-          <Progress.Indicator
-            animation="bounce"
-            backgroundColor="$progressFilled"
-          />
-        </Progress>
+      <TouchableOpacity
+        onPress={() => onPress(asset)}
+        onLongPress={() => onLongPress(id)}
+        activeOpacity={0.7}
+      >
         <View
-          marginTop={8}
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="space-between"
+          marginBottom={16}
+          borderRadius={8}
+          borderColor="white"
+          padding={16}
         >
-          <Text fontSize={12} color="gray">
-            {isHLS
-              ? `${percentage.toFixed()}% - ${downloaded} of ${fileSize} segments`
-              : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
+          <Text marginBottom={4} fontSize={16}>
+            {filename}
           </Text>
-          {renderStatus()}
+          <Progress
+            value={percentage}
+            height={10}
+            backgroundColor="$progressBackground"
+          >
+            <Progress.Indicator
+              animation="bounce"
+              backgroundColor="$progressFilled"
+            />
+          </Progress>
+          <View
+            marginTop={8}
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Text fontSize={12} color="gray">
+              {isHLS
+                ? `${percentage.toFixed()}% - ${downloaded} of ${fileSize} segments`
+                : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
+            </Text>
+            {renderStatus()}
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </ContextMenu>
   );
 };
