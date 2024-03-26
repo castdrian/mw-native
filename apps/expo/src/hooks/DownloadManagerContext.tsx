@@ -68,7 +68,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     useDownloadHistoryStore.setState({ downloads });
   }, [downloads]);
 
-  const cancellationFlags: Record<string, boolean> = {};
+  const cancellationFlags = useState<Record<string, boolean>>({})[0];
 
   const setCancellationFlag = (downloadId: string, flag: boolean): void => {
     cancellationFlags[downloadId] = flag;
@@ -226,26 +226,28 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
 
     for (const [index, segment] of segments.entries()) {
       if (getCancellationFlag(downloadId)) {
-        await FileSystem.deleteAsync(segmentDir, { idempotent: true });
-        break;
+        await cleanupDownload(segmentDir, downloadId);
+        return;
       }
 
       const segmentFile = `${segmentDir}${index}.ts`;
       localSegmentPaths.push(segmentFile);
-      const downloadResumable = FileSystem.createDownloadResumable(
-        segment,
-        segmentFile,
-        { headers },
-      );
 
       try {
-        await downloadResumable.downloadAsync();
+        await downloadSegment(segment, segmentFile, headers);
+
+        if (getCancellationFlag(downloadId)) {
+          await cleanupDownload(segmentDir, downloadId);
+          return;
+        }
+
         segmentsDownloaded++;
         updateProgress();
       } catch (e) {
         console.error(e);
         if (getCancellationFlag(downloadId)) {
-          break;
+          await cleanupDownload(segmentDir, downloadId);
+          return;
         }
       }
     }
@@ -264,6 +266,24 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       downloadId,
     );
     return asset;
+  };
+
+  const downloadSegment = async (
+    segmentUrl: string,
+    segmentFile: string,
+    headers: Record<string, string>,
+  ) => {
+    const downloadResumable = FileSystem.createDownloadResumable(
+      segmentUrl,
+      segmentFile,
+      { headers },
+    );
+    await downloadResumable.downloadAsync();
+  };
+
+  const cleanupDownload = async (segmentDir: string, downloadId: string) => {
+    await FileSystem.deleteAsync(segmentDir, { idempotent: true });
+    removeDownload(downloadId);
   };
 
   async function ensureDirExists(dir: string) {
