@@ -15,6 +15,7 @@ export interface DownloadItemProps {
   statusText?: string;
   asset?: Asset;
   onPress: (asset?: Asset) => void;
+  isHLS?: boolean;
 }
 
 const formatBytes = (bytes: number, decimals = 2) => {
@@ -38,6 +39,7 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   statusText,
   asset,
   onPress,
+  isHLS,
 }) => {
   const percentage = progress * 100;
   const formattedFileSize = formatBytes(fileSize);
@@ -60,6 +62,7 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
         </Text>
       );
     } else {
+      if (isHLS) return null;
       return (
         <Text fontSize={12} color="gray">
           {speed.toFixed(2)} MB/s
@@ -95,8 +98,9 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
           justifyContent="space-between"
         >
           <Text fontSize={12} color="gray">
-            {percentage.toFixed()}% - {formattedDownloaded} of{" "}
-            {formattedFileSize}
+            {isHLS
+              ? `${percentage.toFixed()}% - ${downloaded} of ${fileSize} segments`
+              : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
           </Text>
           {renderStatus()}
         </View>

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "tamagui";
 
-import { constructFullUrl } from "~/lib/url";
+import { constructFullUrl } from "@movie-web/provider-utils";
+
 import { usePlayerStore } from "~/stores/player/store";
 import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";

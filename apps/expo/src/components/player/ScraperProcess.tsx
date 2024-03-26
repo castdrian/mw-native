@@ -10,6 +10,7 @@ import type {
   ScrapeMedia,
 } from "@movie-web/provider-utils";
 import {
+  constructFullUrl,
   extractTracksFromHLS,
   findHighestQuality,
 } from "@movie-web/provider-utils";
@@ -21,7 +22,6 @@ import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 import { useMeta } from "~/hooks/player/useMeta";
 import { useScrape } from "~/hooks/player/useSourceScrape";
 import { convertMetaToScrapeMedia } from "~/lib/meta";
-import { constructFullUrl } from "~/lib/url";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 import { ScrapeCard, ScrapeItem } from "./ScrapeCard";
@@ -76,6 +76,10 @@ export const ScraperProcess = ({
             : null;
           if (!url) return;
           startDownload(url, "mp4").catch(console.error);
+        } else if (streamResult.stream.type === "hls") {
+          startDownload(streamResult.stream.playlist, "hls").catch(
+            console.error,
+          );
         }
         return router.back();
       }

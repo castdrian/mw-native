@@ -27,6 +27,9 @@ const defineConfig = (): ExpoConfig => ({
       CFBundleName: "movie-web",
       NSPhotoLibraryUsageDescription:
         "This app saves videos to the photo library.",
+      NSAppTransportSecurity: {
+        NSAllowsArbitraryLoads: true,
+      },
     },
   },
   android: {

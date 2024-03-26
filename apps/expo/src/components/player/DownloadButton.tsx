@@ -12,10 +12,15 @@ export const DownloadButton = () => {
   const theme = useTheme();
   const stream = usePlayerStore((state) => state.interface.currentStream);
   const { startDownload } = useDownloadManager();
-  if (stream?.type !== "file") return null;
+  let url: string | undefined | null = null;
 
-  const highestQuality = findHighestQuality(stream);
-  const url = highestQuality ? stream.qualities[highestQuality]?.url : null;
+  if (stream?.type === "file") {
+    const highestQuality = findHighestQuality(stream);
+    url = highestQuality ? stream.qualities[highestQuality]?.url : null;
+  } else if (stream?.type === "hls") {
+    url = stream.playlist;
+  }
+
   if (!url) return null;
 
   return (
@@ -30,7 +35,9 @@ export const DownloadButton = () => {
               color={theme.buttonSecondaryText.val}
             />
           }
-          onPress={() => startDownload(url, "mp4")}
+          onPress={() =>
+            url && startDownload(url, stream?.type === "hls" ? "hls" : "mp4")
+          }
         >
           Download
         </MWButton>

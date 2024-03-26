@@ -193,6 +193,50 @@ export async function extractTracksFromHLS(
   }
 }
 
+export async function extractSegmentsFromHLS(
+  playlistUrl: string,
+  headers: Record<string, string>,
+) {
+  try {
+    const response = await fetch(playlistUrl, { headers }).then((res) =>
+      res.text(),
+    );
+    const playlist = hls.parse(response);
+
+    const sortedStreams = playlist.streamRenditions
+      .filter((stream) => stream.properties[0]?.attributes.resolution)
+      .sort((a, b) => {
+        const [widthA, heightA] = (
+          a.properties[0]?.attributes.resolution as string | undefined
+        )
+          ?.split("x")
+          .map(Number) ?? [0, 0];
+        const [widthB, heightB] = (
+          b.properties[0]?.attributes.resolution as string | undefined
+        )
+          ?.split("x")
+          .map(Number) ?? [0, 0];
+        if (!widthA || !heightA || !widthB || !heightB) return 0;
+        return widthB * heightB - widthA * heightA;
+      });
+
+    const highestQuality = sortedStreams[0];
+    if (!highestQuality) return null;
+
+    const highestQualityUri = constructFullUrl(playlistUrl, highestQuality.uri);
+    const highestQualityResponse = await fetch(highestQualityUri, {
+      headers,
+    }).then((res) => res.text());
+    const highestQualityPlaylist = hls.parse(highestQualityResponse);
+
+    return highestQualityPlaylist.segments.map((segment) =>
+      constructFullUrl(highestQualityUri, segment.uri),
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
 export async function convertStreamCaptionsToWebVTT(
   stream: Stream,
 ): Promise<Stream> {
@@ -207,3 +251,10 @@ export async function convertStreamCaptionsToWebVTT(
   }
   return stream;
 }
+
+export const constructFullUrl = (playlistUrl: string, uri: string) => {
+  const baseUrl = playlistUrl.substring(0, playlistUrl.lastIndexOf("/") + 1);
+  return uri.startsWith("http://") || uri.startsWith("https://")
+    ? uri
+    : baseUrl + uri;
+};

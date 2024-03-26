@@ -3,7 +3,10 @@ import type { ReactNode } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import VideoManager from "@salihgun/react-native-video-processor";
 import { useToastController } from "@tamagui/toast";
+
+import { extractSegmentsFromHLS } from "@movie-web/provider-utils";
 
 import { useDownloadHistoryStore } from "~/stores/settings";
 
@@ -19,6 +22,7 @@ export interface DownloadItem {
   isFinished: boolean;
   statusText?: string;
   asset?: Asset;
+  isHLS?: boolean;
 }
 
 interface DownloadManagerContextType {
@@ -83,6 +87,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       type,
       url,
       isFinished: false,
+      isHLS: type === "hls",
     };
 
     setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
@@ -91,7 +96,8 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       const asset = await downloadMP4(url, newDownload.id, headers ?? {});
       return asset;
     } else if (type === "hls") {
-      // HLS stuff later
+      const asset = await downloadHLS(url, newDownload.id, headers ?? {});
+      return asset;
     }
   };
 
@@ -134,11 +140,11 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       lastTimestamp = currentTime;
     };
 
-    const fileUri = FileSystem.documentDirectory
-      ? FileSystem.documentDirectory + url.split("/").pop()
+    const fileUri = FileSystem.cacheDirectory
+      ? FileSystem.cacheDirectory + url.split("/").pop()
       : null;
     if (!fileUri) {
-      console.error("Document directory is unavailable");
+      console.error("Cache directory is unavailable");
       return;
     }
 
@@ -163,6 +169,69 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       console.error(e);
     }
   };
+
+  const downloadHLS = async (
+    url: string,
+    downloadId: string,
+    headers: Record<string, string>,
+  ) => {
+    const segments = await extractSegmentsFromHLS(url, headers);
+
+    if (!segments || segments.length === 0) {
+      return removeDownload(downloadId);
+    }
+
+    const totalSegments = segments.length;
+    let segmentsDownloaded = 0;
+
+    const segmentDir = FileSystem.cacheDirectory + "segments/";
+    await ensureDirExists(segmentDir);
+
+    const updateProgress = () => {
+      const progress = segmentsDownloaded / totalSegments;
+      updateDownloadItem(downloadId, {
+        progress,
+        downloaded: segmentsDownloaded,
+        fileSize: totalSegments,
+      });
+    };
+
+    const localSegmentPaths = [];
+
+    for (const [index, segment] of segments.entries()) {
+      const segmentFile = `${segmentDir}${index}.ts`;
+      localSegmentPaths.push(segmentFile);
+      const downloadResumable = FileSystem.createDownloadResumable(
+        segment,
+        segmentFile,
+        { headers },
+      );
+
+      try {
+        await downloadResumable.downloadAsync();
+        segmentsDownloaded++;
+        updateProgress();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    updateDownloadItem(downloadId, { statusText: "Merging" });
+    const uri = await VideoManager.mergeVideos(
+      localSegmentPaths,
+      `${FileSystem.cacheDirectory}output.mp4`,
+    );
+    const asset = await saveFileToMediaLibraryAndDeleteOriginal(
+      uri,
+      downloadId,
+    );
+    return asset;
+  };
+
+  async function ensureDirExists(dir: string) {
+    await FileSystem.deleteAsync(dir, { idempotent: true });
+    await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+  }
 
   const saveFileToMediaLibraryAndDeleteOriginal = async (
     fileUri: string,
