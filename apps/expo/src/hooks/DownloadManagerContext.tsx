@@ -23,12 +23,14 @@ export interface DownloadItem {
   statusText?: string;
   asset?: Asset;
   isHLS?: boolean;
+  downloadResumable?: FileSystem.DownloadResumable;
 }
 
 interface DownloadManagerContextType {
   downloads: DownloadItem[];
   startDownload: (url: string, type: "mp4" | "hls") => Promise<Asset | void>;
   removeDownload: (id: string) => void;
+  cancelDownload: (id: string) => Promise<void>;
 }
 
 const DownloadManagerContext = createContext<
@@ -65,6 +67,24 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     useDownloadHistoryStore.setState({ downloads });
   }, [downloads]);
+
+  const cancellationFlags: Record<string, boolean> = {};
+
+  const setCancellationFlag = (downloadId: string, flag: boolean): void => {
+    cancellationFlags[downloadId] = flag;
+  };
+
+  const getCancellationFlag = (downloadId: string): boolean => {
+    return cancellationFlags[downloadId] ?? false;
+  };
+
+  const cancelDownload = async (downloadId: string): Promise<void> => {
+    setCancellationFlag(downloadId, true);
+    const downloadItem = downloads.find((d) => d.id === downloadId);
+    if (downloadItem?.downloadResumable) {
+      await downloadItem.downloadResumable.cancelAsync();
+    }
+  };
 
   const startDownload = async (
     url: string,
@@ -154,6 +174,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       { headers },
       callback,
     );
+    updateDownloadItem(downloadId, { downloadResumable });
 
     try {
       const result = await downloadResumable.downloadAsync();
@@ -199,6 +220,11 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     const localSegmentPaths = [];
 
     for (const [index, segment] of segments.entries()) {
+      if (getCancellationFlag(downloadId)) {
+        await FileSystem.deleteAsync(segmentDir, { idempotent: true });
+        break;
+      }
+
       const segmentFile = `${segmentDir}${index}.ts`;
       localSegmentPaths.push(segmentFile);
       const downloadResumable = FileSystem.createDownloadResumable(
@@ -213,7 +239,14 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
         updateProgress();
       } catch (e) {
         console.error(e);
+        if (getCancellationFlag(downloadId)) {
+          break;
+        }
       }
+    }
+
+    if (getCancellationFlag(downloadId)) {
+      return removeDownload(downloadId);
     }
 
     updateDownloadItem(downloadId, { statusText: "Merging" });
@@ -278,7 +311,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <DownloadManagerContext.Provider
-      value={{ downloads, startDownload, removeDownload }}
+      value={{ downloads, startDownload, removeDownload, cancelDownload }}
     >
       {children}
     </DownloadManagerContext.Provider>
