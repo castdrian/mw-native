@@ -105,6 +105,7 @@ export default function SettingsScreen() {
             <Separator minHeight={20} vertical />
             <MWButton
               type="secondary"
+              backgroundColor="$sheetItemBackground"
               icon={
                 <MaterialCommunityIcons
                   name={Platform.select({ ios: "apple", android: "android" })}
