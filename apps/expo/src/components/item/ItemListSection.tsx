@@ -5,7 +5,7 @@ import { ScrollView, Text, View } from "tamagui";
 import type { ItemData } from "~/components/item/item";
 import Item from "~/components/item/item";
 
-export const bookmarks: ItemData[] = [
+export const watching: ItemData[] = [
   {
     id: "219651",
     title: "Welcome to Samdal-ri",
@@ -22,9 +22,6 @@ export const bookmarks: ItemData[] = [
     type: "tv",
     year: 2023,
   },
-];
-
-export const watching: ItemData[] = [
   {
     id: "113268",
     title: "The Uncanny Counter",
