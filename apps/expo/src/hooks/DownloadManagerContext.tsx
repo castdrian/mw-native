@@ -23,7 +23,7 @@ export interface DownloadItem {
 
 interface DownloadManagerContextType {
   downloads: DownloadItem[];
-  startDownload: (url: string, type: "mp4" | "hls") => Promise<void>;
+  startDownload: (url: string, type: "mp4" | "hls") => Promise<Asset | void>;
   removeDownload: (id: string) => void;
 }
 
@@ -66,7 +66,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     url: string,
     type: "mp4" | "hls",
     headers?: Record<string, string>,
-  ) => {
+  ): Promise<Asset | void> => {
     toastController.show("Download started", {
       burntOptions: { preset: "none" },
       native: true,
@@ -87,7 +87,8 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);
 
     if (type === "mp4") {
-      await downloadMP4(url, newDownload.id, headers ?? {});
+      const asset = await downloadMP4(url, newDownload.id, headers ?? {});
+      return asset;
     } else if (type === "hls") {
       // HLS stuff later
     }
@@ -151,7 +152,11 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       const result = await downloadResumable.downloadAsync();
       if (result) {
         console.log("Finished downloading to ", result.uri);
-        await saveFileToMediaLibraryAndDeleteOriginal(result.uri, downloadId);
+        const asset = await saveFileToMediaLibraryAndDeleteOriginal(
+          result.uri,
+          downloadId,
+        );
+        return asset;
       }
     } catch (e) {
       console.error(e);
@@ -161,7 +166,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   const saveFileToMediaLibraryAndDeleteOriginal = async (
     fileUri: string,
     downloadId: string,
-  ) => {
+  ): Promise<Asset | void> => {
     try {
       updateDownloadItem(downloadId, { statusText: "Importing" });
 
@@ -183,6 +188,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
         burntOptions: { preset: "done" },
         native: true,
       });
+      return asset;
     } catch (error) {
       console.error("Error saving file to media library:", error);
       toastController.show("Download failed", {
