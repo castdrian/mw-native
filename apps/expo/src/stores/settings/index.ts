@@ -4,6 +4,7 @@ import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import type { ItemData } from "~/components/item/item";
 import type { DownloadItem } from "~/hooks/DownloadManagerContext";
 import type { ThemeStoreOption } from "~/stores/theme";
 
@@ -89,6 +90,40 @@ export const useDownloadHistoryStore = create<
     }),
     {
       name: "download-history",
+      storage: createJSONStorage(() => zustandStorage),
+    },
+  ),
+);
+
+interface BookmarkStoreState {
+  bookmarks: ItemData[];
+  addBookmark: (item: ItemData) => void;
+  removeBookmark: (item: ItemData) => void;
+  isBookmarked: (item: ItemData) => boolean;
+}
+
+export const useBookmarkStore = create<
+  BookmarkStoreState,
+  [["zustand/persist", BookmarkStoreState]]
+>(
+  persist(
+    (set, get) => ({
+      bookmarks: [],
+      addBookmark: (item: ItemData) =>
+        set((state) => ({
+          bookmarks: [...state.bookmarks, item],
+        })),
+      removeBookmark: (item: ItemData) =>
+        set((state) => ({
+          bookmarks: state.bookmarks.filter(
+            (bookmark) => bookmark.id !== item.id,
+          ),
+        })),
+      isBookmarked: (item: ItemData) =>
+        Boolean(get().bookmarks.find((bookmark) => bookmark.id === item.id)),
+    }),
+    {
+      name: "bookmarks",
       storage: createJSONStorage(() => zustandStorage),
     },
   ),
