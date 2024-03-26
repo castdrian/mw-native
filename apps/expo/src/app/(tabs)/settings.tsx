@@ -3,7 +3,7 @@ import React from "react";
 import { Platform } from "react-native";
 import * as Application from "expo-application";
 import * as Brightness from "expo-brightness";
-import * as Linking from "expo-linking";
+import * as WebBrowser from "expo-web-browser";
 import {
   FontAwesome,
   MaterialCommunityIcons,
@@ -64,7 +64,7 @@ export default function SettingsScreen() {
         native: true,
         duration: 500,
       });
-      await Linking.openURL(url);
+      await WebBrowser.openBrowserAsync(url);
     } else {
       toastController.show("No updates available", {
         burntOptions: { preset: "none" },
