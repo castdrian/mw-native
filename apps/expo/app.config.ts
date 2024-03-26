@@ -24,6 +24,7 @@ const defineConfig = (): ExpoConfig => ({
     supportsTablet: true,
     requireFullScreen: true,
     infoPlist: {
+      CFBundleName: "movie-web",
       NSPhotoLibraryUsageDescription:
         "This app saves videos to the photo library.",
     },
