@@ -13,7 +13,7 @@ export const Header = () => {
   const isIdle = usePlayerStore((state) => state.interface.isIdle);
   const meta = usePlayerStore((state) => state.meta);
 
-  if (!isIdle && meta) {
+  if (!isIdle) {
     return (
       <View
         zIndex={50}
@@ -28,15 +28,17 @@ export const Header = () => {
             <BackButton />
           </Controls>
         </View>
-        <Text fontWeight="bold">
-          {meta.title} ({meta.releaseYear}){" "}
-          {meta.season !== undefined && meta.episode !== undefined
-            ? mapSeasonAndEpisodeNumberToText(
-                meta.season.number,
-                meta.episode.number,
-              )
-            : ""}
-        </Text>
+        {meta && (
+          <Text fontWeight="bold">
+            {meta.title} ({meta.releaseYear}){" "}
+            {meta.season !== undefined && meta.episode !== undefined
+              ? mapSeasonAndEpisodeNumberToText(
+                  meta.season.number,
+                  meta.episode.number,
+                )
+              : ""}
+          </Text>
+        )}
         <View
           height="$3.5"
           width="$11"

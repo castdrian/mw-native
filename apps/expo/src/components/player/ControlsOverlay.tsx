@@ -4,7 +4,13 @@ import { BottomControls } from "./BottomControls";
 import { Header } from "./Header";
 import { MiddleControls } from "./MiddleControls";
 
-export const ControlsOverlay = ({ isLoading }: { isLoading: boolean }) => {
+export const ControlsOverlay = ({
+  isLoading,
+  isLocalAsset,
+}: {
+  isLoading: boolean;
+  isLocalAsset: boolean;
+}) => {
   return (
     <View
       width="100%"
@@ -14,7 +20,7 @@ export const ControlsOverlay = ({ isLoading }: { isLoading: boolean }) => {
     >
       <Header />
       {!isLoading && <MiddleControls />}
-      <BottomControls />
+      {!isLocalAsset && <BottomControls />}
     </View>
   );
 };

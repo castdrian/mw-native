@@ -1,6 +1,5 @@
 import type { Asset } from "expo-media-library";
 import React from "react";
-import { Platform } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -35,7 +34,7 @@ const DownloadsScreen: React.FC = () => {
         backgroundColor="$sheetItemBackground"
         icon={
           <MaterialCommunityIcons
-            name={Platform.select({ ios: "apple", android: "android" })}
+            name="download"
             size={24}
             color={theme.buttonSecondaryText.val}
           />
@@ -50,7 +49,7 @@ const DownloadsScreen: React.FC = () => {
           }
         }}
       >
-        test local playback (expo-av)
+        test download (mp4)
       </MWButton>
       <ScrollView>
         {downloads.map((item) => (

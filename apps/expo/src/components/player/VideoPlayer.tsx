@@ -11,6 +11,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
+import * as MediaLibrary from "expo-media-library";
 import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
@@ -142,7 +143,11 @@ export const VideoPlayer = () => {
   useEffect(() => {
     const initializePlayer = async () => {
       if (asset) {
-        setVideoSrc(asset);
+        const assetInfo = await MediaLibrary.getAssetInfoAsync(asset);
+        if (!assetInfo.localUri) return;
+        setVideoSrc({
+          uri: assetInfo.localUri,
+        });
         setIsLoading(false);
         return;
       }
@@ -283,7 +288,7 @@ export const VideoPlayer = () => {
               position="absolute"
             />
           )}
-          <ControlsOverlay isLoading={isLoading} />
+          <ControlsOverlay isLoading={isLoading} isLocalAsset={!!asset} />
         </View>
         {showVolumeOverlay && <GestureOverlay value={volume} type="volume" />}
         {showBrightnessOverlay && (
