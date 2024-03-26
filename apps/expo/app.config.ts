@@ -46,7 +46,7 @@ const defineConfig = (): ExpoConfig => ({
     [
       "expo-screen-orientation",
       {
-        initialOrientation: "ALL",
+        initialOrientation: "PORTRAIT_UP",
       },
     ],
     [
