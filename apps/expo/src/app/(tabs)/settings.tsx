@@ -75,7 +75,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScreenLayout title="Settings">
+    <ScreenLayout>
       <View padding={4}>
         <YStack>
           <XStack width={200} alignItems="center" gap="$4">

@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useQuery } from "@tanstack/react-query";
-import { Text, View } from "tamagui";
+import { View } from "tamagui";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -106,15 +106,7 @@ export default function HomeScreen() {
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
       >
-        <ScreenLayout
-          title={
-            <View flexDirection="row" alignItems="center">
-              <Text fontWeight="bold" fontSize={20}>
-                Search
-              </Text>
-            </View>
-          }
-        >
+        <ScreenLayout>
           {searchResultsLoaded && (
             <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
               <View flexDirection="row" flexWrap="wrap">

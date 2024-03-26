@@ -29,7 +29,7 @@ const DownloadsScreen: React.FC = () => {
   };
 
   return (
-    <ScreenLayout title="Downloads">
+    <ScreenLayout>
       <MWButton
         type="secondary"
         backgroundColor="$sheetItemBackground"

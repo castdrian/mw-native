@@ -10,7 +10,7 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1 }} flex={1}>
-      <ScreenLayout title="Home">
+      <ScreenLayout>
         <ItemListSection title="Bookmarks" items={bookmarks} />
         <ItemListSection title="Continue Watching" items={watching} />
       </ScreenLayout>
