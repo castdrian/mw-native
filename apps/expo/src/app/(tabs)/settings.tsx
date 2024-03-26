@@ -62,12 +62,14 @@ export default function SettingsScreen() {
       toastController.show("Update available", {
         burntOptions: { preset: "none" },
         native: true,
+        duration: 500,
       });
       await Linking.openURL(url);
     } else {
       toastController.show("No updates available", {
         burntOptions: { preset: "none" },
         native: true,
+        duration: 500,
       });
     }
   };

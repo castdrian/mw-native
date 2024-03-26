@@ -70,6 +70,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     toastController.show("Download started", {
       burntOptions: { preset: "none" },
       native: true,
+      duration: 500,
     });
 
     const newDownload: DownloadItem = {
@@ -187,6 +188,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       toastController.show("Download finished", {
         burntOptions: { preset: "done" },
         native: true,
+        duration: 500,
       });
       return asset;
     } catch (error) {
@@ -194,6 +196,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       toastController.show("Download failed", {
         burntOptions: { preset: "error" },
         native: true,
+        duration: 500,
       });
     }
   };

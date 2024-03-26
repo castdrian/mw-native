@@ -7,6 +7,7 @@ import { useToastController } from "@tamagui/toast";
 import { Image, Text, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
+import { useBookmarkStore } from "~/stores/settings";
 
 export interface ItemData {
   id: string;
@@ -20,6 +21,7 @@ export default function Item({ data }: { data: ItemData }) {
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const router = useRouter();
   const toastController = useToastController();
+  const { isBookmarked, addBookmark, removeBookmark } = useBookmarkStore();
 
   const { title, type, year, posterUrl } = data;
 
@@ -32,20 +34,39 @@ export default function Item({ data }: { data: ItemData }) {
     });
   };
 
+  enum ContextMenuActions {
+    Bookmark = "Bookmark",
+    RemoveBookmark = "Remove Bookmark",
+    Download = "Download",
+  }
+
   const contextMenuActions = [
-    { title: "Bookmark" },
-    ...(type === "movie" ? [{ title: "Download" }] : []),
+    {
+      title: isBookmarked(data)
+        ? ContextMenuActions.RemoveBookmark
+        : ContextMenuActions.Bookmark,
+    },
+    ...(type === "movie" ? [{ title: ContextMenuActions.Download }] : []),
   ];
 
   const onContextMenuPress = (
     e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
   ) => {
-    if (e.nativeEvent.name === "Bookmark") {
+    if (e.nativeEvent.name === ContextMenuActions.Bookmark) {
+      addBookmark(data);
       toastController.show("Added to bookmarks", {
         burntOptions: { preset: "done" },
         native: true,
+        duration: 500,
       });
-    } else if (e.nativeEvent.name === "Download") {
+    } else if (e.nativeEvent.name === ContextMenuActions.RemoveBookmark) {
+      removeBookmark(data);
+      toastController.show("Removed from bookmarks", {
+        burntOptions: { preset: "done" },
+        native: true,
+        duration: 500,
+      });
+    } else if (e.nativeEvent.name === ContextMenuActions.Download) {
       router.push({
         pathname: "/videoPlayer",
         params: { data: JSON.stringify(data), download: "true" },
