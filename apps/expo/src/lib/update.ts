@@ -24,7 +24,7 @@ function isVersionHigher(newVersion: string, currentVersion: string): boolean {
   return false;
 }
 
-export async function checkForUpdate(): Promise<string | undefined> {
+export async function checkForUpdate() {
   const octokit = new Octokit();
 
   const res = await octokit.repos
@@ -40,6 +40,6 @@ export async function checkForUpdate(): Promise<string | undefined> {
   const currentVersion = Application.nativeApplicationVersion ?? "0.0.0";
 
   if (isVersionHigher(latestVersion, currentVersion)) {
-    return res.data.html_url;
+    return res;
   }
 }

@@ -1,6 +1,7 @@
 import type { SelectProps } from "tamagui";
-import React from "react";
+import React, { useState } from "react";
 import { Platform } from "react-native";
+import Markdown from "react-native-markdown-display";
 import * as Application from "expo-application";
 import * as Brightness from "expo-brightness";
 import * as WebBrowser from "expo-web-browser";
@@ -13,6 +14,7 @@ import { useToastController } from "@tamagui/toast";
 import {
   Adapt,
   Label,
+  ScrollView,
   Select,
   Separator,
   Sheet,
@@ -44,6 +46,9 @@ export default function SettingsScreen() {
   const { gestureControls, setGestureControls, autoPlay, setAutoPlay } =
     usePlayerSettingsStore();
   const toastController = useToastController();
+  const [showUpdateSheet, setShowUpdateSheet] = useState(false);
+  const [updateMarkdownContent, setUpdateMarkdownContent] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
 
   const handleGestureControlsToggle = async (isEnabled: boolean) => {
     if (isEnabled) {
@@ -57,14 +62,17 @@ export default function SettingsScreen() {
   };
 
   const handleVersionPress = async () => {
-    const url = await checkForUpdate();
-    if (url) {
-      toastController.show("Update available", {
-        burntOptions: { preset: "none" },
-        native: true,
-        duration: 500,
-      });
-      await WebBrowser.openBrowserAsync(url);
+    const res = await checkForUpdate();
+    if (res) {
+      setUpdateMarkdownContent(res.data.body!);
+      setDownloadUrl(
+        res.data.assets.find(
+          (asset) =>
+            asset.name ===
+            `movie-web.${Platform.select({ ios: "ipa", android: "apk" })}`,
+        )?.browser_download_url ?? "",
+      );
+      setShowUpdateSheet(true);
     } else {
       toastController.show("No updates available", {
         burntOptions: { preset: "none" },
@@ -122,7 +130,84 @@ export default function SettingsScreen() {
           </XStack>
         </YStack>
       </View>
+      <UpdateSheet
+        markdownContent={updateMarkdownContent}
+        open={showUpdateSheet}
+        setShowUpdateSheet={setShowUpdateSheet}
+        downloadUrl={downloadUrl}
+      />
     </ScreenLayout>
+  );
+}
+
+export function UpdateSheet({
+  markdownContent,
+  open,
+  setShowUpdateSheet,
+  downloadUrl,
+}: {
+  markdownContent: string;
+  open: boolean;
+  setShowUpdateSheet: (value: boolean) => void;
+  downloadUrl: string;
+}) {
+  const theme = useTheme();
+
+  return (
+    <Sheet
+      modal
+      open={open}
+      onOpenChange={setShowUpdateSheet}
+      dismissOnSnapToBottom
+      dismissOnOverlayPress
+      animationConfig={{
+        type: "spring",
+        damping: 20,
+        mass: 1.2,
+        stiffness: 250,
+      }}
+      snapPoints={[35]}
+    >
+      <Sheet.Handle backgroundColor="$sheetHandle" />
+      <Sheet.Frame
+        backgroundColor="$sheetBackground"
+        padding="$4"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <ScrollView>
+          <Markdown
+            style={{
+              text: {
+                color: "white",
+              },
+            }}
+          >
+            {markdownContent}
+          </Markdown>
+        </ScrollView>
+        <MWButton
+          type="secondary"
+          backgroundColor="$sheetItemBackground"
+          icon={
+            <MaterialCommunityIcons
+              name={Platform.select({ ios: "apple", android: "android" })}
+              size={24}
+              color={theme.buttonSecondaryText.val}
+            />
+          }
+          onPress={() => WebBrowser.openBrowserAsync(downloadUrl)}
+        >
+          Download
+        </MWButton>
+      </Sheet.Frame>
+      <Sheet.Overlay
+        animation="lazy"
+        backgroundColor="rgba(0, 0, 0, 0.8)"
+        enterStyle={{ opacity: 0 }}
+        exitStyle={{ opacity: 0 }}
+      />
+    </Sheet>
   );
 }
 
