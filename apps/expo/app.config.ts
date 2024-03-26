@@ -25,6 +25,8 @@ const defineConfig = (): ExpoConfig => ({
     requireFullScreen: true,
     infoPlist: {
       CFBundleName: "movie-web",
+      EXDefaultScreenOrientationMask:
+        "UIInterfaceOrientationMaskAllButUpsideDown",
       NSPhotoLibraryUsageDescription:
         "This app saves videos to the photo library.",
       NSAppTransportSecurity: {
