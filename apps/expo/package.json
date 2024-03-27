@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.17.3",
+    "@kesha-antonov/react-native-background-downloader": "^3.1.2",
     "@movie-web/api": "*",
     "@movie-web/colors": "*",
     "@movie-web/provider-utils": "*",

@@ -1,6 +1,7 @@
 import type { ExpoConfig } from "expo/config";
 
 import withRemoveiOSNotificationEntitlement from "./config-plugins/withRemoveiOSNotificationEntitlement";
+import withRNBackgroundDownloader from "./config-plugins/withRNBackgroundDownloader";
 import { version } from "./package.json";
 
 const defineConfig = (): ExpoConfig => ({
@@ -49,6 +50,7 @@ const defineConfig = (): ExpoConfig => ({
   plugins: [
     "expo-router",
     [withRemoveiOSNotificationEntitlement as unknown as string],
+    [withRNBackgroundDownloader as unknown as string],
     [
       "expo-screen-orientation",
       {
