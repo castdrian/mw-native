@@ -1,6 +1,7 @@
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
 
+import type { ItemData } from "~/components/item/item";
 import type { PlayerMeta } from "~/stores/player/slices/video";
 
 export const convertMetaToScrapeMedia = (meta: PlayerMeta): ScrapeMedia => {
@@ -25,6 +26,28 @@ export const convertMetaToScrapeMedia = (meta: PlayerMeta): ScrapeMedia => {
     };
   }
   throw new Error("Invalid meta type");
+};
+
+export const convertMetaToItemData = (meta: PlayerMeta): ItemData => {
+  if (meta.type === "movie") {
+    return {
+      id: meta.tmdbId,
+      title: meta.title,
+      year: meta.releaseYear,
+      type: meta.type,
+      posterUrl: meta.poster ?? "",
+    };
+  }
+  if (meta.type === "show") {
+    return {
+      id: meta.tmdbId,
+      title: meta.title,
+      year: meta.releaseYear,
+      type: "tv",
+      posterUrl: meta.poster ?? "",
+    };
+  }
+  throw new Error("Invalid media type");
 };
 
 export const getNextEpisode = async (

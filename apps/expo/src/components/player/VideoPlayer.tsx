@@ -25,10 +25,17 @@ import { useBrightness } from "~/hooks/player/useBrightness";
 import { usePlaybackSpeed } from "~/hooks/player/usePlaybackSpeed";
 import { usePlayer } from "~/hooks/player/usePlayer";
 import { useVolume } from "~/hooks/player/useVolume";
-import { convertMetaToScrapeMedia, getNextEpisode } from "~/lib/meta";
+import {
+  convertMetaToItemData,
+  convertMetaToScrapeMedia,
+  getNextEpisode,
+} from "~/lib/meta";
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
-import { usePlayerSettingsStore } from "~/stores/settings";
+import {
+  usePlayerSettingsStore,
+  useWatchHistoryStore,
+} from "~/stores/settings";
 import { CaptionRenderer } from "./CaptionRenderer";
 import { ControlsOverlay } from "./ControlsOverlay";
 
@@ -68,6 +75,7 @@ export const VideoPlayer = () => {
   const setMeta = usePlayerStore((state) => state.setMeta);
 
   const { gestureControls, autoPlay } = usePlayerSettingsStore();
+  const { updateWatchHistory, removeFromWatchHistory } = useWatchHistoryStore();
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
@@ -195,6 +203,15 @@ export const VideoPlayer = () => {
     }, 60000);
 
     return () => {
+      if (meta) {
+        const item = convertMetaToItemData(meta);
+        const scrapeMedia = convertMetaToScrapeMedia(meta);
+        updateWatchHistory(
+          item,
+          scrapeMedia,
+          videoRef?.props.positionMillis ?? 0,
+        );
+      }
       clearTimeout(timeout);
       void synchronizePlayback();
     };
@@ -202,11 +219,14 @@ export const VideoPlayer = () => {
     asset,
     dismissFullscreenPlayer,
     hasStartedPlaying,
+    meta,
     router,
     selectedAudioTrack,
     setVideoSrc,
     stream,
     synchronizePlayback,
+    updateWatchHistory,
+    videoRef?.props.positionMillis,
   ]);
 
   const onVideoLoadStart = () => {
@@ -218,11 +238,24 @@ export const VideoPlayer = () => {
     setHasStartedPlaying(true);
     if (videoRef) {
       void videoRef.setRateAsync(currentSpeed, true);
+      if (meta) {
+        const item = convertMetaToItemData(meta);
+        const scrapeMedia = convertMetaToScrapeMedia(meta);
+        updateWatchHistory(
+          item,
+          scrapeMedia,
+          videoRef.props.positionMillis ?? 0,
+        );
+      }
     }
   };
 
   const onPlaybackStatusUpdate = async (status: AVPlaybackStatus) => {
     setStatus(status);
+    if (meta && status.isLoaded && status.didJustFinish) {
+      const item = convertMetaToItemData(meta);
+      removeFromWatchHistory(item);
+    }
     if (
       status.isLoaded &&
       status.didJustFinish &&

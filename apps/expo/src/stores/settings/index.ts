@@ -4,10 +4,11 @@ import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+import type { ScrapeMedia } from "@movie-web/provider-utils";
+
 import type { ItemData } from "~/components/item/item";
 import type { DownloadItem } from "~/hooks/DownloadManagerContext";
 import type { ThemeStoreOption } from "~/stores/theme";
-import type { ScrapeMedia } from "@movie-web/provider-utils";
 
 const storage = new MMKV();
 
@@ -111,7 +112,7 @@ export const useBookmarkStore = create<
   persist(
     (set, get) => ({
       bookmarks: [],
-	  setBookmarks: (bookmarks: ItemData[]) => set({ bookmarks }),
+      setBookmarks: (bookmarks: ItemData[]) => set({ bookmarks }),
       addBookmark: (item: ItemData) =>
         set((state) => ({
           bookmarks: [...state.bookmarks, item],
@@ -141,7 +142,11 @@ interface WatchHistoryItem {
 interface WatchHistoryStoreState {
   watchHistory: WatchHistoryItem[];
   setWatchHistory: (watchHistory: WatchHistoryItem[]) => void;
-  addToWatchHistory: (item: ItemData, media: ScrapeMedia) => void;
+  updateWatchHistory: (
+    item: ItemData,
+    media: ScrapeMedia,
+    positionMillis: number,
+  ) => void;
   removeFromWatchHistory: (item: ItemData) => void;
 }
 
@@ -149,34 +154,38 @@ export const useWatchHistoryStore = create<
   WatchHistoryStoreState,
   [["zustand/persist", WatchHistoryStoreState]]
 >(
-	  persist(
-	(set) => ({
-	  watchHistory: [],
-	  setWatchHistory: (watchHistory: WatchHistoryItem[]) =>
-		set({ watchHistory }),
-	  addToWatchHistory: (item: ItemData, media: ScrapeMedia) =>
-		set((state) => ({
-		  watchHistory: [
-			...state.watchHistory.filter(
-			  (historyItem) => historyItem.item.id !== item.id,
-			),
-			{
-			  item,
-			  media,
-			  positionMillis: 0,
-			},
-		  ],
-		})),
-	  removeFromWatchHistory: (item: ItemData) =>
-		set((state) => ({
-		  watchHistory: state.watchHistory.filter(
-			(historyItem) => historyItem.item.id !== item.id,
-		  ),
-		}),
-	  )}),
-	{
-	  name: "watch-history",
-	  storage: createJSONStorage(() => zustandStorage),
-	},
+  persist(
+    (set) => ({
+      watchHistory: [],
+      setWatchHistory: (watchHistory: WatchHistoryItem[]) =>
+        set({ watchHistory }),
+      updateWatchHistory: (
+        item: ItemData,
+        media: ScrapeMedia,
+        positionMillis: number,
+      ) =>
+        set((state) => ({
+          watchHistory: [
+            ...state.watchHistory.filter(
+              (historyItem) => historyItem.item.id !== item.id,
+            ),
+            {
+              item,
+              media,
+              positionMillis,
+            },
+          ],
+        })),
+      removeFromWatchHistory: (item: ItemData) =>
+        set((state) => ({
+          watchHistory: state.watchHistory.filter(
+            (historyItem) => historyItem.item.id !== item.id,
+          ),
+        })),
+    }),
+    {
+      name: "watch-history",
+      storage: createJSONStorage(() => zustandStorage),
+    },
   ),
 );
