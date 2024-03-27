@@ -1,5 +1,5 @@
 import type { ScrapeMedia } from "@movie-web/provider-utils";
-import { fetchMediaDetails, fetchSeasonDetails } from "@movie-web/tmdb";
+import { fetchMediaDetails, fetchSeasonDetails, getMediaPoster } from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import type { PlayerMeta } from "~/stores/player/slices/video";
@@ -35,7 +35,7 @@ export const convertMetaToItemData = (meta: PlayerMeta): ItemData => {
       title: meta.title,
       year: meta.releaseYear,
       type: meta.type,
-      posterUrl: meta.poster ?? "",
+      posterUrl: getMediaPoster(meta.poster ?? ""),
     };
   }
   if (meta.type === "show") {
@@ -44,7 +44,7 @@ export const convertMetaToItemData = (meta: PlayerMeta): ItemData => {
       title: meta.title,
       year: meta.releaseYear,
       type: "tv",
-      posterUrl: meta.poster ?? "",
+      posterUrl: getMediaPoster(meta.poster ?? ""),
     };
   }
   throw new Error("Invalid media type");
