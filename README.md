@@ -17,6 +17,8 @@ apps
       ├─ Navigation using Expo Router
       └─ Styling with Tamagui
 packages
+  ├─ api
+  |   └─ Typesafe API calls to the backend
   ├─ tmdb
   |   └─ Typesafe API calls to The Movie Database
   └─ provider-utils
