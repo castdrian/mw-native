@@ -206,7 +206,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
         if (timeElapsed === 0) return;
 
         const newBytes = downloadProgress.bytesDownloaded - lastBytesWritten;
-        const speed = newBytes / timeElapsed / 1024;
+        const speed = newBytes / timeElapsed / 1024 / 1024;
         const progress =
           downloadProgress.bytesDownloaded / downloadProgress.bytesTotal;
 
