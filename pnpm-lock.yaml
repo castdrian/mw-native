@@ -29,6 +29,9 @@ importers:
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.21)
+      '@movie-web/api':
+        specifier: '*'
+        version: link:../../packages/api
       '@movie-web/colors':
         specifier: '*'
         version: link:../../tooling/colors
