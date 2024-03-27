@@ -5,6 +5,8 @@ import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme, YStack } from "tamagui";
 
+import type { ScrapeMedia } from "@movie-web/provider-utils";
+
 import { DownloadItem } from "~/components/DownloadItem";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
@@ -27,9 +29,24 @@ const DownloadsScreen: React.FC = () => {
     });
   };
 
+  const exampleShowMedia: ScrapeMedia = {
+    type: "show",
+    title: "Example Show Title",
+    releaseYear: 2022,
+    imdbId: "tt1234567",
+    tmdbId: "12345",
+    season: {
+      number: 1,
+      tmdbId: "54321",
+    },
+    episode: {
+      number: 3,
+      tmdbId: "98765",
+    },
+  };
   return (
     <ScreenLayout>
-      <YStack space={2} style={{ padding: 10 }}>
+      <YStack gap={2} style={{ padding: 10 }}>
         <MWButton
           type="secondary"
           backgroundColor="$sheetItemBackground"
@@ -44,6 +61,7 @@ const DownloadsScreen: React.FC = () => {
             await startDownload(
               "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
               "mp4",
+              exampleShowMedia,
             ).catch(console.error);
           }}
         >
@@ -63,6 +81,7 @@ const DownloadsScreen: React.FC = () => {
             await startDownload(
               "http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8",
               "hls",
+              exampleShowMedia,
             ).catch(console.error);
           }}
         >

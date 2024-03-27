@@ -6,6 +6,7 @@ import * as MediaLibrary from "expo-media-library";
 import VideoManager from "@salihgun/react-native-video-processor";
 import { useToastController } from "@tamagui/toast";
 
+import type { ScrapeMedia } from "@movie-web/provider-utils";
 import { extractSegmentsFromHLS } from "@movie-web/provider-utils";
 
 import { useDownloadHistoryStore } from "~/stores/settings";
@@ -23,12 +24,18 @@ export interface DownloadItem {
   statusText?: string;
   asset?: Asset;
   isHLS?: boolean;
+  media: ScrapeMedia;
   downloadResumable?: FileSystem.DownloadResumable;
 }
 
 interface DownloadManagerContextType {
   downloads: DownloadItem[];
-  startDownload: (url: string, type: "mp4" | "hls") => Promise<Asset | void>;
+  startDownload: (
+    url: string,
+    type: "mp4" | "hls",
+    media: ScrapeMedia,
+    headers?: Record<string, string>,
+  ) => Promise<Asset | void>;
   removeDownload: (id: string) => void;
   cancelDownload: (id: string) => Promise<void>;
 }
@@ -94,6 +101,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   const startDownload = async (
     url: string,
     type: "mp4" | "hls",
+    media: ScrapeMedia,
     headers?: Record<string, string>,
   ): Promise<Asset | void> => {
     toastController.show("Download started", {
@@ -113,6 +121,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       url,
       isFinished: false,
       isHLS: type === "hls",
+      media,
     };
 
     setDownloads((currentDownloads) => [newDownload, ...currentDownloads]);

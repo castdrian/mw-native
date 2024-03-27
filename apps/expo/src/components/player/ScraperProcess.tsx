@@ -42,7 +42,7 @@ export const ScraperProcess = ({
 
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const { convertMovieIdToMeta } = useMeta();
+  const { convertIdToMeta } = useMeta();
   const { startScraping, sourceOrder, sources, currentSource } = useScrape();
 
   const setStream = usePlayerStore((state) => state.setCurrentStream);
@@ -59,7 +59,7 @@ export const ScraperProcess = ({
       let meta: PlayerMeta | undefined = undefined;
 
       if (!media && data) {
-        meta = await convertMovieIdToMeta(data.id, data.type);
+        meta = await convertIdToMeta(data.id, data.type);
         if (!meta) return router.back();
       }
 
@@ -75,9 +75,9 @@ export const ScraperProcess = ({
             ? streamResult.stream.qualities[highestQuality]?.url
             : null;
           if (!url) return;
-          startDownload(url, "mp4").catch(console.error);
+          startDownload(url, "mp4", scrapeMedia).catch(console.error);
         } else if (streamResult.stream.type === "hls") {
-          startDownload(streamResult.stream.playlist, "hls").catch(
+          startDownload(streamResult.stream.playlist, "hls", scrapeMedia).catch(
             console.error,
           );
         }
@@ -126,7 +126,7 @@ export const ScraperProcess = ({
     };
     void fetchData();
   }, [
-    convertMovieIdToMeta,
+    convertIdToMeta,
     data,
     download,
     media,

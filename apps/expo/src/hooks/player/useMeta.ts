@@ -9,7 +9,7 @@ export const useMeta = () => {
   const meta = usePlayerStore((state) => state.meta);
   const setMeta = usePlayerStore((state) => state.setMeta);
 
-  const convertMovieIdToMeta = useCallback(
+  const convertIdToMeta = useCallback(
     async (id: string, type: "movie" | "tv") => {
       const media = await fetchMediaDetails(id, type);
       if (!media) return;
@@ -54,5 +54,5 @@ export const useMeta = () => {
     [meta?.episode?.number, meta?.season?.number, setMeta],
   );
 
-  return { convertMovieIdToMeta };
+  return { convertIdToMeta };
 };

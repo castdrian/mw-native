@@ -4,14 +4,20 @@ import { useTheme } from "tamagui";
 import { findHighestQuality } from "@movie-web/provider-utils";
 
 import { useDownloadManager } from "~/hooks/DownloadManagerContext";
+import { convertMetaToScrapeMedia } from "~/lib/meta";
 import { usePlayerStore } from "~/stores/player/store";
 import { MWButton } from "../ui/Button";
 import { Controls } from "./Controls";
 
 export const DownloadButton = () => {
   const theme = useTheme();
-  const stream = usePlayerStore((state) => state.interface.currentStream);
   const { startDownload } = useDownloadManager();
+  const stream = usePlayerStore((state) => state.interface.currentStream);
+  const meta = usePlayerStore((state) => state.meta);
+
+  if (!meta) return null;
+
+  const scrapeMedia = convertMetaToScrapeMedia(meta);
   let url: string | undefined | null = null;
 
   if (stream?.type === "file") {
@@ -36,7 +42,12 @@ export const DownloadButton = () => {
             />
           }
           onPress={() =>
-            url && startDownload(url, stream?.type === "hls" ? "hls" : "mp4")
+            url &&
+            startDownload(
+              url,
+              stream?.type === "hls" ? "hls" : "mp4",
+              scrapeMedia,
+            ).catch(console.error)
           }
         >
           Download
