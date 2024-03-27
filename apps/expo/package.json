@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "@expo/metro-config": "^0.17.3",
+    "@movie-web/api": "*",
     "@movie-web/colors": "*",
     "@movie-web/provider-utils": "*",
     "@movie-web/tmdb": "*",
-    "@movie-web/api": "*",
     "@octokit/rest": "^20.0.2",
     "@react-native-anywhere/polyfill-base64": "0.0.1-alpha.0",
     "@react-navigation/native": "^6.1.9",
@@ -90,7 +90,7 @@
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint": "^8.56.0",
     "prettier": "^3.1.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.3"
   },
   "eslintConfig": {
     "root": true,
