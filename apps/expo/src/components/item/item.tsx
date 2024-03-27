@@ -7,7 +7,7 @@ import { useToastController } from "@tamagui/toast";
 import { Image, Text, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
-import { useBookmarkStore } from "~/stores/settings";
+import { useBookmarkStore, useWatchHistoryStore } from "~/stores/settings";
 
 export interface ItemData {
   id: string;
@@ -22,6 +22,8 @@ export default function Item({ data }: { data: ItemData }) {
   const router = useRouter();
   const toastController = useToastController();
   const { isBookmarked, addBookmark, removeBookmark } = useBookmarkStore();
+  const { hasWatchHistoryItem, removeFromWatchHistory } =
+    useWatchHistoryStore();
 
   const { title, type, year, posterUrl } = data;
 
@@ -38,6 +40,7 @@ export default function Item({ data }: { data: ItemData }) {
     Bookmark = "Bookmark",
     RemoveBookmark = "Remove Bookmark",
     Download = "Download",
+    RemoveWatchHistoryItem = "Remove from Continue Watching",
   }
 
   const contextMenuActions = [
@@ -47,6 +50,9 @@ export default function Item({ data }: { data: ItemData }) {
         : ContextMenuActions.Bookmark,
     },
     ...(type === "movie" ? [{ title: ContextMenuActions.Download }] : []),
+    ...(hasWatchHistoryItem(data)
+      ? [{ title: ContextMenuActions.RemoveWatchHistoryItem }]
+      : []),
   ];
 
   const onContextMenuPress = (
@@ -70,6 +76,15 @@ export default function Item({ data }: { data: ItemData }) {
       router.push({
         pathname: "/videoPlayer",
         params: { data: JSON.stringify(data), download: "true" },
+      });
+    } else if (
+      e.nativeEvent.name === ContextMenuActions.RemoveWatchHistoryItem
+    ) {
+      removeFromWatchHistory(data);
+      toastController.show("Removed from Continue Watching", {
+        burntOptions: { preset: "done" },
+        native: true,
+        duration: 500,
       });
     }
   };
