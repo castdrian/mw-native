@@ -22,7 +22,7 @@
     "@movie-web/colors": "*",
     "@movie-web/provider-utils": "*",
     "@movie-web/tmdb": "*",
-	"@movie-web/api": "*",
+    "@movie-web/api": "*",
     "@octokit/rest": "^20.0.2",
     "@react-native-anywhere/polyfill-base64": "0.0.1-alpha.0",
     "@react-navigation/native": "^6.1.9",
