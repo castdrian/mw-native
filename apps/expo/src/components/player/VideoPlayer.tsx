@@ -75,7 +75,8 @@ export const VideoPlayer = () => {
   const setMeta = usePlayerStore((state) => state.setMeta);
 
   const { gestureControls, autoPlay } = usePlayerSettingsStore();
-  const { updateWatchHistory, removeFromWatchHistory } = useWatchHistoryStore();
+  const { updateWatchHistory, removeFromWatchHistory, getWatchHistorItem } =
+    useWatchHistoryStore();
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
@@ -238,14 +239,14 @@ export const VideoPlayer = () => {
     setHasStartedPlaying(true);
     if (videoRef) {
       void videoRef.setRateAsync(currentSpeed, true);
+
       if (meta) {
-        const item = convertMetaToItemData(meta);
-        const scrapeMedia = convertMetaToScrapeMedia(meta);
-        updateWatchHistory(
-          item,
-          scrapeMedia,
-          videoRef.props.positionMillis ?? 0,
-        );
+        const media = convertMetaToScrapeMedia(meta);
+        const watchHistoryItem = getWatchHistorItem(media);
+
+        if (watchHistoryItem) {
+          void videoRef.setPositionAsync(watchHistoryItem.positionMillis);
+        }
       }
     }
   };

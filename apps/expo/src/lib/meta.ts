@@ -1,5 +1,9 @@
 import type { ScrapeMedia } from "@movie-web/provider-utils";
-import { fetchMediaDetails, fetchSeasonDetails, getMediaPoster } from "@movie-web/tmdb";
+import {
+  fetchMediaDetails,
+  fetchSeasonDetails,
+  getMediaPoster,
+} from "@movie-web/tmdb";
 
 import type { ItemData } from "~/components/item/item";
 import type { PlayerMeta } from "~/stores/player/slices/video";

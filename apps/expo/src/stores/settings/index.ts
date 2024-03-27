@@ -141,6 +141,7 @@ interface WatchHistoryItem {
 
 interface WatchHistoryStoreState {
   watchHistory: WatchHistoryItem[];
+  getWatchHistorItem: (media: ScrapeMedia) => WatchHistoryItem | undefined;
   setWatchHistory: (watchHistory: WatchHistoryItem[]) => void;
   updateWatchHistory: (
     item: ItemData,
@@ -155,8 +156,23 @@ export const useWatchHistoryStore = create<
   [["zustand/persist", WatchHistoryStoreState]]
 >(
   persist(
-    (set) => ({
+    (set, get) => ({
       watchHistory: [],
+      getWatchHistorItem: (media: ScrapeMedia) =>
+        get().watchHistory.find((historyItem) => {
+          if (historyItem.media.type === "movie" && media.type === "movie") {
+            return historyItem.media.tmdbId === media.tmdbId;
+          } else if (
+            historyItem.media.type === "show" &&
+            media.type === "show"
+          ) {
+            return (
+              historyItem.media.tmdbId === media.tmdbId &&
+              historyItem.media.season === media.season &&
+              historyItem.media.episode === media.episode
+            );
+          }
+        }),
       setWatchHistory: (watchHistory: WatchHistoryItem[]) =>
         set({ watchHistory }),
       updateWatchHistory: (
