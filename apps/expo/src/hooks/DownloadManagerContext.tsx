@@ -1,7 +1,7 @@
 import type { DownloadTask } from "@kesha-antonov/react-native-background-downloader";
 import type { Asset } from "expo-media-library";
 import type { ReactNode } from "react";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import {
@@ -75,9 +75,9 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const initializeDownloads = () => {
-      const { downloads: storedDownloads } = useDownloadHistoryStore.getState();
-      if (storedDownloads) {
-        setDownloads(storedDownloads);
+      const { downloads } = useDownloadHistoryStore.getState();
+      if (downloads) {
+        setDownloads(downloads);
       }
     };
 
@@ -87,6 +87,27 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     useDownloadHistoryStore.setState({ downloads });
   }, [downloads]);
+
+  const checkRunningTasks = useCallback(async () => {
+	const existingTasks = await checkForExistingDownloads();
+	existingTasks.forEach((task) => {
+		task
+		.progress(({ bytesDownloaded, bytesTotal }) => {
+		  const progress = bytesDownloaded / bytesTotal;
+		  updateDownloadItem(task.id, { progress });
+		})
+		.done(() => {
+		  completeHandler(task.id);
+		})
+		.error(({ error, errorCode }) => {
+		  console.error(`Download error: ${errorCode} - ${error}`);
+		});
+	});
+  }, []);
+  
+  useEffect(() => {
+	void checkRunningTasks();
+  }, [checkRunningTasks]);
 
   const cancellationFlags = useState<Record<string, boolean>>({})[0];
 
@@ -109,35 +130,6 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       native: true,
       duration: 500,
     });
-  };
-
-  //   const initializeDownloader = async () => {
-  // 	setConfig({ isLogsEnabled: true }); // Set any global configs here
-
-  // 	const existingTasks = await checkForExistingDownloads();
-  // 	existingTasks.forEach(task => {
-  // 	  // Reattach event listeners to existing tasks
-  // 	  processTask(task);
-  // 	});
-  //   };
-
-  const _processTask = (task: DownloadTask) => {
-    task
-      .progress(({ bytesDownloaded, bytesTotal }) => {
-        const progress = bytesDownloaded / bytesTotal;
-        updateDownloadItem(task.id, { progress });
-      })
-      .done(() => {
-        completeHandler(task.id);
-      })
-      .error(({ error, errorCode }) => {
-        console.error(`Download error: ${errorCode} - ${error}`);
-      });
-
-    const downloadItem = downloads.find((d) => d.id === task.id);
-    if (downloadItem) {
-      updateDownloadItem(task.id, { downloadTask: task });
-    }
   };
 
   const startDownload = async (
