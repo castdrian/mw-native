@@ -16,11 +16,10 @@ export interface DownloadItemProps {
   fileSize: number;
   downloaded: number;
   isFinished: boolean;
-  onLongPress: (id: string) => void;
   statusText?: string;
   asset?: Asset;
-  onPress: (asset?: Asset) => void;
   isHLS?: boolean;
+  onPress: (asset?: Asset) => void;
 }
 
 enum ContextMenuActions {
@@ -45,11 +44,10 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
   fileSize,
   downloaded,
   isFinished,
-  onLongPress,
   statusText,
   asset,
-  onPress,
   isHLS,
+  onPress,
 }) => {
   const percentage = progress * 100;
   const formattedFileSize = formatBytes(fileSize);
@@ -105,11 +103,7 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
       onPress={onContextMenuPress}
       previewBackgroundColor="transparent"
     >
-      <TouchableOpacity
-        onPress={() => onPress(asset)}
-        onLongPress={() => onLongPress(id)}
-        activeOpacity={0.7}
-      >
+      <TouchableOpacity onPress={() => onPress(asset)} activeOpacity={0.7}>
         <View
           marginBottom={16}
           borderRadius={8}

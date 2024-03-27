@@ -14,7 +14,7 @@ import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 import { usePlayerStore } from "~/stores/player/store";
 
 const DownloadsScreen: React.FC = () => {
-  const { startDownload, downloads, removeDownload } = useDownloadManager();
+  const { startDownload, downloads } = useDownloadManager();
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const setAsset = usePlayerStore((state) => state.setAsset);
   const router = useRouter();
@@ -94,7 +94,6 @@ const DownloadsScreen: React.FC = () => {
             key={item.id}
             {...item}
             onPress={() => handlePress(item.asset)}
-            onLongPress={removeDownload}
           />
         ))}
       </ScrollView>
