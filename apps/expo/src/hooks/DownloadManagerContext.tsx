@@ -1,8 +1,15 @@
+import type { DownloadTask } from "@kesha-antonov/react-native-background-downloader";
 import type { Asset } from "expo-media-library";
 import type { ReactNode } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import {
+  checkForExistingDownloads,
+  completeHandler,
+  download,
+  setConfig,
+} from "@kesha-antonov/react-native-background-downloader";
 import VideoManager from "@salihgun/react-native-video-processor";
 import { useToastController } from "@tamagui/toast";
 
@@ -25,8 +32,14 @@ export interface DownloadItem {
   asset?: Asset;
   isHLS?: boolean;
   media: ScrapeMedia;
-  downloadResumable?: FileSystem.DownloadResumable;
+  downloadTask?: DownloadTask;
 }
+
+// @ts-expect-error - types are not up to date
+setConfig({
+  isLogsEnabled: false,
+  progressInterval: 250,
+});
 
 interface DownloadManagerContextType {
   downloads: DownloadItem[];
@@ -37,7 +50,7 @@ interface DownloadManagerContextType {
     headers?: Record<string, string>,
   ) => Promise<Asset | void>;
   removeDownload: (id: string) => void;
-  cancelDownload: (id: string) => Promise<void>;
+  cancelDownload: (id: string) => void;
 }
 
 const DownloadManagerContext = createContext<
@@ -85,17 +98,46 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     return cancellationFlags[downloadId] ?? false;
   };
 
-  const cancelDownload = async (downloadId: string): Promise<void> => {
+  const cancelDownload = (downloadId: string) => {
     setCancellationFlag(downloadId, true);
     const downloadItem = downloads.find((d) => d.id === downloadId);
-    if (downloadItem?.downloadResumable) {
-      await downloadItem.downloadResumable.cancelAsync();
+    if (downloadItem?.downloadTask) {
+      downloadItem.downloadTask.stop();
     }
     toastController.show("Download cancelled", {
       burntOptions: { preset: "done" },
       native: true,
       duration: 500,
     });
+  };
+
+  //   const initializeDownloader = async () => {
+  // 	setConfig({ isLogsEnabled: true }); // Set any global configs here
+
+  // 	const existingTasks = await checkForExistingDownloads();
+  // 	existingTasks.forEach(task => {
+  // 	  // Reattach event listeners to existing tasks
+  // 	  processTask(task);
+  // 	});
+  //   };
+
+  const _processTask = (task: DownloadTask) => {
+    task
+      .progress(({ bytesDownloaded, bytesTotal }) => {
+        const progress = bytesDownloaded / bytesTotal;
+        updateDownloadItem(task.id, { progress });
+      })
+      .done(() => {
+        completeHandler(task.id);
+      })
+      .error(({ error, errorCode }) => {
+        console.error(`Download error: ${errorCode} - ${error}`);
+      });
+
+    const downloadItem = downloads.find((d) => d.id === task.id);
+    if (downloadItem) {
+      updateDownloadItem(task.id, { downloadTask: task });
+    }
   };
 
   const startDownload = async (
@@ -143,66 +185,80 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     );
   };
 
-  const downloadMP4 = async (
+  interface DownloadProgress {
+    bytesDownloaded: number;
+    bytesTotal: number;
+  }
+
+  const downloadMP4 = (
     url: string,
     downloadId: string,
     headers: Record<string, string>,
-  ) => {
-    let lastBytesWritten = 0;
-    let lastTimestamp = Date.now();
+  ): Promise<Asset> => {
+    return new Promise<Asset>((resolve, reject) => {
+      let lastBytesWritten = 0;
+      let lastTimestamp = Date.now();
 
-    const callback = (downloadProgress: FileSystem.DownloadProgressData) => {
-      const currentTime = Date.now();
-      const timeElapsed = (currentTime - lastTimestamp) / 1000;
+      const updateProgress = (downloadProgress: DownloadProgress) => {
+        const currentTime = Date.now();
+        const timeElapsed = (currentTime - lastTimestamp) / 1000;
 
-      if (timeElapsed === 0) return;
+        if (timeElapsed === 0) return;
 
-      const bytesWritten = downloadProgress.totalBytesWritten;
-      const newBytes = bytesWritten - lastBytesWritten;
-      const speed = newBytes / timeElapsed / 1024;
-      const progress =
-        bytesWritten / downloadProgress.totalBytesExpectedToWrite;
+        const newBytes = downloadProgress.bytesDownloaded - lastBytesWritten;
+        const speed = newBytes / timeElapsed / 1024;
+        const progress =
+          downloadProgress.bytesDownloaded / downloadProgress.bytesTotal;
 
-      updateDownloadItem(downloadId, {
-        progress,
-        speed,
-        fileSize: downloadProgress.totalBytesExpectedToWrite,
-        downloaded: bytesWritten,
-      });
+        updateDownloadItem(downloadId, {
+          progress,
+          speed,
+          fileSize: downloadProgress.bytesTotal,
+          downloaded: downloadProgress.bytesDownloaded,
+        });
 
-      lastBytesWritten = bytesWritten;
-      lastTimestamp = currentTime;
-    };
+        lastBytesWritten = downloadProgress.bytesDownloaded;
+        lastTimestamp = currentTime;
+      };
 
-    const fileUri = FileSystem.cacheDirectory
-      ? FileSystem.cacheDirectory + url.split("/").pop()
-      : null;
-    if (!fileUri) {
-      console.error("Cache directory is unavailable");
-      return;
-    }
-
-    const downloadResumable = FileSystem.createDownloadResumable(
-      url,
-      fileUri,
-      { headers },
-      callback,
-    );
-    updateDownloadItem(downloadId, { downloadResumable });
-
-    try {
-      const result = await downloadResumable.downloadAsync();
-      if (result) {
-        console.log("Finished downloading to ", result.uri);
-        const asset = await saveFileToMediaLibraryAndDeleteOriginal(
-          result.uri,
-          downloadId,
-        );
-        return asset;
+      const fileUri = FileSystem.cacheDirectory
+        ? FileSystem.cacheDirectory + url.split("/").pop()
+        : null;
+      if (!fileUri) {
+        console.error("Cache directory is unavailable");
+        reject(new Error("Cache directory is unavailable"));
+        return;
       }
-    } catch (e) {
-      console.error(e);
-    }
+
+      const downloadTask = download({
+        id: downloadId,
+        url,
+        destination: fileUri,
+        headers,
+        isNotificationVisible: true,
+      })
+        .begin(() => {
+          updateDownloadItem(downloadId, { downloadTask });
+        })
+        .progress(({ bytesDownloaded, bytesTotal }) => {
+          updateProgress({ bytesDownloaded, bytesTotal });
+        })
+        .done(() => {
+          saveFileToMediaLibraryAndDeleteOriginal(fileUri, downloadId)
+            .then((asset) => {
+              if (asset) {
+                resolve(asset);
+              } else {
+                reject(new Error("No asset returned"));
+              }
+            })
+            .catch((error) => reject(error));
+        })
+        .error(({ error, errorCode }) => {
+          console.error(`Download error: ${errorCode} - ${error}`);
+          reject(new Error(`Download error: ${errorCode} - ${error}`));
+        });
+    });
   };
 
   const downloadHLS = async (

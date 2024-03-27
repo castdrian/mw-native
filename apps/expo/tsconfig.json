@@ -17,7 +17,7 @@
     "*.js",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "config-plugins/*",
+    "src/plugins/*",
   ],
   "exclude": ["node_modules"],
 }

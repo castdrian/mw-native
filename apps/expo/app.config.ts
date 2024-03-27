@@ -1,8 +1,8 @@
 import type { ExpoConfig } from "expo/config";
 
-import withRemoveiOSNotificationEntitlement from "./config-plugins/withRemoveiOSNotificationEntitlement";
-import withRNBackgroundDownloader from "./config-plugins/withRNBackgroundDownloader";
 import { version } from "./package.json";
+import withRemoveiOSNotificationEntitlement from "./src/plugins/withRemoveiOSNotificationEntitlement";
+import withRNBackgroundDownloader from "./src/plugins/withRNBackgroundDownloader";
 
 const defineConfig = (): ExpoConfig => ({
   name: "movie-web",
