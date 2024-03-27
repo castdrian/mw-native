@@ -75,7 +75,7 @@ export const VideoPlayer = () => {
   const setMeta = usePlayerStore((state) => state.setMeta);
 
   const { gestureControls, autoPlay } = usePlayerSettingsStore();
-  const { updateWatchHistory, removeFromWatchHistory, getWatchHistorItem } =
+  const { updateWatchHistory, removeFromWatchHistory, getWatchHistoryItem } =
     useWatchHistoryStore();
 
   const updateResizeMode = (newMode: ResizeMode) => {
@@ -242,7 +242,7 @@ export const VideoPlayer = () => {
 
       if (meta) {
         const media = convertMetaToScrapeMedia(meta);
-        const watchHistoryItem = getWatchHistorItem(media);
+        const watchHistoryItem = getWatchHistoryItem(media);
 
         if (watchHistoryItem) {
           void videoRef.setPositionAsync(watchHistoryItem.positionMillis);
