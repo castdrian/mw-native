@@ -326,7 +326,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const downloadSegment = async (
-	downloadId: string,
+    downloadId: string,
     segmentUrl: string,
     segmentFile: string,
     headers: Record<string, string>,
