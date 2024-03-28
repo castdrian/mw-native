@@ -291,15 +291,15 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       localSegmentPaths.push(segmentFile);
 
       try {
-        await downloadSegment(segment, segmentFile, headers, downloadId, () => {
-          segmentsDownloaded++;
-          updateProgress();
-        });
+        await downloadSegment(downloadId, segment, segmentFile, headers);
 
         if (getCancellationFlag(downloadId)) {
           await cleanupDownload(segmentDir, downloadId);
           return;
         }
+
+        segmentsDownloaded++;
+        updateProgress();
       } catch (e) {
         console.error(e);
         if (getCancellationFlag(downloadId)) {
@@ -326,11 +326,10 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const downloadSegment = async (
+	downloadId: string,
     segmentUrl: string,
     segmentFile: string,
     headers: Record<string, string>,
-    downloadId: string,
-    onSegmentDownloadComplete: () => void,
   ) => {
     return new Promise<void>((resolve, reject) => {
       const task = download({
@@ -342,7 +341,6 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
 
       task
         .done(() => {
-          onSegmentDownloadComplete();
           resolve();
         })
         .error((error) => {
