@@ -1,7 +1,7 @@
 import type { DownloadTask } from "@kesha-antonov/react-native-background-downloader";
 import type { Asset } from "expo-media-library";
 import type { ReactNode } from "react";
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import {
@@ -88,26 +88,26 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     useDownloadHistoryStore.setState({ downloads });
   }, [downloads]);
 
-  const checkRunningTasks = useCallback(async () => {
-	const existingTasks = await checkForExistingDownloads();
-	existingTasks.forEach((task) => {
-		task
-		.progress(({ bytesDownloaded, bytesTotal }) => {
-		  const progress = bytesDownloaded / bytesTotal;
-		  updateDownloadItem(task.id, { progress });
-		})
-		.done(() => {
-		  completeHandler(task.id);
-		})
-		.error(({ error, errorCode }) => {
-		  console.error(`Download error: ${errorCode} - ${error}`);
-		});
-	});
-  }, []);
-  
   useEffect(() => {
-	void checkRunningTasks();
-  }, [checkRunningTasks]);
+    const checkRunningTasks = async () => {
+      const existingTasks = await checkForExistingDownloads();
+      existingTasks.forEach((task) => {
+        task
+          .progress(({ bytesDownloaded, bytesTotal }) => {
+            const progress = bytesDownloaded / bytesTotal;
+            updateDownloadItem(task.id, { progress });
+          })
+          .done(() => {
+            completeHandler(task.id);
+          })
+          .error(({ error, errorCode }) => {
+            console.error(`Download error: ${errorCode} - ${error}`);
+          });
+      });
+    };
+
+    void checkRunningTasks();
+  }, []);
 
   const cancellationFlags = useState<Record<string, boolean>>({})[0];
 
@@ -291,15 +291,15 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       localSegmentPaths.push(segmentFile);
 
       try {
-        await downloadSegment(segment, segmentFile, headers);
+        await downloadSegment(segment, segmentFile, headers, downloadId, () => {
+          segmentsDownloaded++;
+          updateProgress();
+        });
 
         if (getCancellationFlag(downloadId)) {
           await cleanupDownload(segmentDir, downloadId);
           return;
         }
-
-        segmentsDownloaded++;
-        updateProgress();
       } catch (e) {
         console.error(e);
         if (getCancellationFlag(downloadId)) {
@@ -329,13 +329,27 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     segmentUrl: string,
     segmentFile: string,
     headers: Record<string, string>,
+    downloadId: string,
+    onSegmentDownloadComplete: () => void,
   ) => {
-    const downloadResumable = FileSystem.createDownloadResumable(
-      segmentUrl,
-      segmentFile,
-      { headers },
-    );
-    await downloadResumable.downloadAsync();
+    return new Promise<void>((resolve, reject) => {
+      const task = download({
+        id: `${downloadId}-${segmentUrl.split("/").pop()}`,
+        url: segmentUrl,
+        destination: segmentFile,
+        headers: headers,
+      });
+
+      task
+        .done(() => {
+          onSegmentDownloadComplete();
+          resolve();
+        })
+        .error((error) => {
+          console.error(error);
+          reject(error);
+        });
+    });
   };
 
   const cleanupDownload = async (segmentDir: string, downloadId: string) => {
