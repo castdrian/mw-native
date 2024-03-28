@@ -1,7 +1,27 @@
 # movie-web native-app
+<!---
+used a table bc this shit is annoying to resize to match, someone pls fix
+--->
+| iOS | Android |
+|:---:|:---:|
+| <a href="https://tinyurl.com/axk7vadz"><img src="https://i.imgur.com/46qhEAv.png" width="230"></a> | <a href="https://github.com/movie-web/native-app/releases/latest/download/movie-web.apk"><img src="https://i.imgur.com/WwPPgSZ.png" width="200"></a> |
+
+## iOS Installation
+
+> [!IMPORTANT]
+> Sideloading with a paid certificate breaks a few features, most notably:
+> - Downloads
+> - Alternate App Icons
+>   
+> We reccomend you use a local development certificate if you care about any of these.
+
+- **AltStore:**
+   - Click the Add to AltStore badge to add the movie-web repository to AltStore.
+
+- **Other:**
+   - Employ [Sideloadly](https://sideloadly.io/) or a sideloading method of your preference to install the [ipa](https://github.com/movie-web/native-app/releases/latest/download/movie-web.ipa) directly.
 
 ## About
-
 This repository uses [Turborepo](https://turborepo.org) and contains:
 
 ```text
