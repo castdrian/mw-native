@@ -189,13 +189,13 @@ jobs:
         run: |
           VERSION=$(jq -r '.version' apps/expo/package.json)
           DATE=$(date -u +"%Y-%m-%d")
-          echo "::set-output name=version::$VERSION"
-          echo "::set-output name=date::$DATE"
+          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "date=$DATE" >> $GITHUB_ENV
         
       - name: Update app-repo.json
         run: |
-          IPA_SIZE=$(stat -f%z "movie-web.ipa")
-          NEW_ENTRY=$(jq -n --arg version "${{ steps.vars.outputs.version }}" --arg date "${{ steps.vars.outputs.date }}" --arg size "$IPA_SIZE" --arg downloadURL "https://github.com/movie-web/native-app/releases/download/v${{ steps.vars.outputs.version }}/movie-web.ipa" '{version: $version, date: $date, size: ($size | tonumber), downloadURL: $downloadURL}')
+          IPA_SIZE=$(ls -l movie-web.ipa | awk '{print $5}')
+          NEW_ENTRY=$(jq -n --arg version "$VERSION" --arg date "$DATE" --arg size "$IPA_SIZE" --arg downloadURL "https://github.com/movie-web/native-app/releases/download/v$VERSION/movie-web.ipa" '{version: $version, date: $date, size: ($size | tonumber), downloadURL: $downloadURL}')
           jq --argjson newEntry "$NEW_ENTRY" '.apps[0].versions |= [$newEntry] + .' apps/expo/app-repo.json > temp.json && mv temp.json apps/expo/app-repo.json
         
       - uses: EndBug/add-and-commit@v9
