@@ -138,6 +138,16 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     media: ScrapeMedia,
     headers?: Record<string, string>,
   ): Promise<Asset | void> => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== MediaLibrary.PermissionStatus.GRANTED) {
+      toastController.show("Permission denied", {
+        burntOptions: { preset: "error" },
+        native: true,
+        duration: 500,
+      });
+      return;
+    }
+
     toastController.show("Download started", {
       burntOptions: { preset: "none" },
       native: true,
@@ -366,11 +376,6 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   ): Promise<Asset | void> => {
     try {
       updateDownloadItem(downloadId, { statusText: "Importing" });
-
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== MediaLibrary.PermissionStatus.GRANTED) {
-        throw new Error("MediaLibrary permission not granted");
-      }
 
       const asset = await MediaLibrary.createAssetAsync(fileUri);
       await FileSystem.deleteAsync(fileUri);
