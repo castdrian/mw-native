@@ -1,0 +1,40 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "Run iOS",
+            "program": "pnpm",
+            "args": [
+                "ios"
+            ],
+            "workingDir": "apps/expo/",
+        },
+        {
+            "type": "command",
+            "name": "Run Android",
+            "program": "pnpm",
+            "args": [
+                "android"
+            ],
+            "workingDir": "apps/expo/",
+        },
+        {
+            "type": "command",
+            "name": "Build IPA",
+            "program": "pnpm",
+            "args": [
+                "ipa"
+            ],
+            "workingDir": "apps/expo/",
+        },
+        {
+            "type": "command",
+            "name": "Build APK",
+            "program": "pnpm",
+            "args": [
+                "apk"
+            ],
+            "workingDir": "apps/expo/",
+        },
+    ]
+}
