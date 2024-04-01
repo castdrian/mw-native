@@ -1,8 +1,9 @@
-import { Image, Text, View } from "tamagui";
+import { Text, useTheme, View } from "tamagui";
 
-import Icon from "../../assets/images/icon-transparent.png";
+import { MovieWebSvg } from "./Icon";
 
 export function BrandPill() {
+  const theme = useTheme();
   return (
     <View
       flexDirection="row"
@@ -19,8 +20,12 @@ export function BrandPill() {
         scale: 1.05,
       }}
     >
-      <Image source={Icon} height={20} width={20} />
-      <Text fontSize="$4" fontWeight="$bold" paddingRight={5}>
+      <MovieWebSvg
+        fillColor={theme.tabBarIconFocused.val}
+        width={12}
+        height={12}
+      />
+      <Text fontSize="$4" fontWeight="$bold" paddingRight={5} paddingLeft={3}>
         movie-web
       </Text>
     </View>
