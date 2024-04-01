@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name           = 'CheckIosCertificate'
   s.version        = '1.0.0'
-  s.summary        = 'A sample project summary'
-  s.description    = 'A sample project description'
-  s.author         = ''
+  s.summary        = 'Check if iOS certificate is Development or Production.'
+  s.description    = 'Check if iOS certificate is Development or Production.'
+  s.author         = 'castdrian'
   s.homepage       = 'https://docs.expo.dev/modules/'
   s.platforms      = { :ios => '13.4', :tvos => '13.4' }
   s.source         = { git: '' }
