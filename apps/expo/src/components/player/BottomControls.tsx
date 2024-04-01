@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
+import { isDevelopmentProvisioningProfile } from "modules/check-ios-certificate";
 import { Text, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
@@ -84,7 +85,10 @@ export const BottomControls = ({ isLocalAsset }: { isLocalAsset: boolean }) => {
               <AudioTrackSelector />
               <PlaybackSpeedSelector />
               <QualitySelector />
-              <DownloadButton />
+              {Platform.OS === "android" ||
+              (Platform.OS === "ios" && isDevelopmentProvisioningProfile()) ? (
+                <DownloadButton />
+              ) : null}
             </>
           )}
         </View>

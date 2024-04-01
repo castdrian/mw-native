@@ -1,0 +1,60 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Run iOS",
+			"request": "launch",
+			"runtimeArgs": [
+				"ios",
+			],
+			"cwd": "${workspaceFolder}/apps/expo",
+			"runtimeExecutable": "pnpm",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"type": "node"
+		},
+		{
+			"name": "Run Android",
+			"request": "launch",
+			"runtimeArgs": [
+				"android",
+			],
+			"cwd": "${workspaceFolder}/apps/expo",
+			"runtimeExecutable": "pnpm",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"type": "node"
+		},
+		{
+			"name": "Build IPA",
+			"request": "launch",
+			"runtimeArgs": [
+				"ipa",
+			],
+			"cwd": "${workspaceFolder}/apps/expo",
+			"runtimeExecutable": "pnpm",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"type": "node"
+		},
+		{
+			"name": "Build APK",
+			"request": "launch",
+			"runtimeArgs": [
+				"apk",
+			],
+			"cwd": "${workspaceFolder}/apps/expo",
+			"runtimeExecutable": "pnpm",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"type": "node"
+		},
+	]
+}
