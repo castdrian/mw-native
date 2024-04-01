@@ -1,6 +1,7 @@
 import { Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import { Tabs } from "expo-router";
+import * as Linking from "expo-linking";
+import { Tabs, useRouter } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useTheme, View } from "tamagui";
 
@@ -10,6 +11,21 @@ import TabBarIcon from "~/components/TabBarIcon";
 
 export default function TabLayout() {
   const theme = useTheme();
+
+  //  const url = Linking.useURL();
+  //  const router = useRouter();
+  //
+  //  if (url) {
+  //    const { hostname, queryParams } = Linking.parse(url);
+  //
+  //    switch (hostname) {
+  //      case "media":
+  //        return router.push({
+  //          pathname: "/videoPlayer",
+  //          params: { data: JSON.stringify(queryParams) }
+  //        });
+  //    }
+  //  }
 
   return (
     <Tabs

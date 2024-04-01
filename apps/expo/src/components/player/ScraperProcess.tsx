@@ -27,7 +27,7 @@ import { usePlayerStore } from "~/stores/player/store";
 import { ScrapeCard, ScrapeItem } from "./ScrapeCard";
 
 interface ScraperProcessProps {
-  data?: ItemData;
+  data?: Partial<ItemData>;
   media?: ScrapeMedia;
   download?: boolean;
 }
@@ -53,12 +53,12 @@ export const ScraperProcess = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!data && !media) return router.back();
+      if (!data?.id && !media) return router.back();
 
       let streamResult: RunOutput | null = null;
       let meta: PlayerMeta | undefined = undefined;
 
-      if (!media && data) {
+      if (!media && data?.id && data.type) {
         meta = await convertIdToMeta(data.id, data.type);
         if (!meta) return router.back();
       }
