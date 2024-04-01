@@ -24,6 +24,7 @@ import { useScrape } from "~/hooks/player/useSourceScrape";
 import { convertMetaToScrapeMedia } from "~/lib/meta";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
+import { BackButton } from "./BackButton";
 import { ScrapeCard, ScrapeItem } from "./ScrapeCard";
 
 interface ScraperProcessProps {
@@ -169,6 +170,9 @@ export const ScraperProcess = ({
         justifyContent="center"
         backgroundColor="$screenBackground"
       >
+        <View position="absolute" top={40} left={40}>
+          <BackButton />
+        </View>
         <ScrollView
           ref={scrollViewRef}
           contentContainerStyle={{

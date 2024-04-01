@@ -28,7 +28,7 @@ export const QualitySelector = () => {
       (key) => qualities[key as keyof typeof qualities]!.url === videoSrc.uri,
     );
 
-    qualityMap = Object.keys(qualities).map((key: string) => ({
+    qualityMap = Object.keys(qualities).map((key) => ({
       quality: key,
       url: qualities[key as keyof typeof qualities]!.url,
     }));

@@ -51,7 +51,6 @@ export function SearchBar({
 
   return (
     <View
-      marginBottom={12}
       flexDirection="row"
       alignItems="center"
       borderRadius={999}
@@ -67,8 +66,7 @@ export function SearchBar({
         onChangeText={handleChange}
         ref={inputRef}
         placeholder="What are you looking for?"
-        width="80%"
-        borderColor={isFocused ? theme.colorTransparent : theme.inputBorder}
+        width="75%"
         backgroundColor={
           isFocused ? theme.searchFocused : theme.searchBackground
         }

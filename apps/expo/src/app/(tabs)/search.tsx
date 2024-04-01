@@ -16,7 +16,7 @@ import Item from "~/components/item/item";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { SearchBar } from "~/components/ui/Searchbar";
 
-export default function HomeScreen() {
+export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const translateY = useSharedValue(0);
   const fadeAnim = useSharedValue(1);
@@ -98,42 +98,46 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScreenLayout>
       <ScrollView
         onScrollBeginDrag={handleScrollBegin}
         onMomentumScrollEnd={handleScrollEnd}
         scrollEnabled={searchResultsLoaded ? true : false}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
       >
-        <ScreenLayout>
-          {searchResultsLoaded && (
-            <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
-              <View flexDirection="row" flexWrap="wrap">
-                {data?.map((item, index) => (
-                  <View
-                    key={index}
-                    paddingHorizontal={12}
-                    paddingBottom={12}
-                    width="50%"
-                  >
-                    <Item data={item} />
-                  </View>
-                ))}
-              </View>
-            </Animated.View>
-          )}
-        </ScreenLayout>
+        <View>
+          <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
+            <View flexDirection="row" flexWrap="wrap">
+              {data?.map((item, index) => (
+                <View
+                  key={index}
+                  paddingHorizontal={12}
+                  paddingBottom={12}
+                  width="50%"
+                >
+                  <Item data={item} />
+                </View>
+              ))}
+            </View>
+          </Animated.View>
+        </View>
       </ScrollView>
       <Animated.View
         style={[
-          { position: "absolute", left: 0, right: 0, bottom: 0 },
+          {
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+          },
           animatedStyle,
         ]}
       >
         <SearchBar onSearchChange={setQuery} />
       </Animated.View>
-    </View>
+    </ScreenLayout>
   );
 }
 

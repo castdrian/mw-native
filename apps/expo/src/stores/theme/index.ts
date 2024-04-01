@@ -21,7 +21,9 @@ export const useThemeStore = create(
         updateTheme(newTheme);
         set((state) => {
           state.theme = newTheme;
-          void setAlternateAppIcon(newTheme);
+          setAlternateAppIcon(newTheme).catch(() => {
+            console.log("Failed to set alternate app icon");
+          });
         });
       },
     };

@@ -17,7 +17,6 @@ export const MWInput = styled(Input, {
         outlineStyle: "none",
         focusStyle: {
           borderColor: "$colorTransparent",
-          backgroundColor: "$searchFocused",
         },
       },
     },

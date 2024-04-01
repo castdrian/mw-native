@@ -1,7 +1,7 @@
-import { Image, Text, View } from "tamagui";
+import { Text, View } from "tamagui";
 
 import { usePlayerStore } from "~/stores/player/store";
-import Icon from "../../../assets/images/icon-transparent.png";
+import { BrandPill } from "../BrandPill";
 import { BackButton } from "./BackButton";
 import { Controls } from "./Controls";
 
@@ -39,21 +39,8 @@ export const Header = () => {
               : ""}
           </Text>
         )}
-        <View
-          height="$3.5"
-          width="$11"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-          gap={2}
-          paddingHorizontal="$4"
-          paddingVertical="$1"
-          opacity={0.8}
-          backgroundColor="$pillBackground"
-          borderRadius={24}
-        >
-          <Image source={Icon} height={24} width={24} />
-          <Text fontWeight="bold">movie-web</Text>
+        <View alignItems="center" justifyContent="center" width={130}>
+          <BrandPill />
         </View>
       </View>
     );
