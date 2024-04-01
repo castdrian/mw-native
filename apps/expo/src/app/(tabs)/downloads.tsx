@@ -7,18 +7,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { isDevelopmentProvisioningProfile } from "modules/check-ios-certificate";
 import { useTheme, YStack } from "tamagui";
 
-
-
 import type { ScrapeMedia } from "@movie-web/provider-utils";
-
-
 
 import { DownloadItem } from "~/components/DownloadItem";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { useDownloadManager } from "~/hooks/DownloadManagerContext";
 import { usePlayerStore } from "~/stores/player/store";
-
 
 const DownloadsScreen: React.FC = () => {
   const { startDownload, downloads } = useDownloadManager();
