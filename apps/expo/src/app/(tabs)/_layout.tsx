@@ -1,7 +1,6 @@
 import { Platform } from "react-native";
 import * as Haptics from "expo-haptics";
-import * as Linking from "expo-linking";
-import { Tabs, useRouter } from "expo-router";
+import { Tabs } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useTheme, View } from "tamagui";
 
