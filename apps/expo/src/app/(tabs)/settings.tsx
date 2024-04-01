@@ -13,11 +13,11 @@ import {
 import { useToastController } from "@tamagui/toast";
 import {
   Adapt,
-  Label,
   ScrollView,
   Select,
   Separator,
   Sheet,
+  Text,
   useTheme,
   View,
   XStack,
@@ -85,14 +85,14 @@ export default function SettingsScreen() {
   return (
     <ScreenLayout>
       <View padding={4}>
-        <YStack>
+        <YStack gap={4}>
           <XStack width={200} alignItems="center" gap="$4">
-            <Label minWidth={110}>Theme</Label>
+            <Text minWidth={110}>Theme</Text>
             <Separator minHeight={20} vertical />
             <ThemeSelector />
           </XStack>
           <XStack width={200} alignItems="center" gap="$4">
-            <Label minWidth={110}>Gesture controls</Label>
+            <Text minWidth={110}>Gesture controls</Text>
             <Separator minHeight={20} vertical />
             <MWSwitch
               checked={gestureControls}
@@ -102,16 +102,14 @@ export default function SettingsScreen() {
             </MWSwitch>
           </XStack>
           <XStack width={200} alignItems="center" gap="$4">
-            <Label minWidth={110}>Autoplay</Label>
+            <Text minWidth={110}>Autoplay</Text>
             <Separator minHeight={20} vertical />
             <MWSwitch checked={autoPlay} onCheckedChange={setAutoPlay}>
               <MWSwitch.Thumb animation="quicker" />
             </MWSwitch>
           </XStack>
           <XStack width={200} alignItems="center" gap="$4">
-            <Label minWidth={110}>
-              v{Application.nativeApplicationVersion}
-            </Label>
+            <Text minWidth={110}>v{Application.nativeApplicationVersion}</Text>
             <Separator minHeight={20} vertical />
             <MWButton
               type="secondary"
@@ -229,7 +227,7 @@ export function ThemeSelector(props: SelectProps) {
           <FontAwesome name="chevron-down" color={theme.inputIconColor.val} />
         }
       >
-        <Select.Value />
+        <Select.Value fontWeight="$semibold" textTransform="capitalize" />
       </MWSelect.Trigger>
 
       <Adapt platform="native">
@@ -286,8 +284,11 @@ export function ThemeSelector(props: SelectProps) {
                   i === themeOptions.length - 1 ? "$8" : 0
                 }
               >
-                <Select.ItemText>
-                  {item.charAt(0).toUpperCase() + item.slice(1)}
+                <Select.ItemText
+                  textTransform="capitalize"
+                  fontWeight="$semibold"
+                >
+                  {item}
                 </Select.ItemText>
                 <Select.ItemIndicator ml="auto">
                   <MaterialIcons
