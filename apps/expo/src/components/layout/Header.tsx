@@ -1,4 +1,5 @@
 import { Linking } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { Circle, View } from "tamagui";
 
@@ -6,8 +7,15 @@ import { DISCORD_LINK, GITHUB_LINK } from "~/constants/core";
 import { BrandPill } from "../BrandPill";
 
 export function Header() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View alignItems="center" gap="$3" flexDirection="row">
+    <View
+      paddingTop={insets.top}
+      alignItems="center"
+      gap="$3"
+      flexDirection="row"
+    >
       <BrandPill />
 
       <Circle
