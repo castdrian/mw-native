@@ -22,7 +22,6 @@ function SettingsSheet(props: SheetProps) {
       snapPoints={[90]}
       dismissOnSnapToBottom
       modal
-      native
       animation="spring"
       {...props}
     >
@@ -53,15 +52,11 @@ function SettingsSheetFrame({
   children: React.ReactNode;
   isLoading?: boolean;
 }) {
-  const insets = useSafeAreaInsets();
-
   return (
     <View style={{ flex: 1 }} backgroundColor="black">
       <Sheet.Frame
         backgroundColor="$playerSettingsBackground"
         padding="$5"
-        left={insets.left}
-        right={insets.right}
         gap="$4"
       >
         {isLoading && (
@@ -93,7 +88,7 @@ function SettingsHeader({
   return (
     <>
       <View
-        style={{ paddingRight: insets.right }}
+        style={{ paddingLeft: insets.left, paddingRight: insets.right }}
         flexDirection="row"
         alignItems="center"
         gap="$4"
@@ -115,8 +110,11 @@ function SettingsContent({
   children: React.ReactNode;
 }) {
   const ViewDisplay = isScroll ? ScrollView : View;
+  const insets = useSafeAreaInsets();
+
   return (
     <ViewDisplay
+      style={{ paddingLeft: insets.left, paddingRight: insets.right }}
       contentContainerStyle={{
         gap: "$4",
       }}

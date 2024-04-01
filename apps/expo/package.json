@@ -63,7 +63,6 @@
     "react-native": "0.73.6",
     "react-native-context-menu-view": "^1.14.1",
     "react-native-gesture-handler": "~2.14.1",
-    "react-native-ios-modal": "^0.1.8",
     "react-native-markdown-display": "^7.0.2",
     "react-native-mmkv": "^2.12.2",
     "react-native-modal": "^13.0.1",
