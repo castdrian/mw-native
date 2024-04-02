@@ -8,10 +8,9 @@ import { AudioTrackSelector } from "./AudioTrackSelector";
 import { CaptionsSelector } from "./CaptionsSelector";
 import { Controls } from "./Controls";
 import { DownloadButton } from "./DownloadButton";
-import { PlaybackSpeedSelector } from "./PlaybackSpeedSelector";
 import { ProgressBar } from "./ProgressBar";
-import { QualitySelector } from "./QualitySelector";
 import { SeasonSelector } from "./SeasonEpisodeSelector";
+import { SettingsSelector } from "./SettingsSelector";
 import { SourceSelector } from "./SourceSelector";
 import { mapMillisecondsToTime } from "./utils";
 
@@ -83,8 +82,7 @@ export const BottomControls = ({ isLocalAsset }: { isLocalAsset: boolean }) => {
               <CaptionsSelector />
               <SourceSelector />
               <AudioTrackSelector />
-              <PlaybackSpeedSelector />
-              <QualitySelector />
+              <SettingsSelector />
               {Platform.OS === "android" ||
               (Platform.OS === "ios" && isDevelopmentProvisioningProfile()) ? (
                 <DownloadButton />

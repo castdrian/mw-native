@@ -1,17 +1,14 @@
-import { useState } from "react";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import type { SheetProps } from "tamagui";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "tamagui";
 
 import { constructFullUrl } from "@movie-web/provider-utils";
 
 import { usePlayerStore } from "~/stores/player/store";
-import { MWButton } from "../ui/Button";
-import { Controls } from "./Controls";
 import { Settings } from "./settings/Sheet";
 
-export const QualitySelector = () => {
+export const QualitySelector = (props: SheetProps) => {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
   const videoRef = usePlayerStore((state) => state.videoRef);
   const videoSrc = usePlayerStore((state) => state.videoSrc);
   const stream = usePlayerStore((state) => state.interface.currentStream);
@@ -46,26 +43,10 @@ export const QualitySelector = () => {
 
   return (
     <>
-      <Controls>
-        <MWButton
-          type="secondary"
-          icon={
-            <MaterialIcons
-              name="hd"
-              size={24}
-              color={theme.buttonSecondaryText.val}
-            />
-          }
-          onPress={() => setOpen(true)}
-        >
-          Quality
-        </MWButton>
-      </Controls>
-
       <Settings.Sheet
-        forceRemoveScrollEnabled={open}
-        open={open}
-        onOpenChange={setOpen}
+        forceRemoveScrollEnabled={props.open}
+        open={props.open}
+        onOpenChange={props.onOpenChange}
       >
         <Settings.SheetOverlay />
         <Settings.SheetHandle />
@@ -76,7 +57,7 @@ export const QualitySelector = () => {
                 name="close"
                 size={24}
                 color={theme.playerSettingsUnactiveText.val}
-                onPress={() => setOpen(false)}
+                onPress={() => props.onOpenChange?.(false)}
               />
             }
             title="Quality settings"
