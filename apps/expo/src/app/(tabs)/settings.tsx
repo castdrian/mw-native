@@ -4,6 +4,7 @@ import { Platform } from "react-native";
 import Markdown from "react-native-markdown-display";
 import * as Application from "expo-application";
 import * as Brightness from "expo-brightness";
+import * as FileSystem from "expo-file-system";
 import * as WebBrowser from "expo-web-browser";
 import {
   FontAwesome,
@@ -87,6 +88,28 @@ export default function SettingsScreen() {
     }
   };
 
+  const clearCacheDirectory = async () => {
+    const cacheDirectory = FileSystem.cacheDirectory + "movie-web";
+    if (!cacheDirectory) return;
+
+    try {
+      await FileSystem.deleteAsync(cacheDirectory, { idempotent: true });
+
+      toastController.show("Cache cleared", {
+        burntOptions: { preset: "done" },
+        native: true,
+        duration: 500,
+      });
+    } catch (error) {
+      console.error("Error clearing cache directory:", error);
+      toastController.show("Error clearing cache", {
+        burntOptions: { preset: "error" },
+        native: true,
+        duration: 500,
+      });
+    }
+  };
+
   return (
     <ScreenLayout>
       <View padding={4}>
@@ -142,7 +165,7 @@ export default function SettingsScreen() {
             <YStack gap="$2">
               <XStack gap="$4" alignItems="center">
                 <Text fontWeight="$semibold" flexGrow={1}>
-                  Version v{Application.nativeApplicationVersion}
+                  Version {Application.nativeApplicationVersion}
                 </Text>
                 <MWButton
                   type="secondary"
@@ -164,6 +187,25 @@ export default function SettingsScreen() {
                   onPress={() => mutation.mutate()}
                 >
                   Update
+                </MWButton>
+              </XStack>
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Storage
+                </Text>
+                <MWButton
+                  type="secondary"
+                  backgroundColor="$sheetItemBackground"
+                  icon={
+                    <MaterialCommunityIcons
+                      name="broom"
+                      size={24}
+                      color={theme.buttonSecondaryText.val}
+                    />
+                  }
+                  onPress={() => clearCacheDirectory()}
+                >
+                  Clear Cache
                 </MWButton>
               </XStack>
             </YStack>

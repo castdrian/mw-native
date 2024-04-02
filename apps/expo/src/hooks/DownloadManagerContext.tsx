@@ -223,9 +223,10 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
         lastTimestamp = currentTime;
       };
 
-      const fileUri = FileSystem.cacheDirectory
-        ? FileSystem.cacheDirectory + url.split("/").pop()
-        : null;
+      const fileUri =
+        FileSystem.cacheDirectory + "movie-web"
+          ? FileSystem.cacheDirectory + "movie-web" + url.split("/").pop()
+          : null;
       if (!fileUri) {
         console.error("Cache directory is unavailable");
         reject(new Error("Cache directory is unavailable"));
@@ -277,7 +278,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     const totalSegments = segments.length;
     let segmentsDownloaded = 0;
 
-    const segmentDir = FileSystem.cacheDirectory + "segments/";
+    const segmentDir = FileSystem.cacheDirectory + "movie-web/segments/";
     await ensureDirExists(segmentDir);
 
     const updateProgress = () => {
@@ -326,7 +327,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     updateDownloadItem(downloadId, { statusText: "Merging" });
     const uri = await VideoManager.mergeVideos(
       localSegmentPaths,
-      `${FileSystem.cacheDirectory}output.mp4`,
+      `${FileSystem.cacheDirectory}movie-web/output.mp4`,
     );
     const asset = await saveFileToMediaLibraryAndDeleteOriginal(
       uri,
