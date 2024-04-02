@@ -14,7 +14,7 @@
   },
   "include": [
     "src",
-	"modules",
+    "modules",
     "*.ts",
     "*.js",
     ".expo/types/**/*.ts",
