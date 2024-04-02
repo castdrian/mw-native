@@ -162,54 +162,12 @@ export default function SettingsScreen() {
                   }
                   disabled={mutation.isPending}
                   onPress={() => mutation.mutate()}
-                  animation="quicker"
                 >
                   Update
                 </MWButton>
               </XStack>
             </YStack>
           </YStack>
-
-          {/* <XStack width={200} alignItems="center" gap="$4">
-            <Text minWidth={110}>Theme</Text>
-            <Separator minHeight={20} vertical />
-            <ThemeSelector />
-          </XStack>
-          <XStack width={200} alignItems="center" gap="$4">
-            <Text minWidth={110}>Gesture controls</Text>
-            <Separator minHeight={20} vertical />
-            <MWSwitch
-              checked={gestureControls}
-              onCheckedChange={handleGestureControlsToggle}
-            >
-              <MWSwitch.Thumb animation="quicker" />
-            </MWSwitch>
-          </XStack>
-          <XStack width={200} alignItems="center" gap="$4">
-            <Text minWidth={110}>Autoplay</Text>
-            <Separator minHeight={20} vertical />
-            <MWSwitch checked={autoPlay} onCheckedChange={setAutoPlay}>
-              <MWSwitch.Thumb animation="quicker" />
-            </MWSwitch>
-          </XStack>
-          <XStack width={200} alignItems="center" gap="$4">
-            <Text minWidth={110}>v{Application.nativeApplicationVersion}</Text>
-            <Separator minHeight={20} vertical />
-            <MWButton
-              type="secondary"
-              backgroundColor="$sheetItemBackground"
-              icon={
-                <MaterialCommunityIcons
-                  name={Platform.select({ ios: "apple", android: "android" })}
-                  size={24}
-                  color={theme.buttonSecondaryText.val}
-                />
-              }
-              onPress={handleVersionPress}
-            >
-              Update
-            </MWButton>
-          </XStack> */}
         </YStack>
       </View>
       <UpdateSheet
@@ -352,38 +310,32 @@ export function ThemeSelector(props: SelectProps) {
           enterStyle={{ o: 0, y: -10 }}
           exitStyle={{ o: 0, y: 10 }}
         >
-          {themeOptions.map((item, i) => {
-            return (
-              <Select.Item
-                index={i}
-                key={item}
-                value={item}
-                backgroundColor="$sheetItemBackground"
-                borderTopRightRadius={i === 0 ? "$8" : 0}
-                borderTopLeftRadius={i === 0 ? "$8" : 0}
-                borderBottomRightRadius={
-                  i === themeOptions.length - 1 ? "$8" : 0
-                }
-                borderBottomLeftRadius={
-                  i === themeOptions.length - 1 ? "$8" : 0
-                }
+          {themeOptions.map((item, i) => (
+            <Select.Item
+              index={i}
+              key={item}
+              value={item}
+              backgroundColor="$sheetItemBackground"
+              borderTopRightRadius={i === 0 ? "$8" : 0}
+              borderTopLeftRadius={i === 0 ? "$8" : 0}
+              borderBottomRightRadius={i === themeOptions.length - 1 ? "$8" : 0}
+              borderBottomLeftRadius={i === themeOptions.length - 1 ? "$8" : 0}
+            >
+              <Select.ItemText
+                textTransform="capitalize"
+                fontWeight="$semibold"
               >
-                <Select.ItemText
-                  textTransform="capitalize"
-                  fontWeight="$semibold"
-                >
-                  {item}
-                </Select.ItemText>
-                <Select.ItemIndicator ml="auto">
-                  <MaterialIcons
-                    name="check-circle"
-                    size={24}
-                    color={theme.sheetItemSelected.val}
-                  />
-                </Select.ItemIndicator>
-              </Select.Item>
-            );
-          })}
+                {item}
+              </Select.ItemText>
+              <Select.ItemIndicator ml="auto">
+                <MaterialIcons
+                  name="check-circle"
+                  size={24}
+                  color={theme.sheetItemSelected.val}
+                />
+              </Select.ItemIndicator>
+            </Select.Item>
+          ))}
         </Select.Viewport>
       </Select.Content>
     </MWSelect>
