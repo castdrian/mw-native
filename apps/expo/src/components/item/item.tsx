@@ -1,5 +1,6 @@
 import type { NativeSyntheticEvent } from "react-native";
 import type { ContextMenuOnPressNativeEvent } from "react-native-context-menu-view";
+import { useCallback } from "react";
 import { Keyboard, TouchableOpacity } from "react-native";
 import ContextMenu from "react-native-context-menu-view";
 import { useRouter } from "expo-router";
@@ -14,7 +15,29 @@ export interface ItemData {
   title: string;
   type: "movie" | "tv";
   year: number;
+  release_date?: Date;
   posterUrl: string;
+}
+
+enum ContextMenuActions {
+  Bookmark = "Bookmark",
+  RemoveBookmark = "Remove Bookmark",
+  Download = "Download",
+  RemoveWatchHistoryItem = "Remove from Continue Watching",
+}
+
+function checkReleased(media: ItemData): boolean {
+  const isReleasedYear = Boolean(
+    media.year && media.year <= new Date().getFullYear(),
+  );
+  const isReleasedDate = Boolean(
+    media.release_date && media.release_date <= new Date(),
+  );
+
+  // If the media has a release date, use that, otherwise use the year
+  const isReleased = media.release_date ? isReleasedDate : isReleasedYear;
+
+  return isReleased;
 }
 
 export default function Item({ data }: { data: ItemData }) {
@@ -27,7 +50,17 @@ export default function Item({ data }: { data: ItemData }) {
 
   const { title, type, year, posterUrl } = data;
 
+  const isReleased = useCallback(() => checkReleased(data), [data]);
+
   const handlePress = () => {
+    if (!isReleased()) {
+      toastController.show("This media is not released yet", {
+        burntOptions: { preset: "error" },
+        native: true,
+        duration: 500,
+      });
+      return;
+    }
     resetVideo();
     Keyboard.dismiss();
     router.push({
@@ -35,13 +68,6 @@ export default function Item({ data }: { data: ItemData }) {
       params: { data: JSON.stringify(data) },
     });
   };
-
-  enum ContextMenuActions {
-    Bookmark = "Bookmark",
-    RemoveBookmark = "Remove Bookmark",
-    Download = "Download",
-    RemoveWatchHistoryItem = "Remove from Continue Watching",
-  }
 
   const contextMenuActions = [
     {
@@ -112,12 +138,17 @@ export default function Item({ data }: { data: ItemData }) {
           {title}
         </Text>
         <View flexDirection="row" alignItems="center" gap={3}>
-          <Text fontSize={12} color="gray">
+          <Text fontSize={12} color="$ash100">
             {type === "tv" ? "Show" : "Movie"}
           </Text>
-          <View height={1} width={1} borderRadius={24} backgroundColor="gray" />
-          <Text fontSize={12} color="gray">
-            {year}
+          <View
+            height={8}
+            width={8}
+            borderRadius={24}
+            backgroundColor="$ash100"
+          />
+          <Text fontSize={12} color="$ash100">
+            {isReleased() ? year : "Unreleased"}
           </Text>
         </View>
       </View>

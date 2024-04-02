@@ -12,10 +12,5 @@ class CheckIosCertificateModule : Module() {
     // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
     // The module will be accessible from `requireNativeModule('CheckIosCertificate')` in JavaScript.
     Name("CheckIosCertificate")
-
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      return null
-    }
   }
 }

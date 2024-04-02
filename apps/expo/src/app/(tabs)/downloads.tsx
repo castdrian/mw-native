@@ -64,8 +64,6 @@ const DownloadsScreen: React.FC = () => {
     },
   };
 
-  console.log(isDevelopmentProvisioningProfile());
-
   return (
     <ScreenLayout>
       <YStack gap={2} style={{ padding: 10 }}>

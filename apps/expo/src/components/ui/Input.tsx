@@ -1,6 +1,8 @@
 import { Input, styled } from "tamagui";
 
 export const MWInput = styled(Input, {
+  fontWeight: "$semibold",
+
   variants: {
     type: {
       default: {

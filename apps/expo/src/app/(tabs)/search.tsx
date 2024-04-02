@@ -150,6 +150,9 @@ async function fetchSearchResults(query: string): Promise<ItemData[]> {
     id: result.id.toString(),
     title: result.media_type === "tv" ? result.name : result.title,
     posterUrl: getMediaPoster(result.poster_path),
+    release_date: new Date(
+      result.media_type === "tv" ? result.first_air_date : result.release_date,
+    ),
     year: new Date(
       result.media_type === "tv" ? result.first_air_date : result.release_date,
     ).getFullYear(),
