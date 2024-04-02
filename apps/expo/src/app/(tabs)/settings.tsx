@@ -11,12 +11,13 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { useToastController } from "@tamagui/toast";
+import { useMutation } from "@tanstack/react-query";
 import {
   Adapt,
   ScrollView,
   Select,
-  Separator,
   Sheet,
+  Spinner,
   Text,
   useTheme,
   View,
@@ -28,6 +29,7 @@ import type { ThemeStoreOption } from "~/stores/theme";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWSelect } from "~/components/ui/Select";
+import { MWSeparator } from "~/components/ui/Separator";
 import { MWSwitch } from "~/components/ui/Switch";
 import { checkForUpdate } from "~/lib/update";
 import { usePlayerSettingsStore } from "~/stores/settings";
@@ -50,6 +52,30 @@ export default function SettingsScreen() {
   const [updateMarkdownContent, setUpdateMarkdownContent] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
 
+  const mutation = useMutation({
+    mutationKey: ["checkForUpdate"],
+    mutationFn: checkForUpdate,
+    onSuccess: (res) => {
+      if (res) {
+        setUpdateMarkdownContent(res.data.body!);
+        setDownloadUrl(
+          res.data.assets.find(
+            (asset) =>
+              asset.name ===
+              `movie-web.${Platform.select({ ios: "ipa", android: "apk" })}`,
+          )?.browser_download_url ?? "",
+        );
+        setShowUpdateSheet(true);
+      } else {
+        toastController.show("No updates available", {
+          burntOptions: { preset: "none" },
+          native: true,
+          duration: 500,
+        });
+      }
+    },
+  });
+
   const handleGestureControlsToggle = async (isEnabled: boolean) => {
     if (isEnabled) {
       const { status } = await Brightness.requestPermissionsAsync();
@@ -61,32 +87,90 @@ export default function SettingsScreen() {
     }
   };
 
-  const handleVersionPress = async () => {
-    const res = await checkForUpdate();
-    if (res) {
-      setUpdateMarkdownContent(res.data.body!);
-      setDownloadUrl(
-        res.data.assets.find(
-          (asset) =>
-            asset.name ===
-            `movie-web.${Platform.select({ ios: "ipa", android: "apk" })}`,
-        )?.browser_download_url ?? "",
-      );
-      setShowUpdateSheet(true);
-    } else {
-      toastController.show("No updates available", {
-        burntOptions: { preset: "none" },
-        native: true,
-        duration: 500,
-      });
-    }
-  };
-
   return (
     <ScreenLayout>
       <View padding={4}>
-        <YStack gap={4}>
-          <XStack width={200} alignItems="center" gap="$4">
+        <YStack gap="$8">
+          <YStack gap="$4">
+            <Text fontSize="$9" fontWeight="$semibold">
+              Appearance
+            </Text>
+            <MWSeparator />
+            <YStack gap="$2">
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Theme
+                </Text>
+                <ThemeSelector />
+              </XStack>
+            </YStack>
+          </YStack>
+
+          <YStack gap="$4">
+            <Text fontSize="$9" fontWeight="$semibold">
+              Player
+            </Text>
+            <MWSeparator />
+            <YStack gap="$2">
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Gesture controls
+                </Text>
+                <MWSwitch
+                  checked={gestureControls}
+                  onCheckedChange={handleGestureControlsToggle}
+                >
+                  <MWSwitch.Thumb animation="quicker" />
+                </MWSwitch>
+              </XStack>
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Autoplay
+                </Text>
+                <MWSwitch checked={autoPlay} onCheckedChange={setAutoPlay}>
+                  <MWSwitch.Thumb animation="quicker" />
+                </MWSwitch>
+              </XStack>
+            </YStack>
+          </YStack>
+
+          <YStack gap="$4">
+            <Text fontSize="$9" fontWeight="$semibold">
+              App
+            </Text>
+            <MWSeparator />
+            <YStack gap="$2">
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Version v{Application.nativeApplicationVersion}
+                </Text>
+                <MWButton
+                  type="secondary"
+                  backgroundColor="$sheetItemBackground"
+                  icon={
+                    <MaterialCommunityIcons
+                      name={Platform.select({
+                        ios: "apple",
+                        android: "android",
+                      })}
+                      size={24}
+                      color={theme.buttonSecondaryText.val}
+                    />
+                  }
+                  iconAfter={
+                    <>{mutation.isPending && <Spinner color="$purple200" />}</>
+                  }
+                  disabled={mutation.isPending}
+                  onPress={() => mutation.mutate()}
+                  animation="quicker"
+                >
+                  Update
+                </MWButton>
+              </XStack>
+            </YStack>
+          </YStack>
+
+          {/* <XStack width={200} alignItems="center" gap="$4">
             <Text minWidth={110}>Theme</Text>
             <Separator minHeight={20} vertical />
             <ThemeSelector />
@@ -125,7 +209,7 @@ export default function SettingsScreen() {
             >
               Update
             </MWButton>
-          </XStack>
+          </XStack> */}
         </YStack>
       </View>
       <UpdateSheet

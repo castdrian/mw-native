@@ -2,6 +2,7 @@ import type { LanguageCode } from "iso-639-1";
 import type { ContentCaption } from "subsrt-ts/dist/types/handler";
 import { useState } from "react";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { useToastController } from "@tamagui/toast";
 import { useMutation } from "@tanstack/react-query";
 import { parse } from "subsrt-ts";
 import { Spinner, useTheme, View } from "tamagui";
@@ -34,6 +35,7 @@ const parseCaption = async (
 };
 
 export const CaptionsSelector = () => {
+  const toast = useToastController();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const captions = usePlayerStore(
@@ -94,6 +96,13 @@ export const CaptionsSelector = () => {
                 color="$playerSettingsUnactiveText"
                 fontWeight="bold"
                 chromeless
+                onPress={() => {
+                  toast.show("Work in progress", {
+                    burntOptions: { preset: "none" },
+                    native: true,
+                    duration: 500,
+                  });
+                }}
               >
                 Customize
               </MWButton>
