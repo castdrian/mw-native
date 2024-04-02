@@ -92,7 +92,7 @@ export default function SettingsScreen() {
       <View padding={4}>
         <YStack gap="$8">
           <YStack gap="$4">
-            <Text fontSize="$9" fontWeight="$semibold">
+            <Text fontSize="$7" fontWeight="$bold">
               Appearance
             </Text>
             <MWSeparator />
@@ -107,7 +107,7 @@ export default function SettingsScreen() {
           </YStack>
 
           <YStack gap="$4">
-            <Text fontSize="$9" fontWeight="$semibold">
+            <Text fontSize="$7" fontWeight="$bold">
               Player
             </Text>
             <MWSeparator />
@@ -135,7 +135,7 @@ export default function SettingsScreen() {
           </YStack>
 
           <YStack gap="$4">
-            <Text fontSize="$9" fontWeight="$semibold">
+            <Text fontSize="$7" fontWeight="$bold">
               App
             </Text>
             <MWSeparator />
