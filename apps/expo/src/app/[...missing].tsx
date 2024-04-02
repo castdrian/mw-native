@@ -1,7 +1,9 @@
+import * as Linking from "expo-linking";
 import { Link, Stack } from "expo-router";
 import { Text, View } from "tamagui";
 
 export default function NotFoundScreen() {
+  if (Linking.useURL()) return null;
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />

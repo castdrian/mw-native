@@ -14,13 +14,21 @@ export const BackButton = () => {
       onPress={() => {
         dismissFullscreenPlayer()
           .then(() => {
-            router.back();
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace("/");
+            }
             return setTimeout(() => {
               Keyboard.dismiss();
             }, 100);
           })
           .catch(() => {
-            router.back();
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace("/");
+            }
             return setTimeout(() => {
               Keyboard.dismiss();
             }, 100);
