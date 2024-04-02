@@ -1,9 +1,6 @@
 {
-  "platforms": ["ios", "android"],
+  "platforms": ["ios"],
   "ios": {
     "modules": ["CheckIosCertificateModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.checkioscertificate.CheckIosCertificateModule"]
   }
 }
