@@ -4,7 +4,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["^@movie-web/"],
-      "enabled": false
+      "enabled": true
     }
   ],
   "updateInternalDeps": true,
