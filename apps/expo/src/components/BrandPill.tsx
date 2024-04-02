@@ -1,3 +1,4 @@
+import * as Haptics from "expo-haptics";
 import { Text, useTheme, View } from "tamagui";
 
 import { MovieWebSvg } from "./Icon";
@@ -19,6 +20,7 @@ export function BrandPill() {
         opacity: 1,
         scale: 1.05,
       }}
+      onLongPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)}
     >
       <MovieWebSvg
         fillColor={theme.tabBarIconFocused.val}
@@ -26,6 +28,7 @@ export function BrandPill() {
         height={12}
       />
       <Text fontSize="$4" fontWeight="$bold" paddingRight={5} paddingLeft={3}>
+        {/* padding might need adjusting */}
         movie-web
       </Text>
     </View>

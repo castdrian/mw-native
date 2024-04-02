@@ -1,8 +1,0 @@
-version: 2
-updates:
-  - package-ecosystem: "npm"
-    directory: "/packages/provider-utils"
-    schedule:
-      interval: "daily"
-    allow:
-      - dependency-name: "@movie-web/providers"

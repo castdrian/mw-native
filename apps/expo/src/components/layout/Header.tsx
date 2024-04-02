@@ -1,5 +1,6 @@
 import { Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { Circle, View } from "tamagui";
 
@@ -28,6 +29,9 @@ export function Header() {
         onPress={async () => {
           await Linking.openURL(DISCORD_LINK);
         }}
+        onLongPress={() =>
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+        }
       >
         <MaterialIcons name="discord" size={20} color="white" />
       </Circle>
@@ -41,6 +45,9 @@ export function Header() {
         onPress={async () => {
           await Linking.openURL(GITHUB_LINK);
         }}
+        onLongPress={() =>
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+        }
       >
         <FontAwesome6 name="github" size={20} color="white" />
       </Circle>
