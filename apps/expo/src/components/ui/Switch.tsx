@@ -19,7 +19,7 @@ const MWSwitch = (props: SwitchProps) => {
 };
 
 const MWSwitchThumb = (props: SwitchThumbProps) => {
-  return <Switch.Thumb animation="quicker" {...props} />;
+  return <Switch.Thumb animation="bounce" {...props} />;
 };
 
 MWSwitch.Thumb = MWSwitchThumb;

@@ -120,7 +120,7 @@ export default function SettingsScreen() {
                   checked={gestureControls}
                   onCheckedChange={handleGestureControlsToggle}
                 >
-                  <MWSwitch.Thumb animation="quicker" />
+                  <MWSwitch.Thumb />
                 </MWSwitch>
               </XStack>
               <XStack gap="$4" alignItems="center">
@@ -128,7 +128,7 @@ export default function SettingsScreen() {
                   Autoplay
                 </Text>
                 <MWSwitch checked={autoPlay} onCheckedChange={setAutoPlay}>
-                  <MWSwitch.Thumb animation="quicker" />
+                  <MWSwitch.Thumb />
                 </MWSwitch>
               </XStack>
             </YStack>
