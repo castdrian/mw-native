@@ -14,7 +14,7 @@ class CheckIosCertificateModule : Module() {
     Name("CheckIosCertificate")
 
     // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
+    Function("isDevelopmentProvisioningProfile") {
       return null
     }
   }
