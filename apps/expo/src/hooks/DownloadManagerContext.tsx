@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
+import * as Network from "expo-network";
+import { NetworkStateType } from "expo-network";
 import {
   checkForExistingDownloads,
   completeHandler,
@@ -16,7 +18,10 @@ import { useToastController } from "@tamagui/toast";
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 import { extractSegmentsFromHLS } from "@movie-web/provider-utils";
 
-import { useDownloadHistoryStore } from "~/stores/settings";
+import {
+  useDownloadHistoryStore,
+  useNetworkSettingsStore,
+} from "~/stores/settings";
 
 export interface DownloadItem {
   id: string;
@@ -138,6 +143,19 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     media: ScrapeMedia,
     headers?: Record<string, string>,
   ): Promise<Asset | void> => {
+    const { allowMobileData } = useNetworkSettingsStore.getState();
+
+    const { type: networkType } = await Network.getNetworkStateAsync();
+
+    if (networkType === NetworkStateType.CELLULAR && !allowMobileData) {
+      toastController.show("Mobile data downloads are disabled", {
+        burntOptions: { preset: "error" },
+        native: true,
+        duration: 500,
+      });
+      return;
+    }
+
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== MediaLibrary.PermissionStatus.GRANTED) {
       toastController.show("Permission denied", {
