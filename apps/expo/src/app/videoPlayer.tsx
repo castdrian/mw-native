@@ -15,9 +15,16 @@ export default function VideoPlayerWrapper() {
   const { presentFullscreenPlayer } = usePlayer();
 
   const params = useLocalSearchParams();
-  const data = params.data
-    ? (JSON.parse(params.data as string) as Partial<ItemData>)
-    : undefined;
+  let data;
+  if ("data" in params) {
+    if (typeof params.data === "string") {
+      data = JSON.parse(params.data) as Partial<ItemData>;
+    } else {
+      data = undefined;
+    }
+  } else {
+    data = params as Partial<ItemData>;
+  }
   const media = params.media
     ? (JSON.parse(params.media as string) as ScrapeMedia)
     : undefined;
