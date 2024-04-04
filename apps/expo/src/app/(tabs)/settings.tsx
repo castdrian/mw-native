@@ -33,7 +33,10 @@ import { MWSelect } from "~/components/ui/Select";
 import { MWSeparator } from "~/components/ui/Separator";
 import { MWSwitch } from "~/components/ui/Switch";
 import { checkForUpdate } from "~/lib/update";
-import { usePlayerSettingsStore } from "~/stores/settings";
+import {
+  useNetworkSettingsStore,
+  usePlayerSettingsStore,
+} from "~/stores/settings";
 import { useThemeStore } from "~/stores/theme";
 
 const themeOptions: ThemeStoreOption[] = [
@@ -44,10 +47,13 @@ const themeOptions: ThemeStoreOption[] = [
   "teal",
 ];
 
+const defaultQualityOptions = ["Highest", "Lowest"];
+
 export default function SettingsScreen() {
   const theme = useTheme();
   const { gestureControls, setGestureControls, autoPlay, setAutoPlay } =
     usePlayerSettingsStore();
+  const { allowMobileData, setAllowMobileData } = useNetworkSettingsStore();
   const toastController = useToastController();
   const [showUpdateSheet, setShowUpdateSheet] = useState(false);
   const [updateMarkdownContent, setUpdateMarkdownContent] = useState("");
@@ -113,7 +119,7 @@ export default function SettingsScreen() {
   return (
     <ScreenLayout>
       <View padding={4}>
-        <YStack gap="$8">
+        <YStack gap="$4">
           <YStack gap="$4">
             <Text fontSize="$7" fontWeight="$bold">
               Appearance
@@ -151,6 +157,38 @@ export default function SettingsScreen() {
                   Autoplay
                 </Text>
                 <MWSwitch checked={autoPlay} onCheckedChange={setAutoPlay}>
+                  <MWSwitch.Thumb />
+                </MWSwitch>
+              </XStack>
+            </YStack>
+          </YStack>
+
+          <YStack gap="$4">
+            <Text fontSize="$7" fontWeight="$bold">
+              Network
+            </Text>
+            <MWSeparator />
+            <YStack gap="$2">
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Default quality (Wi-Fi)
+                </Text>
+                <DefaultQualitySelector qualityType="wifi" />
+              </XStack>
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Default quality (Data)
+                </Text>
+                <DefaultQualitySelector qualityType="data" />
+              </XStack>
+              <XStack gap="$4" alignItems="center">
+                <Text fontWeight="$semibold" flexGrow={1}>
+                  Allow downloads on mobile data
+                </Text>
+                <MWSwitch
+                  checked={allowMobileData}
+                  onCheckedChange={setAllowMobileData}
+                >
                   <MWSwitch.Thumb />
                 </MWSwitch>
               </XStack>
@@ -362,6 +400,117 @@ export function ThemeSelector(props: SelectProps) {
               borderTopLeftRadius={i === 0 ? "$8" : 0}
               borderBottomRightRadius={i === themeOptions.length - 1 ? "$8" : 0}
               borderBottomLeftRadius={i === themeOptions.length - 1 ? "$8" : 0}
+            >
+              <Select.ItemText
+                textTransform="capitalize"
+                fontWeight="$semibold"
+              >
+                {item}
+              </Select.ItemText>
+              <Select.ItemIndicator ml="auto">
+                <MaterialIcons
+                  name="check-circle"
+                  size={24}
+                  color={theme.sheetItemSelected.val}
+                />
+              </Select.ItemIndicator>
+            </Select.Item>
+          ))}
+        </Select.Viewport>
+      </Select.Content>
+    </MWSelect>
+  );
+}
+
+interface DefaultQualitySelectorProps extends SelectProps {
+  qualityType: "wifi" | "data";
+}
+
+export function DefaultQualitySelector(props: DefaultQualitySelectorProps) {
+  const theme = useTheme();
+  const {
+    wifiDefaultQuality,
+    mobileDataDefaultQuality,
+    setWifiDefaultQuality,
+    setMobileDataDefaultQuality,
+  } = useNetworkSettingsStore();
+
+  return (
+    <MWSelect
+      value={
+        props.qualityType === "wifi"
+          ? wifiDefaultQuality
+          : mobileDataDefaultQuality
+      }
+      onValueChange={
+        props.qualityType === "wifi"
+          ? setWifiDefaultQuality
+          : setMobileDataDefaultQuality
+      }
+      disablePreventBodyScroll
+      {...props}
+    >
+      <MWSelect.Trigger
+        maxWidth="$12"
+        iconAfter={
+          <FontAwesome name="chevron-down" color={theme.inputIconColor.val} />
+        }
+      >
+        <Select.Value fontWeight="$semibold" textTransform="capitalize" />
+      </MWSelect.Trigger>
+
+      <Adapt platform="native">
+        <Sheet
+          modal
+          dismissOnSnapToBottom
+          dismissOnOverlayPress
+          animationConfig={{
+            type: "spring",
+            damping: 20,
+            mass: 1.2,
+            stiffness: 250,
+          }}
+          snapPoints={[35]}
+        >
+          <Sheet.Handle backgroundColor="$sheetHandle" />
+          <Sheet.Frame
+            backgroundColor="$sheetBackground"
+            padding="$4"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Adapt.Contents />
+          </Sheet.Frame>
+          <Sheet.Overlay
+            animation="lazy"
+            backgroundColor="rgba(0, 0, 0, 0.8)"
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+        </Sheet>
+      </Adapt>
+
+      <Select.Content>
+        <Select.Viewport
+          animation="static"
+          animateOnly={["transform", "opacity"]}
+          enterStyle={{ o: 0, y: -10 }}
+          exitStyle={{ o: 0, y: 10 }}
+        >
+          {defaultQualityOptions.map((item, i) => (
+            <Select.Item
+              index={i}
+              key={item}
+              value={item}
+              backgroundColor="$sheetItemBackground"
+              borderTopRightRadius={i === 0 ? "$8" : 0}
+              borderTopLeftRadius={i === 0 ? "$8" : 0}
+              borderBottomRightRadius={
+                i === defaultQualityOptions.length - 1 ? "$8" : 0
+              }
+              borderBottomLeftRadius={
+                i === defaultQualityOptions.length - 1 ? "$8" : 0
+              }
             >
               <Select.ItemText
                 textTransform="capitalize"

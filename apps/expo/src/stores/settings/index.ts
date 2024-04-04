@@ -212,3 +212,35 @@ export const useWatchHistoryStore = create<
     },
   ),
 );
+
+interface NetworkSettingsStoreState {
+  allowMobileData: boolean;
+  setAllowMobileData: (enabled: boolean) => void;
+  wifiDefaultQuality: string;
+  setWifiDefaultQuality: (quality: string) => void;
+  mobileDataDefaultQuality: string;
+  setMobileDataDefaultQuality: (quality: string) => void;
+}
+
+export const useNetworkSettingsStore = create<
+  NetworkSettingsStoreState,
+  [["zustand/persist", NetworkSettingsStoreState]]
+>(
+  persist(
+    (set) => ({
+      allowMobileData: false,
+      setAllowMobileData: (enabled: boolean) =>
+        set({ allowMobileData: enabled }),
+      wifiDefaultQuality: "Highest",
+      setWifiDefaultQuality: (quality: string) =>
+        set({ wifiDefaultQuality: quality }),
+      mobileDataDefaultQuality: "Lowest",
+      setMobileDataDefaultQuality: (quality: string) =>
+        set({ mobileDataDefaultQuality: quality }),
+    }),
+    {
+      name: "network-settings",
+      storage: createJSONStorage(() => zustandStorage),
+    },
+  ),
+);
