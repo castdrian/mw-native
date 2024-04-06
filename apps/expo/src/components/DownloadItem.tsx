@@ -92,32 +92,27 @@ export function DownloadItem(props: DownloadItemProps) {
             />
           </View>
           <YStack gap="$2">
-            <XStack gap="$5">
-              <Text
-                fontWeight="$bold"
-                ellipse
-                maxWidth={props.item.type === "hls" ? "70%" : "40%"}
-                flexGrow={1}
-              >
+            <XStack gap="$6" maxWidth="65%">
+              <Text fontWeight="$bold" ellipse flexGrow={1}>
                 {props.item.media.title}
               </Text>
               {props.item.type !== "hls" && (
-                <Text fontSize={12} color="gray">
+                <Text fontSize="$2" color="gray">
                   {props.item.speed.toFixed(2)} MB/s
                 </Text>
               )}
             </XStack>
-            <MWProgress value={percentage} height={10}>
+            <MWProgress value={percentage} height={10} maxWidth="100%">
               <MWProgress.Indicator />
             </MWProgress>
             <XStack alignItems="center" justifyContent="space-between">
-              <Text fontSize={12} color="gray">
+              <Text fontSize="$2" color="gray">
                 {props.item.type === "hls"
                   ? `${percentage.toFixed()}% - ${props.item.downloaded} of ${props.item.fileSize} segments`
                   : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text fontSize={12} color="gray">
+                <Text fontSize="$2" color="gray">
                   {statusToTextMap[props.item.status]}
                 </Text>
               </View>
