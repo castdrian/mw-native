@@ -8,6 +8,7 @@ import { Image, Text, View, XStack, YStack } from "tamagui";
 import type { Download } from "~/contexts/DownloadManagerContext";
 import { useDownloadManager } from "~/contexts/DownloadManagerContext";
 import { MWProgress } from "./ui/Progress";
+import { FlashingText } from "./ui/Text";
 
 export interface DownloadItemProps {
   item: Download;
@@ -62,6 +63,12 @@ export function DownloadItem(props: DownloadItemProps) {
     }
   };
 
+  const isInProgress = !(
+    props.item.status === "finished" ||
+    props.item.status === "error" ||
+    props.item.status === "cancelled"
+  );
+
   return (
     <ContextMenu
       actions={contextMenuActions}
@@ -112,9 +119,15 @@ export function DownloadItem(props: DownloadItemProps) {
                   : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
               </Text>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text fontSize="$2" color="gray">
+                <FlashingText
+                  isInProgress={isInProgress}
+                  style={{
+                    fontSize: 12,
+                    color: "gray",
+                  }}
+                >
                   {statusToTextMap[props.item.status]}
-                </Text>
+                </FlashingText>
               </View>
             </XStack>
           </YStack>

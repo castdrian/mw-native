@@ -1,10 +1,9 @@
 import React from "react";
 import { Alert, Platform } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { useFocusEffect, useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { isDevelopmentProvisioningProfile } from "modules/check-ios-certificate";
-import { useTheme, YStack } from "tamagui";
+import { ScrollView, useTheme, YStack } from "tamagui";
 
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 
@@ -114,7 +113,11 @@ const DownloadsScreen: React.FC = () => {
           test download (hls)
         </MWButton>
       </YStack>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          gap: "$4",
+        }}
+      >
         {downloads.map((item) => (
           <DownloadItem
             key={item.id}

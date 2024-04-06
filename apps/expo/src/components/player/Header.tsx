@@ -23,7 +23,7 @@ export const Header = () => {
         height={64}
         paddingHorizontal="$8"
       >
-        <View width={144}>
+        <View width={150}>
           <Controls>
             <BackButton />
           </Controls>
@@ -39,7 +39,7 @@ export const Header = () => {
               : ""}
           </Text>
         )}
-        <View alignItems="center" justifyContent="center" width={130}>
+        <View alignItems="center" justifyContent="center" width={150}>
           <BrandPill />
         </View>
       </View>
