@@ -118,8 +118,8 @@ export default function SettingsScreen() {
 
   return (
     <ScreenLayout>
-      <View padding={4}>
-        <YStack gap="$4">
+      <View>
+        <YStack gap="$8">
           <YStack gap="$4">
             <Text fontSize="$7" fontWeight="$bold">
               Appearance
@@ -181,7 +181,7 @@ export default function SettingsScreen() {
                 </Text>
                 <DefaultQualitySelector qualityType="data" />
               </XStack>
-              <XStack gap="$4" alignItems="center">
+              <XStack gap="$3" alignItems="center">
                 <Text fontWeight="$semibold" flexGrow={1}>
                   Allow downloads on mobile data
                 </Text>
@@ -451,7 +451,7 @@ export function DefaultQualitySelector(props: DefaultQualitySelectorProps) {
       {...props}
     >
       <MWSelect.Trigger
-        maxWidth="$12"
+        maxWidth="$10"
         iconAfter={
           <FontAwesome name="chevron-down" color={theme.inputIconColor.val} />
         }

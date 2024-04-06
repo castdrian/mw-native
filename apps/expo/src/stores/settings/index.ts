@@ -7,7 +7,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 
 import type { ItemData } from "~/components/item/item";
-import type { DownloadItem } from "~/hooks/DownloadManagerContext";
+import type { Download } from "~/contexts/DownloadManagerContext";
 import type { ThemeStoreOption } from "~/stores/theme";
 
 const storage = new MMKV();
@@ -77,8 +77,8 @@ export const usePlayerSettingsStore = create<
 );
 
 interface DownloadHistoryStoreState {
-  downloads: DownloadItem[];
-  setDownloads: (downloads: DownloadItem[]) => void;
+  downloads: Download[];
+  setDownloads: (downloads: Download[]) => void;
 }
 
 export const useDownloadHistoryStore = create<
@@ -88,7 +88,7 @@ export const useDownloadHistoryStore = create<
   persist(
     (set) => ({
       downloads: [],
-      setDownloads: (downloads: DownloadItem[]) => set({ downloads }),
+      setDownloads: (downloads: Download[]) => set({ downloads }),
     }),
     {
       name: "download-history",

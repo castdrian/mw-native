@@ -142,8 +142,8 @@ export default function Item({ data }: { data: ItemData }) {
             {type === "tv" ? "Show" : "Movie"}
           </Text>
           <View
-            height={8}
-            width={8}
+            height={6}
+            width={6}
             borderRadius={24}
             backgroundColor="$ash100"
           />

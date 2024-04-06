@@ -18,7 +18,7 @@ import {
 import type { ItemData } from "../item/item";
 import type { AudioTrack } from "./AudioTrackSelector";
 import type { PlayerMeta } from "~/stores/player/slices/video";
-import { useDownloadManager } from "~/hooks/DownloadManagerContext";
+import { useDownloadManager } from "~/contexts/DownloadManagerContext";
 import { useMeta } from "~/hooks/player/useMeta";
 import { useScrape } from "~/hooks/player/useSourceScrape";
 import { convertMetaToScrapeMedia } from "~/lib/meta";

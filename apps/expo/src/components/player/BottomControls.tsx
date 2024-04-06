@@ -14,9 +14,10 @@ import { SettingsSelector } from "./SettingsSelector";
 import { SourceSelector } from "./SourceSelector";
 import { mapMillisecondsToTime } from "./utils";
 
-export const BottomControls = ({ isLocalAsset }: { isLocalAsset: boolean }) => {
+export const BottomControls = () => {
   const status = usePlayerStore((state) => state.status);
   const setIsIdle = usePlayerStore((state) => state.setIsIdle);
+  const isLocalFile = usePlayerStore((state) => state.isLocalFile);
   const [showRemaining, setShowRemaining] = useState(false);
 
   const toggleTimeDisplay = useCallback(() => {
@@ -76,7 +77,7 @@ export const BottomControls = ({ isLocalAsset }: { isLocalAsset: boolean }) => {
           gap={4}
           paddingBottom={40}
         >
-          {!isLocalAsset && (
+          {!isLocalFile && (
             <>
               <SeasonSelector />
               <CaptionsSelector />

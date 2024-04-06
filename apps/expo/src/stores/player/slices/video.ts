@@ -1,5 +1,4 @@
 import type { AVPlaybackSourceObject, AVPlaybackStatus, Video } from "expo-av";
-import type { Asset } from "expo-media-library";
 
 import type { MakeSlice } from "./types";
 import { PlayerStatus } from "./interface";
@@ -31,13 +30,13 @@ export interface VideoSlice {
   videoSrc: AVPlaybackSourceObject | null;
   status: AVPlaybackStatus | null;
   meta: PlayerMeta | null;
-  asset: Asset | null;
+  isLocalFile: boolean;
 
   setVideoRef(ref: Video | null): void;
   setVideoSrc(src: AVPlaybackSourceObject | null): void;
   setStatus(status: AVPlaybackStatus | null): void;
   setMeta(meta: PlayerMeta | null): void;
-  setAsset(asset: Asset | null): void;
+  setIsLocalFile(isLocalFile: boolean): void;
   resetVideo(): void;
 }
 
@@ -46,7 +45,7 @@ export const createVideoSlice: MakeSlice<VideoSlice> = (set) => ({
   videoSrc: null,
   status: null,
   meta: null,
-  asset: null,
+  isLocalFile: false,
 
   setVideoRef: (ref) => {
     set({ videoRef: ref });
@@ -67,13 +66,11 @@ export const createVideoSlice: MakeSlice<VideoSlice> = (set) => ({
       s.meta = meta;
     });
   },
-  setAsset: (asset) => {
-    set((s) => {
-      s.asset = asset;
-    });
+  setIsLocalFile: (isLocalFile) => {
+    set({ isLocalFile });
   },
   resetVideo() {
-    set({ videoRef: null, status: null, meta: null, asset: null });
+    set({ videoRef: null, status: null, meta: null, isLocalFile: false });
     set((s) => {
       s.interface.playerStatus = PlayerStatus.SCRAPING;
     });

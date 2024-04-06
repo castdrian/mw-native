@@ -3,7 +3,7 @@ import { useTheme } from "tamagui";
 
 import { findHighestQuality } from "@movie-web/provider-utils";
 
-import { useDownloadManager } from "~/hooks/DownloadManagerContext";
+import { useDownloadManager } from "~/contexts/DownloadManagerContext";
 import { convertMetaToScrapeMedia } from "~/lib/meta";
 import { usePlayerStore } from "~/stores/player/store";
 import { MWButton } from "../ui/Button";

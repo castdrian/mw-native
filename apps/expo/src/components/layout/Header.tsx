@@ -21,7 +21,7 @@ export function Header() {
 
       <Circle
         backgroundColor="$pillBackground"
-        size="$2.5"
+        size="$4.5"
         pressStyle={{
           opacity: 1,
           scale: 1.05,
@@ -33,11 +33,11 @@ export function Header() {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
         }
       >
-        <MaterialIcons name="discord" size={20} color="white" />
+        <MaterialIcons name="discord" size={32} color="white" />
       </Circle>
       <Circle
         backgroundColor="$pillBackground"
-        size="$2.5"
+        size="$4.5"
         pressStyle={{
           opacity: 1,
           scale: 1.05,
@@ -49,7 +49,7 @@ export function Header() {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
         }
       >
-        <FontAwesome6 name="github" size={20} color="white" />
+        <FontAwesome6 name="github" size={32} color="white" />
       </Circle>
     </View>
   );

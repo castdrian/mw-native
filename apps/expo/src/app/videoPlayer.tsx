@@ -11,7 +11,6 @@ import { usePlayerStore } from "~/stores/player/store";
 
 export default function VideoPlayerWrapper() {
   const playerStatus = usePlayerStore((state) => state.interface.playerStatus);
-  const asset = usePlayerStore((state) => state.asset);
   const { presentFullscreenPlayer } = usePlayer();
 
   const params = useLocalSearchParams();
@@ -31,10 +30,6 @@ export default function VideoPlayerWrapper() {
   const download = params.download === "true";
 
   void presentFullscreenPlayer();
-
-  if (asset) {
-    return <VideoPlayer />;
-  }
 
   if (download) {
     return <ScraperProcess data={data} download />;

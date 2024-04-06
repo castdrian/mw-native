@@ -1,31 +1,32 @@
-import type { Asset } from "expo-media-library";
 import type { NativeSyntheticEvent } from "react-native";
 import type { ContextMenuOnPressNativeEvent } from "react-native-context-menu-view";
 import React from "react";
 import ContextMenu from "react-native-context-menu-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Progress, Spinner, Text, View } from "tamagui";
+import { Image, Text, View, XStack, YStack } from "tamagui";
 
-import { useDownloadManager } from "~/hooks/DownloadManagerContext";
+import type { Download } from "~/contexts/DownloadManagerContext";
+import { useDownloadManager } from "~/contexts/DownloadManagerContext";
+import { MWProgress } from "./ui/Progress";
 
 export interface DownloadItemProps {
-  id: string;
-  filename: string;
-  progress: number;
-  speed: number;
-  fileSize: number;
-  downloaded: number;
-  isFinished: boolean;
-  statusText?: string;
-  asset?: Asset;
-  isHLS?: boolean;
-  onPress: (asset?: Asset) => void;
+  item: Download;
+  onPress: (localPath?: string) => void;
 }
 
 enum ContextMenuActions {
   Cancel = "Cancel",
   Remove = "Remove",
 }
+
+const statusToTextMap: Record<Download["status"], string> = {
+  downloading: "Downloading",
+  finished: "Finished",
+  error: "Error",
+  merging: "Merging",
+  cancelled: "Cancelled",
+  importing: "Importing",
+};
 
 const formatBytes = (bytes: number, decimals = 2) => {
   if (bytes === 0) return "0 Bytes";
@@ -36,64 +37,28 @@ const formatBytes = (bytes: number, decimals = 2) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 };
 
-export const DownloadItem: React.FC<DownloadItemProps> = ({
-  id,
-  filename,
-  progress,
-  speed,
-  fileSize,
-  downloaded,
-  isFinished,
-  statusText,
-  asset,
-  isHLS,
-  onPress,
-}) => {
-  const percentage = progress * 100;
-  const formattedFileSize = formatBytes(fileSize);
-  const formattedDownloaded = formatBytes(downloaded);
+export function DownloadItem(props: DownloadItemProps) {
+  const percentage = props.item.progress * 100;
+  const formattedFileSize = formatBytes(props.item.fileSize);
+  const formattedDownloaded = formatBytes(props.item.downloaded);
   const { removeDownload, cancelDownload } = useDownloadManager();
 
   const contextMenuActions = [
     {
       title: ContextMenuActions.Remove,
     },
-    ...(!isFinished ? [{ title: ContextMenuActions.Cancel }] : []),
+    ...(props.item.status !== "finished"
+      ? [{ title: ContextMenuActions.Cancel }]
+      : []),
   ];
 
   const onContextMenuPress = (
     e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
   ) => {
     if (e.nativeEvent.name === ContextMenuActions.Cancel) {
-      void cancelDownload(id);
+      void cancelDownload(props.item.id);
     } else if (e.nativeEvent.name === ContextMenuActions.Remove) {
-      removeDownload(id);
-    }
-  };
-
-  const renderStatus = () => {
-    if (statusText) {
-      return (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Spinner size="small" color="$loadingIndicator" />
-          <Text fontSize={12} color="gray" style={{ marginLeft: 8 }}>
-            {statusText}
-          </Text>
-        </View>
-      );
-    } else if (isFinished) {
-      return (
-        <Text fontSize={12} color="gray">
-          Finished
-        </Text>
-      );
-    } else {
-      if (isHLS) return null;
-      return (
-        <Text fontSize={12} color="gray">
-          {speed.toFixed(2)} MB/s
-        </Text>
-      );
+      removeDownload(props.item.id);
     }
   };
 
@@ -103,41 +68,63 @@ export const DownloadItem: React.FC<DownloadItemProps> = ({
       onPress={onContextMenuPress}
       previewBackgroundColor="transparent"
     >
-      <TouchableOpacity onPress={() => onPress(asset)} activeOpacity={0.7}>
-        <View
-          marginBottom={16}
-          borderRadius={8}
-          borderColor="white"
-          padding={16}
-        >
-          <Text marginBottom={4} fontSize={16}>
-            {filename}
-          </Text>
-          <Progress
-            value={percentage}
-            height={10}
-            backgroundColor="$progressBackground"
-          >
-            <Progress.Indicator
-              animation="bounce"
-              backgroundColor="$progressFilled"
-            />
-          </Progress>
+      <TouchableOpacity
+        onPress={() => props.onPress(props.item.localPath)}
+        onLongPress={() => {
+          return;
+        }}
+        activeOpacity={0.7}
+      >
+        <XStack gap="$4" alignItems="center">
           <View
-            marginTop={8}
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
+            aspectRatio={9 / 14}
+            width={70}
+            maxHeight={180}
+            overflow="hidden"
+            borderRadius="$2"
           >
-            <Text fontSize={12} color="gray">
-              {isHLS
-                ? `${percentage.toFixed()}% - ${downloaded} of ${fileSize} segments`
-                : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
-            </Text>
-            {renderStatus()}
+            <Image
+              source={{
+                uri: "https://image.tmdb.org/t/p/original//or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+              }}
+              width="100%"
+              height="100%"
+            />
           </View>
-        </View>
+          <YStack gap="$2">
+            <XStack gap="$5">
+              <Text
+                fontWeight="$bold"
+                ellipse
+                maxWidth={props.item.type === "hls" ? "70%" : "40%"}
+                flexGrow={1}
+              >
+                {props.item.media.title}
+              </Text>
+              {props.item.type !== "hls" && (
+                <Text fontSize={12} color="gray">
+                  {props.item.speed.toFixed(2)} MB/s
+                </Text>
+              )}
+            </XStack>
+            <MWProgress value={percentage} height={10}>
+              <MWProgress.Indicator />
+            </MWProgress>
+            <XStack alignItems="center" justifyContent="space-between">
+              <Text fontSize={12} color="gray">
+                {props.item.type === "hls"
+                  ? `${percentage.toFixed()}% - ${props.item.downloaded} of ${props.item.fileSize} segments`
+                  : `${percentage.toFixed()}% - ${formattedDownloaded} of ${formattedFileSize}`}
+              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text fontSize={12} color="gray">
+                  {statusToTextMap[props.item.status]}
+                </Text>
+              </View>
+            </XStack>
+          </YStack>
+        </XStack>
       </TouchableOpacity>
     </ContextMenu>
   );
-};
+}

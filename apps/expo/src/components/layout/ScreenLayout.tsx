@@ -1,4 +1,4 @@
-import { View } from "tamagui";
+import { ScrollView } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 
 import { Header } from "./Header";
@@ -12,7 +12,7 @@ export default function ScreenLayout({ children }: Props) {
     <LinearGradient
       flex={1}
       paddingVertical="$4"
-      paddingHorizontal="$7"
+      paddingHorizontal="$4"
       colors={[
         "$shade900",
         "$purple900",
@@ -26,9 +26,13 @@ export default function ScreenLayout({ children }: Props) {
       flexGrow={1}
     >
       <Header />
-      <View paddingVertical="$4" flexGrow={1}>
+      <ScrollView
+        marginTop="$4"
+        flexGrow={1}
+        showsVerticalScrollIndicator={false}
+      >
         {children}
-      </View>
+      </ScrollView>
     </LinearGradient>
   );
 }

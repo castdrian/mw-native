@@ -10,9 +10,9 @@ export function BrandPill() {
       flexDirection="row"
       alignItems="center"
       justifyContent="center"
-      paddingHorizontal="$2.5"
-      paddingVertical="$2"
-      gap={2}
+      paddingHorizontal="$3"
+      paddingVertical="$2.5"
+      gap="$2.5"
       opacity={0.8}
       backgroundColor="$pillBackground"
       borderRadius={24}
@@ -24,11 +24,10 @@ export function BrandPill() {
     >
       <MovieWebSvg
         fillColor={theme.tabBarIconFocused.val}
-        width={12}
-        height={12}
+        width={20}
+        height={20}
       />
-      <Text fontSize="$4" fontWeight="$bold" paddingRight={5} paddingLeft={3}>
-        {/* padding might need adjusting */}
+      <Text fontSize="$6" fontWeight="$bold">
         movie-web
       </Text>
     </View>

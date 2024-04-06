@@ -1,4 +1,3 @@
-import type { Asset } from "expo-media-library";
 import React from "react";
 import { Alert, Platform } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -12,13 +11,16 @@ import type { ScrapeMedia } from "@movie-web/provider-utils";
 import { DownloadItem } from "~/components/DownloadItem";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
-import { useDownloadManager } from "~/hooks/DownloadManagerContext";
+import { useDownloadManager } from "~/contexts/DownloadManagerContext";
+import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 
 const DownloadsScreen: React.FC = () => {
   const { startDownload, downloads } = useDownloadManager();
   const resetVideo = usePlayerStore((state) => state.resetVideo);
-  const setAsset = usePlayerStore((state) => state.setAsset);
+  const setVideoSrc = usePlayerStore((state) => state.setVideoSrc);
+  const setIsLocalFile = usePlayerStore((state) => state.setIsLocalFile);
+  const setPlayerStatus = usePlayerStore((state) => state.setPlayerStatus);
   const router = useRouter();
   const theme = useTheme();
 
@@ -39,10 +41,14 @@ const DownloadsScreen: React.FC = () => {
     }, [router]),
   );
 
-  const handlePress = (asset?: Asset) => {
-    if (!asset) return;
+  const handlePress = (localPath?: string) => {
+    if (!localPath) return;
     resetVideo();
-    setAsset(asset);
+    setIsLocalFile(true);
+    setPlayerStatus(PlayerStatus.READY);
+    setVideoSrc({
+      uri: localPath,
+    });
     router.push({
       pathname: "/videoPlayer",
     });
@@ -112,8 +118,8 @@ const DownloadsScreen: React.FC = () => {
         {downloads.map((item) => (
           <DownloadItem
             key={item.id}
-            {...item}
-            onPress={() => handlePress(item.asset)}
+            item={item}
+            onPress={() => handlePress(item.localPath)}
           />
         ))}
       </ScrollView>

@@ -18,21 +18,12 @@ export const ItemListSection = ({
 }) => {
   return (
     <View>
-      <Text marginBottom={8} marginTop={16} fontWeight="500" fontSize={20}>
+      <Text marginBottom={8} marginTop={16} fontWeight="bold" fontSize="$8">
         {title}
       </Text>
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 3 }}
-      >
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         {items.map((item, index) => (
-          <View
-            key={index}
-            width={itemWidth}
-            paddingHorizontal={padding / 2}
-            paddingBottom={padding}
-          >
+          <View key={index} width={itemWidth} paddingBottom={padding}>
             <Item data={item} />
           </View>
         ))}

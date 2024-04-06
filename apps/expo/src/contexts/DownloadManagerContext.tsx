@@ -23,21 +23,29 @@ import {
   useNetworkSettingsStore,
 } from "~/stores/settings";
 
-export interface DownloadItem {
+export interface Download {
   id: string;
-  filename: string;
   progress: number;
   speed: number;
   fileSize: number;
   downloaded: number;
   url: string;
   type: "mp4" | "hls";
-  isFinished: boolean;
-  statusText?: string;
-  asset?: Asset;
-  isHLS?: boolean;
+  status:
+    | "downloading"
+    | "finished"
+    | "error"
+    | "merging"
+    | "cancelled"
+    | "importing";
+  localPath?: string;
   media: ScrapeMedia;
   downloadTask?: DownloadTask;
+}
+
+export interface DownloadContent {
+  media: Pick<ScrapeMedia, "title" | "releaseYear" | "type" | "tmdbId">;
+  downloads: Download[];
 }
 
 // @ts-expect-error - types are not up to date
@@ -47,7 +55,7 @@ setConfig({
 });
 
 interface DownloadManagerContextType {
-  downloads: DownloadItem[];
+  downloads: Download[];
   startDownload: (
     url: string,
     type: "mp4" | "hls",
@@ -75,7 +83,7 @@ export const useDownloadManager = () => {
 export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [downloads, setDownloads] = useState<DownloadItem[]>([]);
+  const [downloads, setDownloads] = useState<Download[]>([]);
   const toastController = useToastController();
 
   useEffect(() => {
@@ -172,17 +180,15 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       duration: 500,
     });
 
-    const newDownload: DownloadItem = {
+    const newDownload: Download = {
       id: `download-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-      filename: url.split("/").pop() ?? "unknown",
       progress: 0,
       speed: 0,
       fileSize: 0,
       downloaded: 0,
       type,
       url,
-      isFinished: false,
-      isHLS: type === "hls",
+      status: "downloading",
       media,
     };
 
@@ -197,7 +203,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const updateDownloadItem = (id: string, updates: Partial<DownloadItem>) => {
+  const updateDownloadItem = (id: string, updates: Partial<Download>) => {
     setDownloads((currentDownloads) =>
       currentDownloads.map((download) =>
         download.id === id ? { ...download, ...updates } : download,
@@ -342,7 +348,7 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
       return removeDownload(downloadId);
     }
 
-    updateDownloadItem(downloadId, { statusText: "Merging" });
+    updateDownloadItem(downloadId, { status: "merging" });
     const uri = await VideoManager.mergeVideos(
       localSegmentPaths,
       `${FileSystem.cacheDirectory}movie-web/output.mp4`,
@@ -394,15 +400,14 @@ export const DownloadManagerProvider: React.FC<{ children: ReactNode }> = ({
     downloadId: string,
   ): Promise<Asset | void> => {
     try {
-      updateDownloadItem(downloadId, { statusText: "Importing" });
+      updateDownloadItem(downloadId, { status: "importing" });
 
       const asset = await MediaLibrary.createAssetAsync(fileUri);
       await FileSystem.deleteAsync(fileUri);
 
       updateDownloadItem(downloadId, {
-        statusText: undefined,
-        asset,
-        isFinished: true,
+        status: "finished",
+        localPath: asset.uri,
       });
       console.log("File saved to media library and original deleted");
       toastController.show("Download finished", {

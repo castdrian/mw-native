@@ -11,7 +11,6 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
-import * as MediaLibrary from "expo-media-library";
 import * as NavigationBar from "expo-navigation-bar";
 import { useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
@@ -63,7 +62,6 @@ export const VideoPlayer = () => {
   const stream = usePlayerStore((state) => state.interface.currentStream);
   const selectedAudioTrack = useAudioTrackStore((state) => state.selectedTrack);
   const videoRef = usePlayerStore((state) => state.videoRef);
-  const asset = usePlayerStore((state) => state.asset);
   const setVideoRef = usePlayerStore((state) => state.setVideoRef);
   const videoSrc = usePlayerStore((state) => state.videoSrc) ?? undefined;
   const setVideoSrc = usePlayerStore((state) => state.setVideoSrc);
@@ -73,6 +71,7 @@ export const VideoPlayer = () => {
   const toggleState = usePlayerStore((state) => state.toggleState);
   const meta = usePlayerStore((state) => state.meta);
   const setMeta = usePlayerStore((state) => state.setMeta);
+  const isLocalFile = usePlayerStore((state) => state.isLocalFile);
 
   const { gestureControls, autoPlay } = usePlayerSettingsStore();
   const { updateWatchHistory, removeFromWatchHistory, getWatchHistoryItem } =
@@ -151,15 +150,7 @@ export const VideoPlayer = () => {
 
   useEffect(() => {
     const initializePlayer = async () => {
-      if (asset) {
-        const assetInfo = await MediaLibrary.getAssetInfoAsync(asset);
-        if (!assetInfo.localUri) return;
-        setVideoSrc({
-          uri: assetInfo.localUri,
-        });
-        setIsLoading(false);
-        return;
-      }
+      if (videoSrc?.uri && isLocalFile) return;
 
       if (!stream) {
         await dismissFullscreenPlayer();
@@ -194,7 +185,6 @@ export const VideoPlayer = () => {
       setIsLoading(false);
     };
 
-    setIsLoading(true);
     void initializePlayer();
 
     const timeout = setTimeout(() => {
@@ -217,7 +207,7 @@ export const VideoPlayer = () => {
       void synchronizePlayback();
     };
   }, [
-    asset,
+    isLocalFile,
     dismissFullscreenPlayer,
     hasStartedPlaying,
     meta,
@@ -228,6 +218,7 @@ export const VideoPlayer = () => {
     synchronizePlayback,
     updateWatchHistory,
     videoRef?.props.positionMillis,
+    videoSrc?.uri,
   ]);
 
   const onVideoLoadStart = () => {
@@ -322,7 +313,7 @@ export const VideoPlayer = () => {
               position="absolute"
             />
           )}
-          <ControlsOverlay isLoading={isLoading} isLocalAsset={!!asset} />
+          <ControlsOverlay isLoading={isLoading} />
         </View>
         {showVolumeOverlay && <GestureOverlay value={volume} type="volume" />}
         {showBrightnessOverlay && (
