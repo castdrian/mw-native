@@ -10,12 +10,14 @@ import type { ScrapeMedia } from "@movie-web/provider-utils";
 import { DownloadItem } from "~/components/DownloadItem";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
-import { useDownloadManager } from "~/contexts/DownloadManagerContext";
+import { useDownloadManager } from "~/hooks/useDownloadManager";
 import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
+import { useDownloadHistoryStore } from "~/stores/settings";
 
 const DownloadsScreen: React.FC = () => {
-  const { startDownload, downloads } = useDownloadManager();
+  const { startDownload } = useDownloadManager();
+  const downloads = useDownloadHistoryStore((state) => state.downloads);
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const setVideoSrc = usePlayerStore((state) => state.setVideoSrc);
   const setIsLocalFile = usePlayerStore((state) => state.setIsLocalFile);
@@ -106,7 +108,10 @@ const DownloadsScreen: React.FC = () => {
             await startDownload(
               "http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8",
               "hls",
-              exampleShowMedia,
+              {
+                ...exampleShowMedia,
+                tmdbId: "123456",
+              },
             ).catch(console.error);
           }}
         >
@@ -118,13 +123,17 @@ const DownloadsScreen: React.FC = () => {
           gap: "$4",
         }}
       >
-        {downloads.map((item) => (
-          <DownloadItem
-            key={item.id}
-            item={item}
-            onPress={() => handlePress(item.localPath)}
-          />
-        ))}
+        {/* TODO: Differentiate movies/shows, shows in new page */}
+        {downloads
+          .map((item) => item.downloads)
+          .flat()
+          .map((item) => (
+            <DownloadItem
+              key={item.id}
+              item={item}
+              onPress={() => handlePress(item.localPath)}
+            />
+          ))}
       </ScrollView>
     </ScreenLayout>
   );

@@ -6,8 +6,9 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 
+import type { ReactStyleStateSetter } from "..";
 import type { ItemData } from "~/components/item/item";
-import type { Download } from "~/contexts/DownloadManagerContext";
+import type { DownloadContent } from "~/hooks/useDownloadManager";
 import type { ThemeStoreOption } from "~/stores/theme";
 
 const storage = new MMKV();
@@ -37,7 +38,7 @@ export const useThemeSettingsStore = create<
   persist(
     (set) => ({
       theme: "main",
-      setTheme: (theme: ThemeStoreOption) => set({ theme }),
+      setTheme: (theme) => set({ theme }),
     }),
     {
       name: "theme-settings",
@@ -64,10 +65,9 @@ export const usePlayerSettingsStore = create<
         android: false,
         default: true,
       }),
-      setGestureControls: (enabled: boolean) =>
-        set({ gestureControls: enabled }),
+      setGestureControls: (enabled) => set({ gestureControls: enabled }),
       autoPlay: true,
-      setAutoPlay: (enabled: boolean) => set({ autoPlay: enabled }),
+      setAutoPlay: (enabled) => set({ autoPlay: enabled }),
     }),
     {
       name: "player-settings",
@@ -77,8 +77,8 @@ export const usePlayerSettingsStore = create<
 );
 
 interface DownloadHistoryStoreState {
-  downloads: Download[];
-  setDownloads: (downloads: Download[]) => void;
+  downloads: DownloadContent[];
+  setDownloads: (downloads: ReactStyleStateSetter<DownloadContent[]>) => void;
 }
 
 export const useDownloadHistoryStore = create<
@@ -88,7 +88,18 @@ export const useDownloadHistoryStore = create<
   persist(
     (set) => ({
       downloads: [],
-      setDownloads: (downloads: Download[]) => set({ downloads }),
+      setDownloads: (newDownloadsOrSetterFn) => {
+        set(({ downloads }) => {
+          if (Array.isArray(newDownloadsOrSetterFn)) {
+            const newArr = newDownloadsOrSetterFn;
+            return { downloads: newArr };
+          }
+          const setterFn = newDownloadsOrSetterFn;
+          return {
+            downloads: setterFn(downloads),
+          };
+        });
+      },
     }),
     {
       name: "download-history",
@@ -112,8 +123,8 @@ export const useBookmarkStore = create<
   persist(
     (set, get) => ({
       bookmarks: [],
-      setBookmarks: (bookmarks: ItemData[]) => set({ bookmarks }),
-      addBookmark: (item: ItemData) =>
+      setBookmarks: (bookmarks) => set({ bookmarks }),
+      addBookmark: (item) =>
         set((state) => ({
           bookmarks: [...state.bookmarks, item],
         })),
@@ -123,7 +134,7 @@ export const useBookmarkStore = create<
             (bookmark) => bookmark.id !== item.id,
           ),
         })),
-      isBookmarked: (item: ItemData) =>
+      isBookmarked: (item) =>
         Boolean(get().bookmarks.find((bookmark) => bookmark.id === item.id)),
     }),
     {
@@ -159,13 +170,13 @@ export const useWatchHistoryStore = create<
   persist(
     (set, get) => ({
       watchHistory: [],
-      hasWatchHistoryItem: (item: ItemData) =>
+      hasWatchHistoryItem: (item) =>
         Boolean(
           get().watchHistory.find(
             (historyItem) => historyItem.item.id === item.id,
           ),
         ),
-      getWatchHistoryItem: (media: ScrapeMedia) =>
+      getWatchHistoryItem: (media) =>
         get().watchHistory.find((historyItem) => {
           if (historyItem.media.type === "movie" && media.type === "movie") {
             return historyItem.media.tmdbId === media.tmdbId;
@@ -180,8 +191,7 @@ export const useWatchHistoryStore = create<
             );
           }
         }),
-      setWatchHistory: (watchHistory: WatchHistoryItem[]) =>
-        set({ watchHistory }),
+      setWatchHistory: (watchHistory) => set({ watchHistory }),
       updateWatchHistory: (
         item: ItemData,
         media: ScrapeMedia,
@@ -199,7 +209,7 @@ export const useWatchHistoryStore = create<
             },
           ],
         })),
-      removeFromWatchHistory: (item: ItemData) =>
+      removeFromWatchHistory: (item) =>
         set((state) => ({
           watchHistory: state.watchHistory.filter(
             (historyItem) => historyItem.item.id !== item.id,
@@ -229,13 +239,11 @@ export const useNetworkSettingsStore = create<
   persist(
     (set) => ({
       allowMobileData: false,
-      setAllowMobileData: (enabled: boolean) =>
-        set({ allowMobileData: enabled }),
+      setAllowMobileData: (enabled) => set({ allowMobileData: enabled }),
       wifiDefaultQuality: "Highest",
-      setWifiDefaultQuality: (quality: string) =>
-        set({ wifiDefaultQuality: quality }),
+      setWifiDefaultQuality: (quality) => set({ wifiDefaultQuality: quality }),
       mobileDataDefaultQuality: "Lowest",
-      setMobileDataDefaultQuality: (quality: string) =>
+      setMobileDataDefaultQuality: (quality) =>
         set({ mobileDataDefaultQuality: quality }),
     }),
     {

@@ -4,9 +4,9 @@ import { useCallback } from "react";
 import { Keyboard, TouchableOpacity } from "react-native";
 import ContextMenu from "react-native-context-menu-view";
 import { useRouter } from "expo-router";
-import { useToastController } from "@tamagui/toast";
 import { Image, Text, View } from "tamagui";
 
+import { useToast } from "~/hooks/useToast";
 import { usePlayerStore } from "~/stores/player/store";
 import { useBookmarkStore, useWatchHistoryStore } from "~/stores/settings";
 
@@ -43,10 +43,10 @@ function checkReleased(media: ItemData): boolean {
 export default function Item({ data }: { data: ItemData }) {
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const router = useRouter();
-  const toastController = useToastController();
   const { isBookmarked, addBookmark, removeBookmark } = useBookmarkStore();
   const { hasWatchHistoryItem, removeFromWatchHistory } =
     useWatchHistoryStore();
+  const { showToast } = useToast();
 
   const { title, type, year, posterUrl } = data;
 
@@ -54,10 +54,8 @@ export default function Item({ data }: { data: ItemData }) {
 
   const handlePress = () => {
     if (!isReleased()) {
-      toastController.show("This media is not released yet", {
+      showToast("This media is not released yet", {
         burntOptions: { preset: "error" },
-        native: true,
-        duration: 500,
       });
       return;
     }
@@ -86,17 +84,13 @@ export default function Item({ data }: { data: ItemData }) {
   ) => {
     if (e.nativeEvent.name === ContextMenuActions.Bookmark) {
       addBookmark(data);
-      toastController.show("Added to bookmarks", {
+      showToast("Added to bookmarks", {
         burntOptions: { preset: "done" },
-        native: true,
-        duration: 500,
       });
     } else if (e.nativeEvent.name === ContextMenuActions.RemoveBookmark) {
       removeBookmark(data);
-      toastController.show("Removed from bookmarks", {
+      showToast("Removed from bookmarks", {
         burntOptions: { preset: "done" },
-        native: true,
-        duration: 500,
       });
     } else if (e.nativeEvent.name === ContextMenuActions.Download) {
       router.push({
@@ -107,10 +101,8 @@ export default function Item({ data }: { data: ItemData }) {
       e.nativeEvent.name === ContextMenuActions.RemoveWatchHistoryItem
     ) {
       removeFromWatchHistory(data);
-      toastController.show("Removed from Continue Watching", {
+      showToast("Removed from Continue Watching", {
         burntOptions: { preset: "done" },
-        native: true,
-        duration: 500,
       });
     }
   };

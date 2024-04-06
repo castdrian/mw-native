@@ -5,8 +5,8 @@ import ContextMenu from "react-native-context-menu-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Image, Text, View, XStack, YStack } from "tamagui";
 
-import type { Download } from "~/contexts/DownloadManagerContext";
-import { useDownloadManager } from "~/contexts/DownloadManagerContext";
+import type { Download } from "~/hooks/useDownloadManager";
+import { useDownloadManager } from "~/hooks/useDownloadManager";
 import { MWProgress } from "./ui/Progress";
 import { FlashingText } from "./ui/Text";
 
@@ -57,9 +57,9 @@ export function DownloadItem(props: DownloadItemProps) {
     e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>,
   ) => {
     if (e.nativeEvent.name === ContextMenuActions.Cancel) {
-      void cancelDownload(props.item.id);
+      void cancelDownload(props.item);
     } else if (e.nativeEvent.name === ContextMenuActions.Remove) {
-      removeDownload(props.item.id);
+      removeDownload(props.item);
     }
   };
 

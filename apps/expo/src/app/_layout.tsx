@@ -10,7 +10,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TamaguiProvider, Theme, useTheme } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 
-import { DownloadManagerProvider } from "~/contexts/DownloadManagerContext";
 import { useThemeStore } from "~/stores/theme";
 // @ts-expect-error - Without named import it causes an infinite loop
 import _styles from "../../tamagui-web.css";
@@ -106,13 +105,11 @@ function RootLayoutNav() {
     <QueryClientProvider client={queryClient}>
       <TamaguiProvider config={tamaguiConfig} defaultTheme="main">
         <ToastProvider>
-          <DownloadManagerProvider>
-            <ThemeProvider value={DarkTheme}>
-              <Theme name={themeStore}>
-                <ScreenStacks />
-              </Theme>
-            </ThemeProvider>
-          </DownloadManagerProvider>
+          <ThemeProvider value={DarkTheme}>
+            <Theme name={themeStore}>
+              <ScreenStacks />
+            </Theme>
+          </ThemeProvider>
           <ToastViewport />
         </ToastProvider>
       </TamaguiProvider>

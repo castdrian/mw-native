@@ -11,7 +11,6 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { useToastController } from "@tamagui/toast";
 import { useMutation } from "@tanstack/react-query";
 import {
   Adapt,
@@ -32,6 +31,7 @@ import { MWButton } from "~/components/ui/Button";
 import { MWSelect } from "~/components/ui/Select";
 import { MWSeparator } from "~/components/ui/Separator";
 import { MWSwitch } from "~/components/ui/Switch";
+import { useToast } from "~/hooks/useToast";
 import { checkForUpdate } from "~/lib/update";
 import {
   useNetworkSettingsStore,
@@ -54,10 +54,10 @@ export default function SettingsScreen() {
   const { gestureControls, setGestureControls, autoPlay, setAutoPlay } =
     usePlayerSettingsStore();
   const { allowMobileData, setAllowMobileData } = useNetworkSettingsStore();
-  const toastController = useToastController();
   const [showUpdateSheet, setShowUpdateSheet] = useState(false);
   const [updateMarkdownContent, setUpdateMarkdownContent] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
+  const { showToast } = useToast();
 
   const mutation = useMutation({
     mutationKey: ["checkForUpdate"],
@@ -74,11 +74,7 @@ export default function SettingsScreen() {
         );
         setShowUpdateSheet(true);
       } else {
-        toastController.show("No updates available", {
-          burntOptions: { preset: "none" },
-          native: true,
-          duration: 500,
-        });
+        showToast("No updates available");
       }
     },
   });
@@ -100,18 +96,13 @@ export default function SettingsScreen() {
 
     try {
       await FileSystem.deleteAsync(cacheDirectory, { idempotent: true });
-
-      toastController.show("Cache cleared", {
+      showToast("Cache cleared", {
         burntOptions: { preset: "done" },
-        native: true,
-        duration: 500,
       });
     } catch (error) {
       console.error("Error clearing cache directory:", error);
-      toastController.show("Error clearing cache", {
+      showToast("Error clearing cache", {
         burntOptions: { preset: "error" },
-        native: true,
-        duration: 500,
       });
     }
   };

@@ -268,8 +268,8 @@ importers:
   packages/provider-utils:
     dependencies:
       '@movie-web/providers':
-        specifier: ^2.2.8
-        version: 2.2.8
+        specifier: ^2.2.9
+        version: 2.2.9
       parse-hls:
         specifier: ^1.0.7
         version: 1.0.7
@@ -2897,8 +2897,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@movie-web/providers@2.2.8:
-    resolution: {integrity: sha512-fsksIYuRn39TLC1PLMZrM6AW5kRQCWFmK0aK/p9bTui0ojs6aXLIZbvIwK0svzKLP2pmH6xJEhALxF8SYPE72Q==}
+  /@movie-web/providers@2.2.9:
+    resolution: {integrity: sha512-NHsyplM9Oe4DK3lIkNaEk0CqoQ6IqlaWXeDh01jj+DH4I4EJjSD4ow7OTeAC+BLz3Gwj6fh/vaE2WBGevPTDkQ==}
     requiresBuild: true
     dependencies:
       cheerio: 1.0.0-rc.12
