@@ -46,7 +46,7 @@ export default function SearchScreen() {
       "keyboardWillShow",
       (e) => {
         translateY.value = withTiming(
-          -(e.endCoordinates.height - 110), // determines the height of the Searchbar above keyboard, use Platform.select to adjust value if needed
+          -(e.endCoordinates.height - 100), // determines the height of the Searchbar above keyboard, use Platform.select to adjust value if needed
           {
             duration: e.duration ?? 250, // duration always returns 0 on Android, adjust value if needed
             easing: Easing.out(Easing.ease),
