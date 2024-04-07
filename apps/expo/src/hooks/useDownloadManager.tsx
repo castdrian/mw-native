@@ -151,11 +151,12 @@ export const useDownloadManager = () => {
         updateDownloadItem(download.id, { status: "importing" });
 
         const asset = await MediaLibrary.createAssetAsync(fileUri);
+        const { localUri } = await MediaLibrary.getAssetInfoAsync(asset);
         await FileSystem.deleteAsync(fileUri);
 
         updateDownloadItem(download.id, {
           status: "finished",
-          localPath: asset.uri,
+          localPath: localUri,
         });
         console.log("File saved to media library and original deleted");
         showToast("Download finished", {
