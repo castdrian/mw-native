@@ -5,9 +5,23 @@ import { Header } from "./Header";
 
 interface Props {
   children?: React.ReactNode;
+  onScrollBeginDrag?: () => void;
+  onMomentumScrollEnd?: () => void;
+  scrollEnabled?: boolean;
+  keyboardDismissMode?: "none" | "on-drag" | "interactive";
+  keyboardShouldPersistTaps?: "always" | "never" | "handled";
+  contentContainerStyle?: Record<string, unknown>;
 }
 
-export default function ScreenLayout({ children }: Props) {
+export default function ScreenLayout({
+  children,
+  onScrollBeginDrag,
+  onMomentumScrollEnd,
+  scrollEnabled,
+  keyboardDismissMode,
+  keyboardShouldPersistTaps,
+  contentContainerStyle,
+}: Props) {
   return (
     <LinearGradient
       flex={1}
@@ -27,6 +41,12 @@ export default function ScreenLayout({ children }: Props) {
     >
       <Header />
       <ScrollView
+        onScrollBeginDrag={onScrollBeginDrag}
+        onMomentumScrollEnd={onMomentumScrollEnd}
+        scrollEnabled={scrollEnabled}
+        keyboardDismissMode={keyboardDismissMode}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        contentContainerStyle={contentContainerStyle}
         marginTop="$4"
         flexGrow={1}
         showsVerticalScrollIndicator={false}

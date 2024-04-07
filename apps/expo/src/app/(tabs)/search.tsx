@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Keyboard, ScrollView } from "react-native";
+import { Keyboard } from "react-native";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useQuery } from "@tanstack/react-query";
-import { View, XStack } from "tamagui";
+import { View, ZStack } from "tamagui";
 
 import { getMediaPoster, searchTitle } from "@movie-web/tmdb";
 
@@ -98,48 +98,46 @@ export default function SearchScreen() {
   };
 
   return (
-    <ScreenLayout>
-      <XStack flex={1}>
-        <ScrollView
-          onScrollBeginDrag={handleScrollBegin}
-          onMomentumScrollEnd={handleScrollEnd}
-          scrollEnabled={searchResultsLoaded ? true : false}
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
-          <View>
-            <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
-              <View flexDirection="row" flexWrap="wrap">
-                {data?.map((item, index) => (
-                  <View
-                    key={index}
-                    paddingHorizontal={12}
-                    paddingBottom={12}
-                    width="50%"
-                  >
-                    <Item data={item} />
-                  </View>
-                ))}
-              </View>
-            </Animated.View>
-          </View>
-        </ScrollView>
-        <Animated.View
-          style={[
-            {
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-            },
-            animatedStyle,
-          ]}
-        >
-          <SearchBar onSearchChange={setQuery} />
-        </Animated.View>
-      </XStack>
-    </ScreenLayout>
+    <ZStack flex={1}>
+      <ScreenLayout
+        onScrollBeginDrag={handleScrollBegin}
+        onMomentumScrollEnd={handleScrollEnd}
+        scrollEnabled={searchResultsLoaded ? true : false}
+        keyboardDismissMode="on-drag"
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View>
+          <Animated.View style={[searchResultsStyle, { flex: 1 }]}>
+            <View flexDirection="row" flexWrap="wrap">
+              {data?.map((item, index) => (
+                <View
+                  key={index}
+                  paddingHorizontal={12}
+                  paddingBottom={12}
+                  width="50%"
+                >
+                  <Item data={item} />
+                </View>
+              ))}
+            </View>
+          </Animated.View>
+        </View>
+      </ScreenLayout>
+      <Animated.View
+        style={[
+          {
+            position: "absolute",
+            bottom: 5,
+            left: 0,
+            right: 0,
+          },
+          animatedStyle,
+        ]}
+      >
+        <SearchBar onSearchChange={setQuery} />
+      </Animated.View>
+    </ZStack>
   );
 }
 
