@@ -29,9 +29,6 @@ importers:
       '@expo/metro-config':
         specifier: ^0.17.3
         version: 0.17.3(@react-native/babel-preset@0.73.21)
-      '@kesha-antonov/react-native-background-downloader':
-        specifier: ^3.1.2
-        version: 3.1.2(react-native@0.73.6)
       '@movie-web/api':
         specifier: '*'
         version: link:../../packages/api
@@ -2841,14 +2838,6 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
-
-  /@kesha-antonov/react-native-background-downloader@3.1.2(react-native@0.73.6):
-    resolution: {integrity: sha512-xBs1DyGOdGCSI7mfE7cT7V1Ecv6G99A4zh08o0q7/DXOqttX4tymiTQNuWQxW2dMe7clOHGjzeW1BLYwofSYNw==}
-    peerDependencies:
-      react-native: '>=0.57.0'
-    dependencies:
-      react-native: 0.73.6(@babel/core@7.23.9)(@babel/preset-env@7.23.9)(react@18.2.0)
-    dev: false
 
   /@motionone/animation@10.17.0:
     resolution: {integrity: sha512-ANfIN9+iq1kGgsZxs+Nz96uiNcPLGTXwfNo2Xz/fcJXniPYpaz/Uyrfa+7I5BPLxCP82sh7quVDudf1GABqHbg==}
