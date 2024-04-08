@@ -16,3 +16,10 @@ export const mapMillisecondsToTime = (milliseconds: number): string => {
 
   return formattedTime;
 };
+
+export const mapSeasonAndEpisodeNumberToText = (
+  season: number,
+  episode: number,
+) => {
+  return `S${season.toString().padStart(2, "0")}E${episode.toString().padStart(2, "0")}`;
+};

@@ -4,10 +4,7 @@ import { usePlayerStore } from "~/stores/player/store";
 import { BrandPill } from "../BrandPill";
 import { BackButton } from "./BackButton";
 import { Controls } from "./Controls";
-
-const mapSeasonAndEpisodeNumberToText = (season: number, episode: number) => {
-  return `S${season.toString().padStart(2, "0")}E${episode.toString().padStart(2, "0")}`;
-};
+import { mapSeasonAndEpisodeNumberToText } from "./utils";
 
 export const Header = () => {
   const isIdle = usePlayerStore((state) => state.interface.isIdle);

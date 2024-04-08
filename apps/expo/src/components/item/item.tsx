@@ -124,6 +124,7 @@ export default function Item({ data }: { data: ItemData }) {
             width="100%"
             overflow="hidden"
             borderRadius={24}
+            height="$14"
           >
             <Image source={{ uri: posterUrl }} width="100%" height="100%" />
           </View>

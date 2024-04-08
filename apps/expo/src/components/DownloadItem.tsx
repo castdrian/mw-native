@@ -3,10 +3,12 @@ import type { ContextMenuOnPressNativeEvent } from "react-native-context-menu-vi
 import React from "react";
 import ContextMenu from "react-native-context-menu-view";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useRouter } from "expo-router";
 import { Image, Text, View, XStack, YStack } from "tamagui";
 
-import type { Download } from "~/hooks/useDownloadManager";
+import type { Download, DownloadContent } from "~/hooks/useDownloadManager";
 import { useDownloadManager } from "~/hooks/useDownloadManager";
+import { mapSeasonAndEpisodeNumberToText } from "./player/utils";
 import { MWProgress } from "./ui/Progress";
 import { FlashingText } from "./ui/Text";
 
@@ -101,6 +103,11 @@ export function DownloadItem(props: DownloadItemProps) {
           <YStack gap="$2">
             <XStack gap="$6" maxWidth="65%">
               <Text fontWeight="$bold" ellipse flexGrow={1}>
+                {props.item.media.type === "show" &&
+                  mapSeasonAndEpisodeNumberToText(
+                    props.item.media.season.number,
+                    props.item.media.episode.number,
+                  ) + " "}
                 {props.item.media.title}
               </Text>
               {props.item.type !== "hls" && (
@@ -134,5 +141,56 @@ export function DownloadItem(props: DownloadItemProps) {
         </XStack>
       </TouchableOpacity>
     </ContextMenu>
+  );
+}
+
+export function ShowDownloadItem({ download }: { download: DownloadContent }) {
+  const router = useRouter();
+
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        router.push({
+          pathname: "/(downloads)/[tmdbId]",
+          params: { tmdbId: download.media.tmdbId },
+        })
+      }
+      activeOpacity={0.7}
+    >
+      <XStack gap="$4" alignItems="center">
+        <View
+          aspectRatio={9 / 14}
+          width={70}
+          maxHeight={180}
+          overflow="hidden"
+          borderRadius="$2"
+        >
+          <Image
+            source={{
+              uri: "https://image.tmdb.org/t/p/original//or06FN3Dka5tukK1e9sl16pB3iy.jpg",
+            }}
+            width="100%"
+            height="100%"
+          />
+        </View>
+        <YStack gap="$2">
+          <YStack gap="$1">
+            <Text fontWeight="$bold" ellipse flexGrow={1} fontSize="$5">
+              {download.media.title}
+            </Text>
+            <Text fontSize="$2">
+              {download.downloads.length} Episode
+              {download.downloads.length > 1 ? "s" : ""} |{" "}
+              {formatBytes(
+                download.downloads.reduce(
+                  (acc, curr) => acc + curr.fileSize,
+                  0,
+                ),
+              )}
+            </Text>
+          </YStack>
+        </YStack>
+      </XStack>
+    </TouchableOpacity>
   );
 }

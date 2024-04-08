@@ -7,7 +7,7 @@ import { ScrollView, useTheme, YStack } from "tamagui";
 
 import type { ScrapeMedia } from "@movie-web/provider-utils";
 
-import { DownloadItem } from "~/components/DownloadItem";
+import { DownloadItem, ShowDownloadItem } from "~/components/DownloadItem";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { useDownloadManager } from "~/hooks/useDownloadManager";
@@ -15,15 +15,69 @@ import { PlayerStatus } from "~/stores/player/slices/interface";
 import { usePlayerStore } from "~/stores/player/store";
 import { useDownloadHistoryStore } from "~/stores/settings";
 
-const DownloadsScreen: React.FC = () => {
+const exampleMovieMedia: ScrapeMedia = {
+  type: "movie",
+  title: "Avengers: Endgame",
+  releaseYear: 2019,
+  imdbId: "tt4154796",
+  tmdbId: "299534",
+};
+
+const getExampleShowMedia = (seasonNumber: number, episodeNumber: number) =>
+  ({
+    type: "show",
+    title: "Loki",
+    releaseYear: 2021,
+    imdbId: "tt9140554",
+    tmdbId: "84958",
+    season: {
+      number: seasonNumber,
+      tmdbId: seasonNumber.toString(),
+    },
+    episode: {
+      number: episodeNumber,
+      tmdbId: episodeNumber.toString(),
+    },
+  }) as const;
+
+const TestDownloadButton = (props: {
+  media: ScrapeMedia;
+  type: "hls" | "mp4";
+  url: string;
+}) => {
   const { startDownload } = useDownloadManager();
+  const theme = useTheme();
+  return (
+    <MWButton
+      type="secondary"
+      backgroundColor="$sheetItemBackground"
+      icon={
+        <MaterialCommunityIcons
+          name="download"
+          size={24}
+          color={theme.buttonSecondaryText.val}
+        />
+      }
+      onPress={async () => {
+        await startDownload(props.url, props.type, props.media).catch(
+          console.error,
+        );
+      }}
+    >
+      test download
+      {props.type === "hls" ? " (hls)" : "(mp4)"}{" "}
+      {props.media.type === "show" ? "show" : "movie"}
+    </MWButton>
+  );
+};
+
+const DownloadsScreen: React.FC = () => {
   const downloads = useDownloadHistoryStore((state) => state.downloads);
   const resetVideo = usePlayerStore((state) => state.resetVideo);
   const setVideoSrc = usePlayerStore((state) => state.setVideoSrc);
   const setIsLocalFile = usePlayerStore((state) => state.setIsLocalFile);
   const setPlayerStatus = usePlayerStore((state) => state.setPlayerStatus);
   const router = useRouter();
-  const theme = useTheme();
 
   useFocusEffect(
     React.useCallback(() => {
@@ -55,85 +109,54 @@ const DownloadsScreen: React.FC = () => {
     });
   };
 
-  const exampleShowMedia: ScrapeMedia = {
-    type: "show",
-    title: "Example Show Title",
-    releaseYear: 2022,
-    imdbId: "tt1234567",
-    tmdbId: "12345",
-    season: {
-      number: 1,
-      tmdbId: "54321",
-    },
-    episode: {
-      number: 3,
-      tmdbId: "98765",
-    },
-  };
-
   return (
     <ScreenLayout>
       <YStack gap={2} style={{ padding: 10 }}>
-        <MWButton
-          type="secondary"
-          backgroundColor="$sheetItemBackground"
-          icon={
-            <MaterialCommunityIcons
-              name="download"
-              size={24}
-              color={theme.buttonSecondaryText.val}
-            />
-          }
-          onPress={async () => {
-            await startDownload(
-              "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-              "mp4",
-              exampleShowMedia,
-            ).catch(console.error);
-          }}
-        >
-          test download (mp4)
-        </MWButton>
-        <MWButton
-          type="secondary"
-          backgroundColor="$sheetItemBackground"
-          icon={
-            <MaterialCommunityIcons
-              name="download"
-              size={24}
-              color={theme.buttonSecondaryText.val}
-            />
-          }
-          onPress={async () => {
-            await startDownload(
-              "http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8",
-              "hls",
-              {
-                ...exampleShowMedia,
-                tmdbId: "123456",
-              },
-            ).catch(console.error);
-          }}
-        >
-          test download (hls)
-        </MWButton>
+        <TestDownloadButton
+          media={exampleMovieMedia}
+          type="mp4"
+          url="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        />
+        <TestDownloadButton
+          media={getExampleShowMedia(1, 1)}
+          type="mp4"
+          url="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        />
+        <TestDownloadButton
+          media={getExampleShowMedia(1, 2)}
+          type="mp4"
+          url="https://samplelib.com/lib/preview/mp4/sample-5s.mp4"
+        />
+        <TestDownloadButton
+          media={getExampleShowMedia(1, 1)}
+          type="hls"
+          url="http://sample.vodobox.com/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8"
+        />
       </YStack>
       <ScrollView
         contentContainerStyle={{
           gap: "$4",
         }}
       >
-        {/* TODO: Differentiate movies/shows, shows in new page */}
-        {downloads
-          .map((item) => item.downloads)
-          .flat()
-          .map((item) => (
-            <DownloadItem
-              key={item.id}
-              item={item}
-              onPress={() => handlePress(item.localPath)}
-            />
-          ))}
+        {downloads.map((download) => {
+          if (download.downloads.length === 0) return null;
+          if (download.media.type === "movie") {
+            return (
+              <DownloadItem
+                key={download.media.tmdbId}
+                item={download.downloads[0]!}
+                onPress={() => handlePress(download.downloads[0]!.localPath)}
+              />
+            );
+          } else {
+            return (
+              <ShowDownloadItem
+                key={download.media.tmdbId}
+                download={download}
+              />
+            );
+          }
+        })}
       </ScrollView>
     </ScreenLayout>
   );

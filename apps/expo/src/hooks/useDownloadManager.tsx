@@ -404,19 +404,18 @@ export const useDownloadManager = () => {
         media,
       };
 
-      const newDownloadContent = existingDownload
-        ? {
-            ...existingDownload,
-            downloads: [newDownload, ...existingDownload.downloads],
-          }
-        : {
-            media,
-            downloads: [newDownload],
-          };
-
-      setDownloads((prev) => {
-        return [...prev, newDownloadContent];
-      });
+      if (existingDownload) {
+        existingDownload.downloads.push(newDownload);
+        setDownloads((prev) => {
+          return prev.map((d) =>
+            d.media.tmdbId === media.tmdbId ? existingDownload : d,
+          );
+        });
+      } else {
+        setDownloads((prev) => {
+          return [...prev, { media, downloads: [newDownload] }];
+        });
+      }
 
       if (type === "mp4") {
         const asset = await downloadMP4(url, newDownload, headers ?? {});

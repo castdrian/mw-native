@@ -1,3 +1,4 @@
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
 
@@ -7,6 +8,7 @@ interface Props {
   children?: React.ReactNode;
   onScrollBeginDrag?: () => void;
   onMomentumScrollEnd?: () => void;
+  showHeader?: boolean;
   scrollEnabled?: boolean;
   keyboardDismissMode?: "none" | "on-drag" | "interactive";
   keyboardShouldPersistTaps?: "always" | "never" | "handled";
@@ -17,11 +19,14 @@ export default function ScreenLayout({
   children,
   onScrollBeginDrag,
   onMomentumScrollEnd,
+  showHeader = true,
   scrollEnabled,
   keyboardDismissMode,
   keyboardShouldPersistTaps,
   contentContainerStyle,
 }: Props) {
+  const insets = useSafeAreaInsets();
+
   return (
     <LinearGradient
       flex={1}
@@ -38,8 +43,9 @@ export default function ScreenLayout({
       start={[0, 0]}
       end={[1, 1]}
       flexGrow={1}
+      paddingTop={showHeader ? insets.top : insets.top + 50}
     >
-      <Header />
+      {showHeader && <Header />}
       <ScrollView
         onScrollBeginDrag={onScrollBeginDrag}
         onMomentumScrollEnd={onMomentumScrollEnd}
