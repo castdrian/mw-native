@@ -60,7 +60,12 @@ export const ScraperProcess = ({
       let meta: PlayerMeta | undefined = undefined;
 
       if (!media && data?.id && data.type) {
-        meta = await convertIdToMeta(data.id, data.type);
+        meta = await convertIdToMeta(
+          data.id,
+          data.type,
+          data.season,
+          data.episode,
+        );
         if (!meta) return router.back();
       }
 

@@ -14,6 +14,8 @@ export interface ItemData {
   id: string;
   title: string;
   type: "movie" | "tv";
+  season?: number;
+  episode?: number;
   year: number;
   release_date?: Date;
   posterUrl: string;

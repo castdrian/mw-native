@@ -10,14 +10,19 @@ export const useMeta = () => {
   const setMeta = usePlayerStore((state) => state.setMeta);
 
   const convertIdToMeta = useCallback(
-    async (id: string, type: "movie" | "tv") => {
+    async (
+      id: string,
+      type: "movie" | "tv",
+      season?: number,
+      episode?: number,
+    ) => {
       const media = await fetchMediaDetails(id, type);
       if (!media) return;
       const scrapeMedia = transformSearchResultToScrapeMedia(
         media.type,
         media.result,
-        meta?.season?.number,
-        meta?.episode?.number,
+        season ?? meta?.season?.number,
+        episode ?? meta?.episode?.number,
       );
       let seasonData = null;
       if (scrapeMedia.type === "show") {
