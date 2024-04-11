@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "tamagui";
 
-import { findHighestQuality } from "@movie-web/provider-utils";
+import { findQuality } from "@movie-web/provider-utils";
 
 import { useDownloadManager } from "~/hooks/useDownloadManager";
 import { convertMetaToScrapeMedia } from "~/lib/meta";
@@ -21,7 +21,7 @@ export const DownloadButton = () => {
   let url: string | undefined | null = null;
 
   if (stream?.type === "file") {
-    const highestQuality = findHighestQuality(stream);
+    const highestQuality = findQuality(stream);
     url = highestQuality ? stream.qualities[highestQuality]?.url : null;
   } else if (stream?.type === "hls") {
     url = stream.playlist;

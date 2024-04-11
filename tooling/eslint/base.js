@@ -32,6 +32,8 @@ const config = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/no-useless-template-literals": "error",
+    "prefer-template": "error",
   },
   ignorePatterns: [
     "**/*.config.js",

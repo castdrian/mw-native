@@ -12,12 +12,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ResizeMode, Video } from "expo-av";
 import * as Haptics from "expo-haptics";
 import * as NavigationBar from "expo-navigation-bar";
+import * as Network from "expo-network";
 import { useRouter } from "expo-router";
 import * as StatusBar from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
 import { Spinner, useTheme, View } from "tamagui";
 
-import { findHighestQuality } from "@movie-web/provider-utils";
+import { findHLSQuality, findQuality } from "@movie-web/provider-utils";
 
 import { useAudioTrack } from "~/hooks/player/useAudioTrack";
 import { useBrightness } from "~/hooks/player/useBrightness";
@@ -32,6 +33,8 @@ import {
 import { useAudioTrackStore } from "~/stores/audio";
 import { usePlayerStore } from "~/stores/player/store";
 import {
+  DefaultQuality,
+  useNetworkSettingsStore,
   usePlayerSettingsStore,
   useWatchHistoryStore,
 } from "~/stores/settings";
@@ -76,6 +79,8 @@ export const VideoPlayer = () => {
   const { gestureControls, autoPlay } = usePlayerSettingsStore();
   const { updateWatchHistory, removeFromWatchHistory, getWatchHistoryItem } =
     useWatchHistoryStore();
+  const { wifiDefaultQuality, mobileDataDefaultQuality } =
+    useNetworkSettingsStore();
 
   const updateResizeMode = (newMode: ResizeMode) => {
     setResizeMode(newMode);
@@ -158,15 +163,22 @@ export const VideoPlayer = () => {
       }
       setIsLoading(true);
 
+      const { type: networkType } = await Network.getNetworkStateAsync();
+      const defaultQuality =
+        networkType === Network.NetworkStateType.WIFI
+          ? wifiDefaultQuality
+          : mobileDataDefaultQuality;
+      const highest = defaultQuality === DefaultQuality.Highest;
+
       let url = null;
 
       if (stream.type === "hls") {
-        url = stream.playlist;
+        url = await findHLSQuality(stream.playlist, stream.headers, highest);
       }
 
       if (stream.type === "file") {
-        const highestQuality = findHighestQuality(stream);
-        url = highestQuality ? stream.qualities[highestQuality]?.url : null;
+        const chosenQuality = findQuality(stream, highest);
+        url = chosenQuality ? stream.qualities[chosenQuality]?.url : null;
       }
 
       if (!url) {
@@ -219,6 +231,8 @@ export const VideoPlayer = () => {
     updateWatchHistory,
     videoRef?.props.positionMillis,
     videoSrc?.uri,
+    wifiDefaultQuality,
+    mobileDataDefaultQuality,
   ]);
 
   const onVideoLoadStart = () => {

@@ -149,8 +149,9 @@ export async function getVideoStreamFromEmbed({
   }
 }
 
-export function findHighestQuality(
+export function findQuality(
   stream: FileBasedStream,
+  highest = true,
 ): Qualities | undefined {
   const qualityOrder: Qualities[] = [
     "4k",
@@ -160,6 +161,9 @@ export function findHighestQuality(
     "360",
     "unknown",
   ];
+  if (!highest) {
+    qualityOrder.reverse();
+  }
   for (const quality of qualityOrder) {
     if (stream.qualities[quality]) {
       return quality;
@@ -193,9 +197,10 @@ export async function extractTracksFromHLS(
   }
 }
 
-export async function extractSegmentsFromHLS(
+export async function findHLSQuality(
   playlistUrl: string,
-  headers: Record<string, string>,
+  headers?: Record<string, string>,
+  highest = true,
 ) {
   try {
     const response = await fetch(playlistUrl, { headers }).then((res) =>
@@ -220,17 +225,29 @@ export async function extractSegmentsFromHLS(
         return widthB * heightB - widthA * heightA;
       });
 
-    const highestQuality = sortedStreams[0];
-    if (!highestQuality) return null;
+    const chosenQuality = sortedStreams[highest ? 0 : sortedStreams.length - 1];
+    if (!chosenQuality) return null;
 
-    const highestQualityUri = constructFullUrl(playlistUrl, highestQuality.uri);
-    const highestQualityResponse = await fetch(highestQualityUri, {
-      headers,
-    }).then((res) => res.text());
-    const highestQualityPlaylist = hls.parse(highestQualityResponse);
+    return chosenQuality.uri;
+  } catch (e) {
+    return null;
+  }
+}
 
-    return highestQualityPlaylist.segments.map((segment) =>
-      constructFullUrl(highestQualityUri, segment.uri),
+export async function extractSegmentsFromHLS(
+  playlistUrl: string,
+  headers: Record<string, string>,
+) {
+  try {
+    const highestQualityUrl = await findHLSQuality(playlistUrl, headers);
+    if (!highestQualityUrl) return null;
+    const response = await fetch(highestQualityUrl, { headers }).then((res) =>
+      res.text(),
+    );
+    const playlist = hls.parse(response);
+
+    return playlist.segments.map((segment) =>
+      constructFullUrl(highestQualityUrl, segment.uri),
     );
   } catch (e) {
     return null;

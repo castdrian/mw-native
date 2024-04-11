@@ -91,7 +91,7 @@ export default function SettingsScreen() {
   };
 
   const clearCacheDirectory = async () => {
-    const cacheDirectory = FileSystem.cacheDirectory + "movie-web";
+    const cacheDirectory = `${FileSystem.cacheDirectory}movie-web`;
     if (!cacheDirectory) return;
 
     try {

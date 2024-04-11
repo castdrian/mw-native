@@ -4,19 +4,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useRouter } from "expo-router";
 import { View } from "tamagui";
 
-import type {
-  HlsBasedStream,
-  RunOutput,
-  ScrapeMedia,
-} from "@movie-web/provider-utils";
+import type { RunOutput, ScrapeMedia } from "@movie-web/provider-utils";
 import {
-  constructFullUrl,
   extractTracksFromHLS,
-  findHighestQuality,
+  filterAudioTracks,
+  findQuality,
 } from "@movie-web/provider-utils";
 
 import type { ItemData } from "../item/item";
-import type { AudioTrack } from "./AudioTrackSelector";
 import type { PlayerMeta } from "~/stores/player/slices/video";
 import { useMeta } from "~/hooks/player/useMeta";
 import { useScrape } from "~/hooks/player/useSourceScrape";
@@ -76,9 +71,9 @@ export const ScraperProcess = ({
       if (!streamResult) return router.back();
       if (download) {
         if (streamResult.stream.type === "file") {
-          const highestQuality = findHighestQuality(streamResult.stream);
-          const url = highestQuality
-            ? streamResult.stream.qualities[highestQuality]?.url
+          const quality = findQuality(streamResult.stream);
+          const url = quality
+            ? streamResult.stream.qualities[quality]?.url
             : null;
           if (!url) return;
           startDownload(url, "mp4", scrapeMedia).catch(console.error);
@@ -89,6 +84,7 @@ export const ScraperProcess = ({
         }
         return router.back();
       }
+
       setStream(streamResult.stream);
 
       if (streamResult.stream.type === "hls") {
@@ -103,28 +99,9 @@ export const ScraperProcess = ({
         if (tracks) setHlsTracks(tracks);
 
         if (tracks?.audio.length) {
-          const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
-            uri: constructFullUrl(
-              (streamResult?.stream as HlsBasedStream).playlist,
-              track.uri,
-            ),
-            name: track.properties[0]?.attributes.name?.toString() ?? "Unknown",
-            language:
-              track.properties[0]?.attributes.language?.toString() ?? "Unknown",
-            active: Boolean(track.properties[0]?.attributes.default) ?? false,
-          }));
-
-          const uniqueTracks = new Set(audioTracks.map((t) => t.language));
-
-          const filteredAudioTracks = audioTracks.filter((track) => {
-            if (uniqueTracks.has(track.language)) {
-              uniqueTracks.delete(track.language);
-              return true;
-            }
-            return false;
-          });
-
-          setAudioTracks(filteredAudioTracks);
+          setAudioTracks(
+            filterAudioTracks(tracks, streamResult.stream.playlist),
+          );
         }
       }
       setPlayerStatus(PlayerStatus.READY);

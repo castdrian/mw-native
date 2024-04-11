@@ -2,7 +2,8 @@ import type { AppendToResponse, MovieDetails, TvShowDetails } from "tmdb-ts";
 
 import type { ScrapeMedia } from "@movie-web/providers";
 
-import { providers } from "./video";
+import type { HLSTracks } from "./video";
+import { constructFullUrl, providers } from "./video";
 
 export function getMetaData() {
   return [...providers.listSources(), ...providers.listEmbeds()];
@@ -58,4 +59,32 @@ export function transformSearchResultToScrapeMedia<T extends "tv" | "movie">(
   }
 
   throw new Error("Invalid type parameter");
+}
+
+interface AudioTrack {
+  uri: string;
+  name: string;
+  language: string;
+  active?: boolean;
+}
+
+export function filterAudioTracks(tracks: HLSTracks, playlist: string) {
+  const audioTracks: AudioTrack[] = tracks.audio.map((track) => ({
+    uri: constructFullUrl(playlist, track.uri),
+    name: track.properties[0]?.attributes.name?.toString() ?? "Unknown",
+    language: track.properties[0]?.attributes.language?.toString() ?? "Unknown",
+    active: Boolean(track.properties[0]?.attributes.default) ?? false,
+  }));
+
+  const uniqueTracks = new Set(audioTracks.map((t) => t.language));
+
+  const filteredAudioTracks = audioTracks.filter((track) => {
+    if (uniqueTracks.has(track.language)) {
+      uniqueTracks.delete(track.language);
+      return true;
+    }
+    return false;
+  });
+
+  return filteredAudioTracks;
 }

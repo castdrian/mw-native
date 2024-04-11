@@ -223,13 +223,18 @@ export const useWatchHistoryStore = create<
   ),
 );
 
+export enum DefaultQuality {
+  Lowest = "Lowest",
+  Highest = "Highest",
+}
+
 interface NetworkSettingsStoreState {
   allowMobileData: boolean;
   setAllowMobileData: (enabled: boolean) => void;
-  wifiDefaultQuality: string;
-  setWifiDefaultQuality: (quality: string) => void;
-  mobileDataDefaultQuality: string;
-  setMobileDataDefaultQuality: (quality: string) => void;
+  wifiDefaultQuality: DefaultQuality;
+  setWifiDefaultQuality: (quality: DefaultQuality) => void;
+  mobileDataDefaultQuality: DefaultQuality;
+  setMobileDataDefaultQuality: (quality: DefaultQuality) => void;
 }
 
 export const useNetworkSettingsStore = create<
@@ -240,9 +245,9 @@ export const useNetworkSettingsStore = create<
     (set) => ({
       allowMobileData: false,
       setAllowMobileData: (enabled) => set({ allowMobileData: enabled }),
-      wifiDefaultQuality: "Highest",
+      wifiDefaultQuality: DefaultQuality.Highest,
       setWifiDefaultQuality: (quality) => set({ wifiDefaultQuality: quality }),
-      mobileDataDefaultQuality: "Lowest",
+      mobileDataDefaultQuality: DefaultQuality.Lowest,
       setMobileDataDefaultQuality: (quality) =>
         set({ mobileDataDefaultQuality: quality }),
     }),

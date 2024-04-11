@@ -184,11 +184,11 @@ export const useDownloadManager = () => {
       lastTimestamp = currentTime;
     };
 
-    const fileUri =
-      FileSystem.cacheDirectory + "movie-web"
-        ? FileSystem.cacheDirectory + "movie-web" + url.split("/").pop()
-        : null;
-    if (!fileUri) {
+    const fileUri = `${FileSystem.cacheDirectory}movie-web${url.split("/").pop()}`;
+    if (
+      !(await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}movie-web`))
+        .exists
+    ) {
       console.error("Cache directory is unavailable");
       return;
     }
@@ -238,7 +238,7 @@ export const useDownloadManager = () => {
     const totalSegments = segments.length;
     let segmentsDownloaded = 0;
 
-    const segmentDir = FileSystem.cacheDirectory + "movie-web/segments/";
+    const segmentDir = `${FileSystem.cacheDirectory}movie-web/segments/`;
     await ensureDirExists(segmentDir);
 
     const updateProgress = () => {
