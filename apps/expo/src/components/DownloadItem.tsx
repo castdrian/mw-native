@@ -37,7 +37,7 @@ const formatBytes = (bytes: number, decimals = 2) => {
   const dm = decimals < 0 ? 0 : decimals;
   const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 };
 
 export function DownloadItem(props: DownloadItemProps) {
@@ -104,10 +104,10 @@ export function DownloadItem(props: DownloadItemProps) {
             <XStack gap="$6" maxWidth="65%">
               <Text fontWeight="$bold" ellipse flexGrow={1}>
                 {props.item.media.type === "show" &&
-                  mapSeasonAndEpisodeNumberToText(
+                  `${mapSeasonAndEpisodeNumberToText(
                     props.item.media.season.number,
                     props.item.media.episode.number,
-                  ) + " "}
+                  )} `}
                 {props.item.media.title}
               </Text>
               {props.item.type !== "hls" && (

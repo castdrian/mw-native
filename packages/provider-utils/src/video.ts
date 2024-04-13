@@ -228,7 +228,7 @@ export async function findHLSQuality(
     const chosenQuality = sortedStreams[highest ? 0 : sortedStreams.length - 1];
     if (!chosenQuality) return null;
 
-    return chosenQuality.uri;
+    return constructFullUrl(playlistUrl, chosenQuality.uri);
   } catch (e) {
     return null;
   }

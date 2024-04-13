@@ -28,11 +28,9 @@ export const BottomControls = () => {
   const { currentTime, remainingTime } = useMemo(() => {
     if (status?.isLoaded) {
       const current = mapMillisecondsToTime(status.positionMillis ?? 0);
-      const remaining =
-        "-" +
-        mapMillisecondsToTime(
-          (status.durationMillis ?? 0) - (status.positionMillis ?? 0),
-        );
+      const remaining = `-${mapMillisecondsToTime(
+        (status.durationMillis ?? 0) - (status.positionMillis ?? 0),
+      )}`;
       return { currentTime: current, remainingTime: remaining };
     } else {
       return { currentTime: "", remainingTime: "" };
