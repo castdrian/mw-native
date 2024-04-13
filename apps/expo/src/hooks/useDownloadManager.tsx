@@ -1,6 +1,7 @@
 import type { DownloadProgressData } from "expo-file-system";
 import type { Asset } from "expo-media-library";
 import { useCallback, useState } from "react";
+import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import * as Network from "expo-network";
@@ -133,11 +134,15 @@ export const useDownloadManager = () => {
       try {
         updateDownloadItem(download.id, { status: "importing" });
         const asset = await MediaLibrary.createAssetAsync(fileUri);
+        const { localUri } = await MediaLibrary.getAssetInfoAsync(asset);
         await FileSystem.deleteAsync(fileUri);
 
         updateDownloadItem(download.id, {
           status: "finished",
-          localPath: asset.uri,
+          localPath: Platform.select({
+            ios: localUri,
+            android: asset.uri,
+          }),
         });
         console.log("File saved to media library and original deleted");
         showToast("Download finished", {
