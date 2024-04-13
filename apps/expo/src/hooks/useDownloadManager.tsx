@@ -194,8 +194,7 @@ export const useDownloadManager = () => {
           await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}movie-web`)
         ).exists
       ) {
-        console.error("Cache directory is unavailable");
-        return;
+        await ensureDirExists(`${FileSystem.cacheDirectory}movie-web`);
       }
 
       const downloadResumable = FileSystem.createDownloadResumable(
