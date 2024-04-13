@@ -41,7 +41,7 @@ export default function Page() {
           title: download?.media.title ?? "Downloads",
         }}
       />
-      <YStack gap="$3">
+      <YStack gap="$4">
         {download?.downloads.map((download) => {
           return (
             <DownloadItem

@@ -100,9 +100,14 @@ export function DownloadItem(props: DownloadItemProps) {
               height="100%"
             />
           </View>
-          <YStack gap="$2">
-            <XStack gap="$6" maxWidth="65%">
-              <Text fontWeight="$bold" ellipse flexGrow={1}>
+          <YStack gap="$2" flex={1}>
+            <XStack justifyContent="space-between" alignItems="center">
+              <Text
+                fontWeight="$bold"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                flex={1}
+              >
                 {props.item.media.type === "show" &&
                   `${mapSeasonAndEpisodeNumberToText(
                     props.item.media.season.number,
