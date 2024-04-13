@@ -124,97 +124,104 @@ export const useDownloadManager = () => {
     [setDownloads],
   );
 
-  const saveFileToMediaLibraryAndDeleteOriginal = async (
-    fileUri: string,
-    download: Download,
-  ): Promise<Asset | void> => {
-    console.log("Saving file to media library and deleting original", fileUri);
-    try {
-      updateDownloadItem(download.id, { status: "importing" });
+  const saveFileToMediaLibraryAndDeleteOriginal = useCallback(
+    async (fileUri: string, download: Download): Promise<Asset | void> => {
+      console.log(
+        "Saving file to media library and deleting original",
+        fileUri,
+      );
+      try {
+        updateDownloadItem(download.id, { status: "importing" });
 
-      const asset = await MediaLibrary.createAssetAsync(fileUri);
-      const { localUri } = await MediaLibrary.getAssetInfoAsync(asset);
-      await FileSystem.deleteAsync(fileUri);
+        const asset = await MediaLibrary.createAssetAsync(fileUri);
+        const { localUri } = await MediaLibrary.getAssetInfoAsync(asset);
+        await FileSystem.deleteAsync(fileUri);
 
-      updateDownloadItem(download.id, {
-        status: "finished",
-        localPath: localUri,
-      });
-      console.log("File saved to media library and original deleted");
-      showToast("Download finished", {
-        burntOptions: { preset: "done" },
-      });
-      return asset;
-    } catch (error) {
-      console.error("Error saving file to media library:", error);
-      showToast("Download failed", {
-        burntOptions: { preset: "error" },
-      });
-    }
-  };
-
-  const downloadMP4 = async (
-    url: string,
-    downloadItem: Download,
-    headers: Record<string, string>,
-  ): Promise<Asset | void> => {
-    let lastBytesWritten = 0;
-    let lastTimestamp = Date.now();
-
-    const updateProgress = (downloadProgress: DownloadProgressData) => {
-      const currentTime = Date.now();
-      const timeElapsed = (currentTime - lastTimestamp) / 1000;
-
-      if (timeElapsed === 0) return;
-
-      const newBytes = downloadProgress.totalBytesWritten - lastBytesWritten;
-      const speed = newBytes / timeElapsed / 1024 / 1024;
-      const progress =
-        downloadProgress.totalBytesWritten /
-        downloadProgress.totalBytesExpectedToWrite;
-
-      updateDownloadItem(downloadItem.id, {
-        progress,
-        speed,
-        fileSize: downloadProgress.totalBytesExpectedToWrite,
-        downloaded: downloadProgress.totalBytesWritten,
-      });
-
-      lastBytesWritten = downloadProgress.totalBytesWritten;
-      lastTimestamp = currentTime;
-    };
-
-    const fileUri = `${FileSystem.cacheDirectory}movie-web${url.split("/").pop()}`;
-    if (
-      !(await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}movie-web`))
-        .exists
-    ) {
-      console.error("Cache directory is unavailable");
-      return;
-    }
-
-    const downloadResumable = FileSystem.createDownloadResumable(
-      url,
-      fileUri,
-      {
-        headers,
-      },
-      updateProgress,
-    );
-
-    try {
-      const result = await downloadResumable.downloadAsync();
-      if (result) {
-        console.log("Finished downloading to ", result.uri);
-        return saveFileToMediaLibraryAndDeleteOriginal(
-          result.uri,
-          downloadItem,
-        );
+        updateDownloadItem(download.id, {
+          status: "finished",
+          localPath: localUri,
+        });
+        console.log("File saved to media library and original deleted");
+        showToast("Download finished", {
+          burntOptions: { preset: "done" },
+        });
+        return asset;
+      } catch (error) {
+        console.error("Error saving file to media library:", error);
+        showToast("Download failed", {
+          burntOptions: { preset: "error" },
+        });
       }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    },
+    [updateDownloadItem, showToast],
+  );
+
+  const downloadMP4 = useCallback(
+    async (
+      url: string,
+      downloadItem: Download,
+      headers: Record<string, string>,
+    ): Promise<Asset | void> => {
+      let lastBytesWritten = 0;
+      let lastTimestamp = Date.now();
+
+      const updateProgress = (downloadProgress: DownloadProgressData) => {
+        const currentTime = Date.now();
+        const timeElapsed = (currentTime - lastTimestamp) / 1000;
+
+        if (timeElapsed === 0) return;
+
+        const newBytes = downloadProgress.totalBytesWritten - lastBytesWritten;
+        const speed = newBytes / timeElapsed / 1024 / 1024;
+        const progress =
+          downloadProgress.totalBytesWritten /
+          downloadProgress.totalBytesExpectedToWrite;
+
+        updateDownloadItem(downloadItem.id, {
+          progress,
+          speed,
+          fileSize: downloadProgress.totalBytesExpectedToWrite,
+          downloaded: downloadProgress.totalBytesWritten,
+        });
+
+        lastBytesWritten = downloadProgress.totalBytesWritten;
+        lastTimestamp = currentTime;
+      };
+
+      const fileUri = `${FileSystem.cacheDirectory}movie-web${url.split("/").pop()}`;
+      if (
+        !(
+          await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}movie-web`)
+        ).exists
+      ) {
+        console.error("Cache directory is unavailable");
+        return;
+      }
+
+      const downloadResumable = FileSystem.createDownloadResumable(
+        url,
+        fileUri,
+        {
+          headers,
+        },
+        updateProgress,
+      );
+
+      try {
+        const result = await downloadResumable.downloadAsync();
+        if (result) {
+          console.log("Finished downloading to ", result.uri);
+          return saveFileToMediaLibraryAndDeleteOriginal(
+            result.uri,
+            downloadItem,
+          );
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [updateDownloadItem, saveFileToMediaLibraryAndDeleteOriginal],
+  );
 
   const cleanupDownload = useCallback(
     async (segmentDir: string, download: Download) => {
@@ -224,162 +231,177 @@ export const useDownloadManager = () => {
     [removeDownload],
   );
 
-  const downloadHLS = async (
-    url: string,
-    download: Download,
-    headers: Record<string, string>,
-  ) => {
-    const segments = await extractSegmentsFromHLS(url, headers);
+  const downloadHLS = useCallback(
+    async (
+      url: string,
+      download: Download,
+      headers: Record<string, string>,
+    ) => {
+      const segments = await extractSegmentsFromHLS(url, headers);
 
-    if (!segments || segments.length === 0) {
-      return removeDownload(download);
-    }
+      if (!segments || segments.length === 0) {
+        return removeDownload(download);
+      }
 
-    const totalSegments = segments.length;
-    let segmentsDownloaded = 0;
+      const totalSegments = segments.length;
+      let segmentsDownloaded = 0;
 
-    const segmentDir = `${FileSystem.cacheDirectory}movie-web/segments/`;
-    await ensureDirExists(segmentDir);
+      const segmentDir = `${FileSystem.cacheDirectory}movie-web/segments/`;
+      await ensureDirExists(segmentDir);
 
-    const updateProgress = () => {
-      const progress = segmentsDownloaded / totalSegments;
-      updateDownloadItem(download.id, {
-        progress,
-        downloaded: segmentsDownloaded,
-        fileSize: totalSegments,
-      });
-    };
+      const updateProgress = () => {
+        const progress = segmentsDownloaded / totalSegments;
+        updateDownloadItem(download.id, {
+          progress,
+          downloaded: segmentsDownloaded,
+          fileSize: totalSegments,
+        });
+      };
 
-    const localSegmentPaths = [];
+      const localSegmentPaths = [];
 
-    for (const [index, segment] of segments.entries()) {
+      for (const [index, segment] of segments.entries()) {
+        if (getCancellationFlag(download.id)) {
+          await cleanupDownload(segmentDir, download);
+          return;
+        }
+
+        const segmentFile = `${segmentDir}${index}.ts`;
+        localSegmentPaths.push(segmentFile);
+
+        try {
+          await downloadSegment(segment, segmentFile, headers);
+
+          if (getCancellationFlag(download.id)) {
+            await cleanupDownload(segmentDir, download);
+            return;
+          }
+
+          segmentsDownloaded++;
+          updateProgress();
+        } catch (e) {
+          console.error(e);
+          if (getCancellationFlag(download.id)) {
+            await cleanupDownload(segmentDir, download);
+            return;
+          }
+        }
+      }
+
       if (getCancellationFlag(download.id)) {
-        await cleanupDownload(segmentDir, download);
+        return removeDownload(download);
+      }
+
+      updateDownloadItem(download.id, { status: "merging" });
+      const uri = await VideoManager.mergeVideos(
+        localSegmentPaths,
+        `${FileSystem.cacheDirectory}movie-web/output.mp4`,
+      );
+      const asset = await saveFileToMediaLibraryAndDeleteOriginal(
+        uri,
+        download,
+      );
+      return asset;
+    },
+    [
+      getCancellationFlag,
+      updateDownloadItem,
+      saveFileToMediaLibraryAndDeleteOriginal,
+      removeDownload,
+      cleanupDownload,
+    ],
+  );
+
+  const startDownload = useCallback(
+    async (
+      url: string,
+      type: "mp4" | "hls",
+      media: ScrapeMedia,
+      headers?: Record<string, string>,
+    ): Promise<Asset | void> => {
+      const { allowMobileData } = useNetworkSettingsStore.getState();
+
+      const { type: networkType } = await Network.getNetworkStateAsync();
+
+      if (networkType === NetworkStateType.CELLULAR && !allowMobileData) {
+        showToast("Mobile data downloads are disabled", {
+          burntOptions: { preset: "error" },
+        });
         return;
       }
 
-      const segmentFile = `${segmentDir}${index}.ts`;
-      localSegmentPaths.push(segmentFile);
-
-      try {
-        await downloadSegment(segment, segmentFile, headers);
-
-        if (getCancellationFlag(download.id)) {
-          await cleanupDownload(segmentDir, download);
-          return;
-        }
-
-        segmentsDownloaded++;
-        updateProgress();
-      } catch (e) {
-        console.error(e);
-        if (getCancellationFlag(download.id)) {
-          await cleanupDownload(segmentDir, download);
-          return;
-        }
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== MediaLibrary.PermissionStatus.GRANTED) {
+        showToast("Permission denied", {
+          burntOptions: { preset: "error" },
+        });
+        return;
       }
-    }
 
-    if (getCancellationFlag(download.id)) {
-      return removeDownload(download);
-    }
-
-    updateDownloadItem(download.id, { status: "merging" });
-    const uri = await VideoManager.mergeVideos(
-      localSegmentPaths,
-      `${FileSystem.cacheDirectory}movie-web/output.mp4`,
-    );
-    const asset = await saveFileToMediaLibraryAndDeleteOriginal(uri, download);
-    return asset;
-  };
-
-  const startDownload = async (
-    url: string,
-    type: "mp4" | "hls",
-    media: ScrapeMedia,
-    headers?: Record<string, string>,
-  ): Promise<Asset | void> => {
-    const { allowMobileData } = useNetworkSettingsStore.getState();
-
-    const { type: networkType } = await Network.getNetworkStateAsync();
-
-    if (networkType === NetworkStateType.CELLULAR && !allowMobileData) {
-      showToast("Mobile data downloads are disabled", {
-        burntOptions: { preset: "error" },
-      });
-      return;
-    }
-
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== MediaLibrary.PermissionStatus.GRANTED) {
-      showToast("Permission denied", {
-        burntOptions: { preset: "error" },
-      });
-      return;
-    }
-
-    const existingDownload = downloads.find(
-      (d) => d.media.tmdbId === media.tmdbId,
-    );
-
-    if (existingDownload && media.type === "movie") {
-      showToast("Download already exists", {
-        burntOptions: { preset: "error" },
-      });
-      return;
-    }
-
-    if (existingDownload && media.type === "show") {
-      const existingEpisode = existingDownload.downloads.find(
-        (d) =>
-          d.media.type === "show" &&
-          d.media.episode.tmdbId === media.episode.tmdbId,
+      const existingDownload = downloads.find(
+        (d) => d.media.tmdbId === media.tmdbId,
       );
 
-      if (existingEpisode) {
+      if (existingDownload && media.type === "movie") {
         showToast("Download already exists", {
           burntOptions: { preset: "error" },
         });
         return;
       }
-    }
-    showToast("Download started", {
-      burntOptions: { preset: "none" },
-    });
 
-    const newDownload: Download = {
-      id: `download-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-      progress: 0,
-      speed: 0,
-      fileSize: 0,
-      downloaded: 0,
-      type,
-      url,
-      status: "downloading",
-      media,
-    };
-
-    if (existingDownload) {
-      existingDownload.downloads.push(newDownload);
-      setDownloads((prev) => {
-        return prev.map((d) =>
-          d.media.tmdbId === media.tmdbId ? existingDownload : d,
+      if (existingDownload && media.type === "show") {
+        const existingEpisode = existingDownload.downloads.find(
+          (d) =>
+            d.media.type === "show" &&
+            d.media.episode.tmdbId === media.episode.tmdbId,
         );
-      });
-    } else {
-      setDownloads((prev) => {
-        return [...prev, { media, downloads: [newDownload] }];
-      });
-    }
 
-    if (type === "mp4") {
-      const asset = await downloadMP4(url, newDownload, headers ?? {});
-      return asset;
-    } else if (type === "hls") {
-      const asset = await downloadHLS(url, newDownload, headers ?? {});
-      return asset;
-    }
-  };
+        if (existingEpisode) {
+          showToast("Download already exists", {
+            burntOptions: { preset: "error" },
+          });
+          return;
+        }
+      }
+      showToast("Download started", {
+        burntOptions: { preset: "none" },
+      });
+
+      const newDownload: Download = {
+        id: `download-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        progress: 0,
+        speed: 0,
+        fileSize: 0,
+        downloaded: 0,
+        type,
+        url,
+        status: "downloading",
+        media,
+      };
+
+      if (existingDownload) {
+        existingDownload.downloads.push(newDownload);
+        setDownloads((prev) => {
+          return prev.map((d) =>
+            d.media.tmdbId === media.tmdbId ? existingDownload : d,
+          );
+        });
+      } else {
+        setDownloads((prev) => {
+          return [...prev, { media, downloads: [newDownload] }];
+        });
+      }
+
+      if (type === "mp4") {
+        const asset = await downloadMP4(url, newDownload, headers ?? {});
+        return asset;
+      } else if (type === "hls") {
+        const asset = await downloadHLS(url, newDownload, headers ?? {});
+        return asset;
+      }
+    },
+    [downloads, showToast, setDownloads, downloadMP4, downloadHLS],
+  );
 
   const downloadSegment = async (
     segmentUrl: string,
