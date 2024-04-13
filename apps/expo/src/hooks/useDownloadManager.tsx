@@ -188,7 +188,7 @@ export const useDownloadManager = () => {
         lastTimestamp = currentTime;
       };
 
-      const fileUri = `${FileSystem.cacheDirectory}movie-web${url.split("/").pop()}`;
+      const fileUri = `${FileSystem.cacheDirectory}movie-web/${url.split("/").pop()}`;
       if (
         !(
           await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory}movie-web`)
