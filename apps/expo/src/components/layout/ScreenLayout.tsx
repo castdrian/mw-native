@@ -43,7 +43,7 @@ export default function ScreenLayout({
       start={[0, 0]}
       end={[1, 1]}
       flexGrow={1}
-      paddingTop={showHeader ? insets.top : insets.top + 50}
+      paddingTop={showHeader ? insets.top + 16 : insets.top + 50}
     >
       {showHeader && <Header />}
       <ScrollView
