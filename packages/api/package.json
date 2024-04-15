@@ -27,5 +27,8 @@
       "@movie-web/eslint-config/base"
     ]
   },
-  "prettier": "@movie-web/prettier-config"
+  "prettier": "@movie-web/prettier-config",
+  "dependencies": {
+    "ofetch": "^1.3.4"
+  }
 }
