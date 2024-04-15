@@ -1,3 +1,4 @@
+import type { ScrollViewProps } from "tamagui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
@@ -5,26 +6,14 @@ import { LinearGradient } from "tamagui/linear-gradient";
 import { Header } from "./Header";
 
 interface Props {
-  children?: React.ReactNode;
-  onScrollBeginDrag?: () => void;
-  onMomentumScrollEnd?: () => void;
   showHeader?: boolean;
-  scrollEnabled?: boolean;
-  keyboardDismissMode?: "none" | "on-drag" | "interactive";
-  keyboardShouldPersistTaps?: "always" | "never" | "handled";
-  contentContainerStyle?: Record<string, unknown>;
 }
 
 export default function ScreenLayout({
   children,
-  onScrollBeginDrag,
-  onMomentumScrollEnd,
   showHeader = true,
-  scrollEnabled,
-  keyboardDismissMode,
-  keyboardShouldPersistTaps,
-  contentContainerStyle,
-}: Props) {
+  ...props
+}: ScrollViewProps & Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -47,15 +36,10 @@ export default function ScreenLayout({
     >
       {showHeader && <Header />}
       <ScrollView
-        onScrollBeginDrag={onScrollBeginDrag}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        scrollEnabled={scrollEnabled}
-        keyboardDismissMode={keyboardDismissMode}
-        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-        contentContainerStyle={contentContainerStyle}
         marginTop="$4"
         flexGrow={1}
         showsVerticalScrollIndicator={false}
+        {...props}
       >
         {children}
       </ScrollView>
