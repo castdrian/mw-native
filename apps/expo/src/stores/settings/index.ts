@@ -257,3 +257,66 @@ export const useNetworkSettingsStore = create<
     },
   ),
 );
+
+export interface Account {
+  profile: {
+    colorA: string;
+    colorB: string;
+    icon: string;
+  };
+}
+
+export type AccountWithToken = Account & {
+  sessionId: string;
+  userId: string;
+  token: string;
+  seed: string;
+  deviceName: string;
+};
+
+interface AuthStoreState {
+  account: null | AccountWithToken;
+  backendUrl: string;
+  proxySet: null | string[];
+  removeAccount(): void;
+  setAccount(acc: AccountWithToken): void;
+  updateDeviceName(deviceName: string): void;
+  updateAccount(acc: Account): void;
+  setAccountProfile(acc: Account["profile"]): void;
+  setBackendUrl(url: string): void;
+  setProxySet(urls: null | string[]): void;
+}
+
+export const useAuthStore = create<
+  AuthStoreState,
+  [["zustand/persist", AuthStoreState]]
+>(
+  persist(
+    (set) => ({
+      account: null,
+      backendUrl: "https://mw-backend.lonelil.ru",
+      proxySet: null,
+      setAccount: (acc) => set((s) => ({ ...s, account: acc })),
+      removeAccount: () => set((s) => ({ ...s, account: null })),
+      setBackendUrl: (v) => set((s) => ({ ...s, backendUrl: v })),
+      setProxySet: (urls) => set((s) => ({ ...s, proxySet: urls })),
+      setAccountProfile: (profile) =>
+        set((s) => ({
+          ...s,
+          account: s.account ? { ...s.account, profile } : s.account,
+        })),
+      updateAccount: (acc) =>
+        set((s) =>
+          s.account ? { ...s, account: { ...s.account, ...acc } } : s,
+        ),
+      updateDeviceName: (deviceName) =>
+        set((s) =>
+          s.account ? { ...s, account: { ...s.account, deviceName } } : s,
+        ),
+    }),
+    {
+      name: "account-settings",
+      storage: createJSONStorage(() => zustandStorage),
+    },
+  ),
+);

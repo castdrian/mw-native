@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "expo-router";
 import { H2, H5, Paragraph, View } from "tamagui";
 
@@ -6,9 +5,10 @@ import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
 import { MWInput } from "~/components/ui/Input";
+import { useAuthStore } from "~/stores/settings";
 
 export default function MovieWebScreen() {
-  const [url, setUrl] = useState("https://mw-backend.lonelil.ru");
+  const { backendUrl, setBackendUrl } = useAuthStore();
 
   return (
     <ScreenLayout
@@ -34,10 +34,10 @@ export default function MovieWebScreen() {
 
         <View padding="$4">
           <MWInput
-            placeholder="https://mw-backend.lonelil.ru"
+            placeholder={backendUrl}
             type="search"
-            value={url}
-            onChangeText={setUrl}
+            value={backendUrl}
+            onChangeText={setBackendUrl}
           />
         </View>
 
@@ -46,7 +46,7 @@ export default function MovieWebScreen() {
             <Link
               href={{
                 pathname: "/sync/trust/[url]",
-                params: { url },
+                params: { url: backendUrl },
               }}
               style={{ color: "white", fontWeight: "bold" }}
             >
