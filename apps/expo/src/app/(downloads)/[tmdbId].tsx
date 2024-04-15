@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { YStack } from "tamagui";
 
@@ -20,6 +20,10 @@ export default function Page() {
   const download = useMemo(() => {
     return allDownloads.find((download) => download.media.tmdbId === tmdbId);
   }, [allDownloads, tmdbId]);
+
+  useEffect(() => {
+    if (!download) router.back();
+  }, [download, router]);
 
   const handlePress = (localPath?: string) => {
     if (!localPath) return;
