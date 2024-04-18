@@ -1,17 +1,6 @@
 import { ofetch } from "ofetch";
 
-export interface SessionResponse {
-  id: string;
-  userId: string;
-  createdAt: string;
-  accessedAt: string;
-  device: string;
-  userAgent: string;
-}
-export interface LoginResponse {
-  session: SessionResponse;
-  token: string;
-}
+import type { LoginResponse } from "./types";
 
 export function getAuthHeaders(token: string): Record<string, string> {
   return {

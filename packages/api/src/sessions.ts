@@ -1,35 +1,7 @@
 import { ofetch } from "ofetch";
 
+import type { AccountWithToken, SessionResponse, SessionUpdate } from "./types";
 import { getAuthHeaders } from "./auth";
-
-export interface SessionResponse {
-  id: string;
-  userId: string;
-  createdAt: string;
-  accessedAt: string;
-  device: string;
-  userAgent: string;
-}
-
-export interface SessionUpdate {
-  deviceName: string;
-}
-
-interface Account {
-  profile: {
-    colorA: string;
-    colorB: string;
-    icon: string;
-  };
-}
-
-export type AccountWithToken = Account & {
-  sessionId: string;
-  userId: string;
-  token: string;
-  seed: string;
-  deviceName: string;
-};
 
 export async function getSessions(url: string, account: AccountWithToken) {
   return ofetch<SessionResponse[]>(`/users/${account.userId}/sessions`, {

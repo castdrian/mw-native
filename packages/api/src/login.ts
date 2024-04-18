@@ -1,10 +1,10 @@
 import { ofetch } from "ofetch";
 
-import type { SessionResponse } from "./auth";
-
-export interface ChallengeTokenResponse {
-  challenge: string;
-}
+import type {
+  ChallengeTokenResponse,
+  LoginInput,
+  LoginResponse,
+} from "./types";
 
 export async function getLoginChallengeToken(
   url: string,
@@ -17,20 +17,6 @@ export async function getLoginChallengeToken(
     },
     baseURL: url,
   });
-}
-
-export interface LoginResponse {
-  session: SessionResponse;
-  token: string;
-}
-
-export interface LoginInput {
-  publicKey: string;
-  challenge: {
-    code: string;
-    signature: string;
-  };
-  device: string;
 }
 
 export async function loginAccount(
