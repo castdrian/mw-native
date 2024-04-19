@@ -75,6 +75,7 @@
     "react-native-web": "^0.19.10",
     "subsrt-ts": "^2.1.2",
     "tamagui": "^1.94.0",
+    "text-encoding-polyfill": "^0.6.7",
     "zustand": "^4.4.7"
   },
   "devDependencies": {

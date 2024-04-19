@@ -197,6 +197,9 @@ importers:
       tamagui:
         specifier: ^1.94.0
         version: 1.94.0(@types/react@18.2.52)(immer@10.0.3)(react-dom@18.2.0)(react-native-web@0.19.10)(react-native@0.73.6)(react@18.2.0)
+      text-encoding-polyfill:
+        specifier: ^0.6.7
+        version: 0.6.7
       zustand:
         specifier: ^4.4.7
         version: 4.4.7(@types/react@18.2.52)(immer@10.0.3)(react@18.2.0)
@@ -13081,6 +13084,10 @@ packages:
       acorn: 8.11.3
       commander: 2.20.3
       source-map-support: 0.5.21
+    dev: false
+
+  /text-encoding-polyfill@0.6.7:
+    resolution: {integrity: sha512-/DZ1XJqhbqRkCop6s9ZFu8JrFRwmVuHg4quIRm+ziFkR3N3ec6ck6yBvJ1GYeEQZhLVwRW0rZE+C3SSJpy0RTg==}
     dev: false
 
   /text-table@0.2.0:

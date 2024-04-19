@@ -144,7 +144,7 @@ export const useBookmarkStore = create<
   ),
 );
 
-interface WatchHistoryItem {
+export interface WatchHistoryItem {
   item: ItemData;
   media: ScrapeMedia;
   positionMillis: number;

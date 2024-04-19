@@ -1,11 +1,52 @@
 import { Link } from "expo-router";
-import { H2, H5, Paragraph, View } from "tamagui";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { H2, H5, Paragraph, useTheme, View } from "tamagui";
 
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
 import { MWInput } from "~/components/ui/Input";
+import { useAuth } from "~/hooks/useAuth";
 import { useAuthStore } from "~/stores/settings";
+
+function TestButtons() {
+  const theme = useTheme();
+  const { login } = useAuth();
+
+  return (
+    <View>
+      <MWButton
+        type="secondary"
+        backgroundColor="$sheetItemBackground"
+        marginBottom="$4"
+        icon={
+          <MaterialCommunityIcons
+            name="login"
+            size={24}
+            color={theme.buttonSecondaryText.val}
+          />
+        }
+        onPress={async () => {
+          const passhphrase = "";
+          if (!passhphrase) {
+            alert("Please configure your passphrase");
+            return;
+          }
+
+          const account = await login({
+            mnemonic: passhphrase,
+            userData: {
+              device: "phone",
+            },
+          });
+          console.log(account);
+        }}
+      >
+        test login
+      </MWButton>
+    </View>
+  );
+}
 
 export default function MovieWebScreen() {
   const { backendUrl, setBackendUrl } = useAuthStore();
@@ -18,6 +59,7 @@ export default function MovieWebScreen() {
         justifyContent: "center",
       }}
     >
+      <TestButtons />
       <MWCard bordered>
         <MWCard.Header padded>
           <H2 fontWeight="$bold" paddingBottom="$1">
