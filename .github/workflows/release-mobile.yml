@@ -42,8 +42,8 @@ jobs:
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
-            version: 8
-            run_install: false
+          version: 9
+          run_install: false
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -63,7 +63,7 @@ jobs:
       - name: Cache Node Modules
         uses: actions/cache@v4
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install dependencies
@@ -95,7 +95,7 @@ jobs:
       - uses: pnpm/action-setup@v3
         name: Install pnpm
         with:
-          version: 8
+          version: 9
           run_install: false
 
       - name: Install Node.js
@@ -107,7 +107,7 @@ jobs:
       - name: Cache Node Modules
         uses: actions/cache@v4
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install dependencies
@@ -178,7 +178,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ipa
-        
+
       - name: Update app-repo.json
         run: |
           VERSION=$(jq -r '.version' apps/expo/package.json)
@@ -186,7 +186,7 @@ jobs:
           IPA_SIZE=$(ls -l movie-web.ipa | awk '{print $5}')
           NEW_ENTRY=$(jq -n --arg version "$VERSION" --arg date "$DATE" --arg size "$IPA_SIZE" --arg downloadURL "https://github.com/movie-web/native-app/releases/download/v$VERSION/movie-web.ipa" '{version: $version, date: $date, size: ($size | tonumber), downloadURL: $downloadURL}')
           jq --argjson newEntry "$NEW_ENTRY" '.apps[0].versions |= [$newEntry] + .' apps/expo/app-repo.json > temp.json && mv temp.json apps/expo/app-repo.json
-        
+
       - uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actions
