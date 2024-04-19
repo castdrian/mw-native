@@ -1,7 +1,6 @@
 {
   "extends": ["@movie-web/tsconfig/base.json"],
   "compilerOptions": {
-    "incremental": true,
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
