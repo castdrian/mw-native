@@ -6,19 +6,35 @@ export const MWInput = styled(Input, {
   variants: {
     type: {
       default: {
-        backgroundColor: "$inputBackground",
-        color: "$inputText",
-        placeholderTextColor: "$placeHolderText",
-        borderColor: "$inputBorder",
+        backgroundColor: "$ash600",
+        color: "$ash100",
+        placeholderTextColor: "$ash200",
+        borderColor: "$ash500",
         outlineStyle: "none",
+        focusStyle: {
+          borderColor: "$ash300",
+        },
       },
       search: {
-        backgroundColor: "$searchBackground",
+        backgroundColor: "$shade500",
+        color: "$shade100",
         borderColor: "$colorTransparent",
-        placeholderTextColor: "$searchPlaceholder",
+        placeholderTextColor: "$shade100",
         outlineStyle: "none",
         focusStyle: {
           borderColor: "$colorTransparent",
+        },
+      },
+      authentication: {
+        backgroundColor: "$shade500",
+        color: "$shade100",
+        placeholderTextColor: "$shade400",
+        outlineStyle: "none",
+        focusStyle: {
+          borderColor: "$shade300",
+        },
+        pressStyle: {
+          backgroundColor: "$shade500",
         },
       },
     },

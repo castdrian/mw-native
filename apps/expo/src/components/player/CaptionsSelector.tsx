@@ -65,7 +65,7 @@ export const CaptionsSelector = () => {
             <MaterialCommunityIcons
               name="subtitles"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
             />
           }
           onPress={() => setOpen(true)}

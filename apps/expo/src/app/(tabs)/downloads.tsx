@@ -55,7 +55,7 @@ const TestDownloadButton = (props: {
         <MaterialCommunityIcons
           name="download"
           size={24}
-          color={theme.buttonSecondaryText.val}
+          color={theme.silver300.val}
         />
       }
       onPress={async () => {

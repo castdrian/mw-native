@@ -1,7 +1,7 @@
 import { Card, styled, withStaticProperties } from "tamagui";
 
 export const MWCardFrame = styled(Card, {
-  backgroundColor: "$shade400",
+  backgroundColor: "$shade600",
   borderColor: "$shade400",
 
   variants: {

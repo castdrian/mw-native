@@ -57,17 +57,6 @@ const createThemeConfig = (tokens: Tokens) => ({
 
   loadingIndicator: tokens.purple.c200,
 
-  buttonSecondaryBackground: tokens.ash.c700,
-  buttonSecondaryText: tokens.semantic.silver.c300,
-  buttonSecondaryBackgroundHover: tokens.ash.c700,
-  buttonPrimaryBackground: tokens.white,
-  buttonPrimaryText: tokens.black,
-  buttonPrimaryBackgroundHover: tokens.semantic.silver.c100,
-  buttonPurpleBackground: tokens.purple.c500,
-  buttonPurpleBackgroundHover: tokens.purple.c400,
-  buttonCancelBackground: tokens.ash.c500,
-  buttonCancelBackgroundHover: tokens.ash.c300,
-
   switchActiveTrackColor: tokens.purple.c300,
   switchInactiveTrackColor: tokens.ash.c500,
   switchThumbColor: tokens.white,

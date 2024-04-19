@@ -206,7 +206,7 @@ export default function SettingsScreen() {
                         android: "android",
                       })}
                       size={24}
-                      color={theme.buttonSecondaryText.val}
+                      color={theme.silver300.val}
                     />
                   }
                   iconAfter={
@@ -229,7 +229,7 @@ export default function SettingsScreen() {
                     <MaterialCommunityIcons
                       name="broom"
                       size={24}
-                      color={theme.buttonSecondaryText.val}
+                      color={theme.silver300.val}
                     />
                   }
                   onPress={() => clearCacheDirectory()}
@@ -304,7 +304,7 @@ export function UpdateSheet({
             <MaterialCommunityIcons
               name={Platform.select({ ios: "apple", android: "android" })}
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
             />
           }
           onPress={() => WebBrowser.openBrowserAsync(downloadUrl)}

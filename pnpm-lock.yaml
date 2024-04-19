@@ -95,6 +95,9 @@ importers:
       expo-build-properties:
         specifier: ~0.11.1
         version: 0.11.1(expo@50.0.14)
+      expo-clipboard:
+        specifier: ^5.0.1
+        version: 5.0.1(expo@50.0.14)
       expo-constants:
         specifier: ~15.4.5
         version: 15.4.5(expo@50.0.14)
@@ -7858,6 +7861,14 @@ packages:
       ajv: 8.12.0
       expo: 50.0.14(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
       semver: 7.5.4
+    dev: false
+
+  /expo-clipboard@5.0.1(expo@50.0.14):
+    resolution: {integrity: sha512-JH853QJPr5W3h87If3aDTnMK+ESSIrwzU2TdfZrqZttVDY2pMIf/w37mVHHNYodXM4ATHXadtOkjKbAa0DWwUg==}
+    peerDependencies:
+      expo: '*'
+    dependencies:
+      expo: 50.0.14(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
     dev: false
 
   /expo-constants@15.4.5(expo@50.0.14):

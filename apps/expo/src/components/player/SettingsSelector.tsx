@@ -23,7 +23,7 @@ export const SettingsSelector = () => {
             <MaterialIcons
               name="display-settings"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
             />
           }
           onPress={() => setOpen(true)}

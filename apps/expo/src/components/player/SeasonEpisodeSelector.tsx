@@ -47,7 +47,7 @@ const EpisodeSelector = ({
             <Ionicons
               name="arrow-back"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
               onPress={() => {
                 setSelectedSeason(null);
                 props.onOpenChange?.(false);
@@ -119,7 +119,7 @@ export const SeasonSelector = () => {
             <MaterialCommunityIcons
               name="audio-video"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
             />
           }
           onPress={() => setOpen(true)}

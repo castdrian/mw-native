@@ -102,7 +102,7 @@ const EmbedsPart = ({
             <Ionicons
               name="arrow-back"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
               onPress={() => {
                 props.onOpenChange?.(false);
               }}
@@ -160,7 +160,7 @@ export const SourceSelector = () => {
             <MaterialCommunityIcons
               name="video"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
             />
           }
           onPress={() => setOpen(true)}

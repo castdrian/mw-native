@@ -1,4 +1,4 @@
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { H4, Paragraph, Text, View } from "tamagui";
 
@@ -30,7 +30,7 @@ export default function Page() {
           title: "",
         }}
       />
-      <MWCard bordered>
+      <MWCard bordered padded>
         <MWCard.Header padded>
           <H4 fontWeight="$bold" textAlign="center">
             Do you trust this server?
@@ -90,15 +90,23 @@ export default function Page() {
           flexDirection="column"
           gap="$4"
         >
-          <MWButton type="purple">I trust this server</MWButton>
-          <MWButton type="cancel">Go back</MWButton>
-
-          <Paragraph color="$ash50" textAlign="center" fontWeight="$semibold">
-            Already have an account?{" "}
-            <Text color="$purple100" fontWeight="$bold">
-              Login here
-            </Text>
-          </Paragraph>
+          <Link
+            href={{
+              pathname: "/sync/register",
+            }}
+            asChild
+          >
+            <MWButton type="purple">I trust this server</MWButton>
+          </Link>
+          <Link
+            href={{
+              pathname: "/(tabs)/",
+            }}
+            replace
+            asChild
+          >
+            <MWButton type="cancel">Go back</MWButton>
+          </Link>
         </MWCard.Footer>
       </MWCard>
     </ScreenLayout>

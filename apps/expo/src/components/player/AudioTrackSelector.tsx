@@ -58,7 +58,7 @@ export const AudioTrackSelector = () => {
             <MaterialCommunityIcons
               name="volume-high"
               size={24}
-              color={theme.buttonSecondaryText.val}
+              color={theme.silver300.val}
             />
           }
           onPress={() => setOpen(true)}
