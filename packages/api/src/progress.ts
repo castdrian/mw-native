@@ -1,5 +1,3 @@
-import { ofetch } from "ofetch";
-
 import type {
   AccountWithToken,
   ProgressInput,
@@ -8,6 +6,7 @@ import type {
   ProgressUpdateItem,
 } from "./types";
 import { getAuthHeaders } from "./auth";
+import { f } from "./fetch";
 
 export function progressUpdateItemToInput(
   item: ProgressUpdateItem,
@@ -72,12 +71,12 @@ export async function setProgress(
   account: AccountWithToken,
   input: ProgressInput,
 ) {
-  return ofetch<ProgressResponse>(
+  return f<ProgressResponse>(
     `/users/${account.userId}/progress/${input.tmdbId}`,
     {
       method: "PUT",
       headers: getAuthHeaders(account.token),
-      baseURL: url,
+      baseUrl: url,
       body: input,
     },
   );
@@ -90,10 +89,10 @@ export async function removeProgress(
   episodeId?: string,
   seasonId?: string,
 ) {
-  await ofetch(`/users/${account.userId}/progress/${id}`, {
+  await f(`/users/${account.userId}/progress/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(account.token),
-    baseURL: url,
+    baseUrl: url,
     body: {
       episodeId,
       seasonId,

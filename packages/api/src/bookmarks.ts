@@ -1,5 +1,3 @@
-import { ofetch } from "ofetch";
-
 import type {
   AccountWithToken,
   BookmarkInput,
@@ -7,6 +5,7 @@ import type {
   BookmarkResponse,
 } from "./types";
 import { getAuthHeaders } from "./auth";
+import { f } from "./fetch";
 
 export function bookmarkMediaToInput(
   tmdbId: string,
@@ -28,12 +27,12 @@ export async function addBookmark(
   account: AccountWithToken,
   input: BookmarkInput,
 ) {
-  return ofetch<BookmarkResponse>(
+  return f<BookmarkResponse>(
     `/users/${account.userId}/bookmarks/${input.tmdbId}`,
     {
       method: "POST",
       headers: getAuthHeaders(account.token),
-      baseURL: url,
+      baseUrl: url,
       body: input,
     },
   );
@@ -44,12 +43,9 @@ export async function removeBookmark(
   account: AccountWithToken,
   id: string,
 ) {
-  return ofetch<{ tmdbId: string }>(
-    `/users/${account.userId}/bookmarks/${id}`,
-    {
-      method: "DELETE",
-      headers: getAuthHeaders(account.token),
-      baseURL: url,
-    },
-  );
+  return f<{ tmdbId: string }>(`/users/${account.userId}/bookmarks/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(account.token),
+    baseUrl: url,
+  });
 }

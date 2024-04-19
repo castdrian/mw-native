@@ -1,9 +1,8 @@
-import { ofetch } from "ofetch";
-
 import type { MetaResponse } from "./types";
+import { f } from "./fetch";
 
-export async function getBackendMeta(url: string): Promise<MetaResponse> {
-  return ofetch<MetaResponse>("/meta", {
-    baseURL: url,
+export function getBackendMeta(url: string): Promise<MetaResponse> {
+  return f<MetaResponse>("/meta", {
+    baseUrl: url,
   });
 }

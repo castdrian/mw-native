@@ -2,29 +2,18 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { H4, Paragraph, Text, View } from "tamagui";
 
+import { getBackendMeta } from "@movie-web/api";
+
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
 
-// TODO: extract to function with cleanup and types
-const getBackendMeta = (
-  url: string,
-): Promise<{
-  description: string;
-  hasCaptcha: boolean;
-  name: string;
-  url: string;
-}> => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return fetch(`${url}/meta`).then((res) => res.json());
-};
-
 export default function Page() {
-  const { url } = useLocalSearchParams();
+  const { url } = useLocalSearchParams<{ url: string }>();
 
   const meta = useQuery({
     queryKey: ["backendMeta", url],
-    queryFn: () => getBackendMeta(url as string),
+    queryFn: () => getBackendMeta(url),
   });
 
   return (
@@ -102,7 +91,7 @@ export default function Page() {
           gap="$4"
         >
           <MWButton type="purple">I trust this server</MWButton>
-          <MWButton type="secondary">Go back</MWButton>
+          <MWButton type="cancel">Go back</MWButton>
 
           <Paragraph color="$ash50" textAlign="center" fontWeight="$semibold">
             Already have an account?{" "}

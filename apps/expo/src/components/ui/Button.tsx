@@ -4,35 +4,35 @@ export const MWButton = styled(Button, {
   variants: {
     type: {
       primary: {
-        backgroundColor: "$buttonPrimaryBackground",
-        color: "$buttonPrimaryText",
+        backgroundColor: "white",
+        color: "black",
         fontWeight: "bold",
         pressStyle: {
-          backgroundColor: "$buttonPrimaryBackgroundHover",
+          backgroundColor: "$silver100",
         },
       },
       secondary: {
-        backgroundColor: "$buttonSecondaryBackground",
-        color: "$buttonSecondaryText",
+        backgroundColor: "$ash700",
+        color: "$silver300",
         fontWeight: "bold",
         pressStyle: {
-          backgroundColor: "$buttonSecondaryBackgroundHover",
+          backgroundColor: "$ash500",
         },
       },
       purple: {
-        backgroundColor: "$buttonPurpleBackground",
+        backgroundColor: "$purple500",
         color: "white",
         fontWeight: "bold",
         pressStyle: {
-          backgroundColor: "$buttonPurpleBackgroundHover",
+          backgroundColor: "$purple400",
         },
       },
       cancel: {
-        backgroundColor: "$buttonCancelBackground",
+        backgroundColor: "$ash500",
         color: "white",
         fontWeight: "bold",
         pressStyle: {
-          backgroundColor: "$buttonCancelBackgroundHover",
+          backgroundColor: "$ash300",
         },
       },
     },

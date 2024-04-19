@@ -39,11 +39,7 @@ export function genMnemonic(): string {
   return generateMnemonic(wordlist);
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function signCode(
-  code: string,
-  privateKey: Uint8Array,
-): Promise<Uint8Array> {
+export function signCode(code: string, privateKey: Uint8Array): Uint8Array {
   return forge.pki.ed25519.sign({
     encoding: "utf8",
     message: code,
@@ -62,8 +58,8 @@ export function bytesToBase64Url(bytes: Uint8Array): string {
     .replace(/=+$/, "");
 }
 
-export async function signChallenge(keys: Keys, challengeCode: string) {
-  const signature = await signCode(challengeCode, keys.privateKey);
+export function signChallenge(keys: Keys, challengeCode: string) {
+  const signature = signCode(challengeCode, keys.privateKey);
   return bytesToBase64Url(signature);
 }
 

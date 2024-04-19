@@ -1,5 +1,3 @@
-import { ofetch } from "ofetch";
-
 import type {
   AccountWithToken,
   BookmarkMediaItem,
@@ -11,6 +9,7 @@ import type {
   UserResponse,
 } from "./types";
 import { getAuthHeaders } from "./auth";
+import { f } from "./fetch";
 
 export function bookmarkResponsesToEntries(responses: BookmarkResponse[]) {
   const entries = responses.map((bookmark) => {
@@ -83,13 +82,10 @@ export async function getUser(
   url: string,
   token: string,
 ): Promise<{ user: UserResponse; session: SessionResponse }> {
-  return ofetch<{ user: UserResponse; session: SessionResponse }>(
-    "/users/@me",
-    {
-      headers: getAuthHeaders(token),
-      baseURL: url,
-    },
-  );
+  return f<{ user: UserResponse; session: SessionResponse }>("/users/@me", {
+    headers: getAuthHeaders(token),
+    baseUrl: url,
+  });
 }
 
 export async function editUser(
@@ -97,13 +93,13 @@ export async function editUser(
   account: AccountWithToken,
   object: UserEdit,
 ): Promise<{ user: UserResponse; session: SessionResponse }> {
-  return ofetch<{ user: UserResponse; session: SessionResponse }>(
+  return f<{ user: UserResponse; session: SessionResponse }>(
     `/users/${account.userId}`,
     {
       method: "PATCH",
       headers: getAuthHeaders(account.token),
       body: object,
-      baseURL: url,
+      baseUrl: url,
     },
   );
 }
@@ -112,22 +108,22 @@ export async function deleteUser(
   url: string,
   account: AccountWithToken,
 ): Promise<UserResponse> {
-  return ofetch<UserResponse>(`/users/${account.userId}`, {
+  return f<UserResponse>(`/users/${account.userId}`, {
     headers: getAuthHeaders(account.token),
-    baseURL: url,
+    baseUrl: url,
   });
 }
 
 export async function getBookmarks(url: string, account: AccountWithToken) {
-  return ofetch<BookmarkResponse[]>(`/users/${account.userId}/bookmarks`, {
+  return f<BookmarkResponse[]>(`/users/${account.userId}/bookmarks`, {
     headers: getAuthHeaders(account.token),
-    baseURL: url,
+    baseUrl: url,
   });
 }
 
 export async function getProgress(url: string, account: AccountWithToken) {
-  return ofetch<ProgressResponse[]>(`/users/${account.userId}/progress`, {
+  return f<ProgressResponse[]>(`/users/${account.userId}/progress`, {
     headers: getAuthHeaders(account.token),
-    baseURL: url,
+    baseUrl: url,
   });
 }

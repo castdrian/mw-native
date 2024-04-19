@@ -1,12 +1,11 @@
-import { ofetch } from "ofetch";
-
 import type { AccountWithToken, SessionResponse, SessionUpdate } from "./types";
 import { getAuthHeaders } from "./auth";
+import { f } from "./fetch";
 
 export async function getSessions(url: string, account: AccountWithToken) {
-  return ofetch<SessionResponse[]>(`/users/${account.userId}/sessions`, {
+  return f<SessionResponse[]>(`/users/${account.userId}/sessions`, {
     headers: getAuthHeaders(account.token),
-    baseURL: url,
+    baseUrl: url,
   });
 }
 
@@ -15,11 +14,11 @@ export async function updateSession(
   account: AccountWithToken,
   update: SessionUpdate,
 ) {
-  return ofetch<SessionResponse[]>(`/sessions/${account.sessionId}`, {
+  return f<SessionResponse[]>(`/sessions/${account.sessionId}`, {
     method: "PATCH",
     headers: getAuthHeaders(account.token),
     body: update,
-    baseURL: url,
+    baseUrl: url,
   });
 }
 
@@ -28,9 +27,9 @@ export async function removeSession(
   token: string,
   sessionId: string,
 ) {
-  return ofetch<SessionResponse[]>(`/sessions/${sessionId}`, {
+  return f<SessionResponse[]>(`/sessions/${sessionId}`, {
     method: "DELETE",
     headers: getAuthHeaders(token),
-    baseURL: url,
+    baseUrl: url,
   });
 }

@@ -1,6 +1,5 @@
-import { ofetch } from "ofetch";
-
 import type { LoginResponse } from "./types";
+import { f } from "./fetch";
 
 export function getAuthHeaders(token: string): Record<string, string> {
   return {
@@ -13,12 +12,12 @@ export async function accountLogin(
   id: string,
   deviceName: string,
 ): Promise<LoginResponse> {
-  return ofetch<LoginResponse>("/auth/login", {
+  return f<LoginResponse>("/auth/login", {
     method: "POST",
     body: {
       id,
       device: deviceName,
     },
-    baseURL: url,
+    baseUrl: url,
   });
 }
