@@ -71,7 +71,7 @@ export function useAuth() {
         backendUrl,
         publicKeyBase64Url,
       );
-      const signature = await signChallenge(keys, challenge);
+      const signature = signChallenge(keys, challenge);
       const loginResult = await loginAccount(backendUrl, {
         challenge: {
           code: challenge,
@@ -110,7 +110,7 @@ export function useAuth() {
         registerData.recaptchaToken,
       );
       const keys = await keysFromMnemonic(registerData.mnemonic);
-      const signature = await signChallenge(keys, challenge);
+      const signature = signChallenge(keys, challenge);
       const registerResult = await registerAccount(backendUrl, {
         challenge: {
           code: challenge,
