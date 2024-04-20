@@ -13,7 +13,7 @@ export default function Page() {
 
   const meta = useQuery({
     queryKey: ["backendMeta", url],
-    queryFn: () => getBackendMeta(url),
+    queryFn: () => getBackendMeta(url as unknown as string),
   });
 
   return (
