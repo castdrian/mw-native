@@ -122,6 +122,9 @@ importers:
       expo-network:
         specifier: ~5.8.0
         version: 5.8.0(expo@50.0.14)
+      expo-pod-pinner:
+        specifier: ^1.0.1
+        version: 1.0.1
       expo-router:
         specifier: ~3.4.8
         version: 3.4.8(expo-constants@15.4.5)(expo-linking@6.2.2)(expo-modules-autolinking@1.10.3)(expo-status-bar@1.11.1)(expo@50.0.14)(react-dom@18.2.0)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react-native@0.73.6)(react@18.2.0)
@@ -7979,6 +7982,10 @@ packages:
       expo: '*'
     dependencies:
       expo: 50.0.14(@babel/core@7.23.9)(@react-native/babel-preset@0.73.21)
+    dev: false
+
+  /expo-pod-pinner@1.0.1:
+    resolution: {integrity: sha512-UeyCRXrI13tjb+rtQkjBjgs+eS1KntAgTRnLoawFdMp8s1T2bOcm9P4cIrFlLHt9aZBLLMdHra1TY6LiMI3+kw==}
     dev: false
 
   /expo-router@3.4.8(expo-constants@15.4.5)(expo-linking@6.2.2)(expo-modules-autolinking@1.10.3)(expo-status-bar@1.11.1)(expo@50.0.14)(react-dom@18.2.0)(react-native-reanimated@3.6.2)(react-native-safe-area-context@4.8.2)(react-native-screens@3.29.0)(react-native@0.73.6)(react@18.2.0):
