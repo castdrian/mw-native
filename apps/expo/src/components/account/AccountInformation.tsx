@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { H3, Spinner, Text, View, XStack, YStack } from "tamagui";
+import { H5, Spinner, Text, View, XStack, YStack } from "tamagui";
 
 import {
   base64ToBuffer,
@@ -260,7 +260,7 @@ export function AccountInformation() {
             <MWSeparator />
             <MWCard bordered padded>
               <YStack gap="$3">
-                <H3 fontWeight="$bold">Delete account</H3>
+                <H5 fontWeight="$bold">Delete account</H5>
                 <Text color="$ash300" fontWeight="$semibold">
                   This action is irreversible. All data will be deleted and
                   nothing can be recovered.
