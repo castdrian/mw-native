@@ -99,7 +99,7 @@ export default function Page() {
             }}
             asChild
             onPress={() => {
-              setBackendUrl(backendUrl);
+              setBackendUrl(backendUrl as unknown as string);
             }}
           >
             <MWButton type="purple" disabled={!meta.isSuccess}>
