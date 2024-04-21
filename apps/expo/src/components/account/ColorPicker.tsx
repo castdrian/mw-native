@@ -11,8 +11,8 @@ export const colors = [
 ] as const;
 
 export function ColorPicker(props: {
-  value: (typeof colors)[number];
-  onInput: (v: (typeof colors)[number]) => void;
+  value: string;
+  onInput: (v: string) => void;
 }) {
   return (
     <XStack gap="$2">

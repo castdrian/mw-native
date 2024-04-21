@@ -1,14 +1,13 @@
 import type { CircleProps } from "tamagui";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Circle } from "tamagui";
+import { Circle, View } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
-
-import type { expoIcons } from "./UserIconPicker";
 
 export interface AvatarProps {
   colorA: string;
   colorB: string;
-  icon: (typeof expoIcons)[number];
+  icon: string;
+  bottomItem?: React.ReactNode;
 }
 
 export function Avatar(props: AvatarProps & CircleProps) {
@@ -33,6 +32,9 @@ export function Avatar(props: AvatarProps & CircleProps) {
       >
         <FontAwesome6 name={props.icon} size={24} color="white" />
       </LinearGradient>
+      <View position="absolute" bottom={0}>
+        {props.bottomItem}
+      </View>
     </Circle>
   );
 }

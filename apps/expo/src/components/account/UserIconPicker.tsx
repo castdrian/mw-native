@@ -24,9 +24,13 @@ export const getExpoIconFromDbIcon = (icon: string) => {
   ) as (typeof expoIcons)[number];
 };
 
+export const getDbIconFromExpoIcon = (icon: string) => {
+  return expoIconsToDbIcons[icon as (typeof expoIcons)[number]];
+};
+
 export function UserIconPicker(props: {
-  value: (typeof expoIcons)[number];
-  onInput: (v: (typeof expoIcons)[number]) => void;
+  value: string;
+  onInput: (v: string) => void;
 }) {
   return (
     <XStack gap="$2">

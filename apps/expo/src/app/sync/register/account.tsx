@@ -6,7 +6,7 @@ import { Avatar } from "~/components/account/Avatar";
 import { ColorPicker, colors } from "~/components/account/ColorPicker";
 import {
   expoIcons,
-  expoIconsToDbIcons,
+  getDbIconFromExpoIcon,
   UserIconPicker,
 } from "~/components/account/UserIconPicker";
 import ScreenLayout from "~/components/layout/ScreenLayout";
@@ -19,9 +19,9 @@ export default function Page() {
 
   const [deviceName, setDeviceName] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [colorA, setColorA] = useState<(typeof colors)[number]>(colors[0]);
-  const [colorB, setColorB] = useState<(typeof colors)[number]>(colors[0]);
-  const [icon, setIcon] = useState<(typeof expoIcons)[number]>(expoIcons[0]);
+  const [colorA, setColorA] = useState<string>(colors[0]);
+  const [colorB, setColorB] = useState<string>(colors[0]);
+  const [icon, setIcon] = useState<string>(expoIcons[0]);
 
   const handleNext = () => {
     if (!deviceName) {
@@ -34,7 +34,7 @@ export default function Page() {
         deviceName,
         colorA,
         colorB,
-        icon: expoIconsToDbIcons[icon],
+        icon: getDbIconFromExpoIcon(icon),
       },
     });
   };
