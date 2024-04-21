@@ -27,7 +27,7 @@ export function ChangeProfileModal(props: {
       animation="fast"
       snapPoints={[65]}
     >
-      <Sheet.Handle backgroundColor="$shade900" />
+      <Sheet.Handle backgroundColor="$shade100" />
       <Sheet.Frame
         backgroundColor="$shade800"
         padding="$4"
