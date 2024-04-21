@@ -94,14 +94,15 @@ export function AccountInformation() {
                 <MWInput
                   type="authentication"
                   value={decryptedName}
-                  minWidth={"80%"}
-                  maxWidth={"80%"}
+                  alignSelf="flex-start"
+                  width="$14"
                 />
 
                 <MWButton
                   type="danger"
-                  width={"50%"}
                   onPress={() => logoutMutation.mutate()}
+                  alignSelf="flex-start"
+                  isLoading={logoutMutation.isPending}
                 >
                   Logout
                 </MWButton>
@@ -133,6 +134,7 @@ export function AccountInformation() {
                 {!device.current && (
                   <MWButton
                     type="danger"
+                    isLoading={removeSessionMutation.isPending}
                     onPress={() => removeSessionMutation.mutate(device.id)}
                   >
                     Remove

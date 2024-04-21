@@ -1,6 +1,6 @@
-import { Button, styled } from "tamagui";
+import { Button, Spinner, styled, withStaticProperties } from "tamagui";
 
-export const MWButton = styled(Button, {
+const MWButtonFrame = styled(Button, {
   variants: {
     type: {
       primary: {
@@ -71,3 +71,22 @@ export const MWButton = styled(Button, {
     },
   } as const,
 });
+
+const ButtonComponent = MWButtonFrame.styleable<{
+  isLoading?: boolean;
+}>(function Button(props, ref) {
+  const spinnerColor =
+    // @ts-expect-error this is a hack to get the color from the variant
+    MWButtonFrame.staticConfig.variants?.type?.[props.type!]?.color as string;
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    <MWButtonFrame {...props} ref={ref}>
+      {props.isLoading && (
+        <Spinner size="small" color={spinnerColor ?? "white"} />
+      )}
+      {props.children}
+    </MWButtonFrame>
+  );
+});
+
+export const MWButton = withStaticProperties(ButtonComponent, {});

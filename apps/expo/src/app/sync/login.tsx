@@ -96,7 +96,11 @@ export default function Page() {
           flexDirection="column"
           gap="$4"
         >
-          <MWButton type="purple" onPress={() => mutation.mutate()}>
+          <MWButton
+            type="purple"
+            onPress={() => mutation.mutate()}
+            isLoading={mutation.isPending}
+          >
             Login
           </MWButton>
           {mutation.isError && (

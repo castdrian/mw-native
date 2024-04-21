@@ -75,7 +75,12 @@ export function DeleteAccountAlert() {
                 asChild
                 onPress={() => deleteAccountMutation.mutate()}
               >
-                <MWButton type="purple">I am sure</MWButton>
+                <MWButton
+                  type="purple"
+                  isLoading={deleteAccountMutation.isPending}
+                >
+                  I am sure
+                </MWButton>
               </AlertDialog.Action>
             </XStack>
           </YStack>

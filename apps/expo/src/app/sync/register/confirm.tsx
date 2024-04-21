@@ -95,7 +95,11 @@ export default function Page() {
             </Paragraph>
           )}
 
-          <MWButton type="purple" onPress={() => mutation.mutate()}>
+          <MWButton
+            type="purple"
+            onPress={() => mutation.mutate()}
+            isLoading={mutation.isPending}
+          >
             Create account
           </MWButton>
         </MWCard.Footer>
