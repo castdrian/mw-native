@@ -11,12 +11,14 @@ import { useAuth } from "~/hooks/useAuth";
 
 export default function Page() {
   const router = useRouter();
-  const { deviceName, colorA, colorB, icon } = useLocalSearchParams<{
-    deviceName: string;
-    colorA: string;
-    colorB: string;
-    icon: string;
-  }>();
+  // Requires type casting, typecheck fails for type-safe params
+  const { deviceName, colorA, colorB, icon } =
+    useLocalSearchParams() as unknown as {
+      deviceName: string;
+      colorA: string;
+      colorB: string;
+      icon: string;
+    };
   const { register } = useAuth();
 
   const [passphrase, setPassphrase] = useState("");
