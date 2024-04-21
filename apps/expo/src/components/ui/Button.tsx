@@ -10,6 +10,11 @@ export const MWButton = styled(Button, {
         pressStyle: {
           backgroundColor: "$silver100",
         },
+        disabledStyle: {
+          backgroundColor: "$ash500",
+          color: "$ash200",
+          pointerEvents: "none",
+        },
       },
       secondary: {
         backgroundColor: "$ash700",
@@ -17,6 +22,11 @@ export const MWButton = styled(Button, {
         fontWeight: "bold",
         pressStyle: {
           backgroundColor: "$ash500",
+        },
+        disabledStyle: {
+          backgroundColor: "$ash900",
+          color: "$ash200",
+          pointerEvents: "none",
         },
       },
       purple: {
@@ -26,6 +36,11 @@ export const MWButton = styled(Button, {
         pressStyle: {
           backgroundColor: "$purple400",
         },
+        disabledStyle: {
+          backgroundColor: "$purple700",
+          color: "$ash200",
+          pointerEvents: "none",
+        },
       },
       cancel: {
         backgroundColor: "$ash500",
@@ -33,6 +48,24 @@ export const MWButton = styled(Button, {
         fontWeight: "bold",
         pressStyle: {
           backgroundColor: "$ash300",
+        },
+        disabledStyle: {
+          backgroundColor: "$ash700",
+          color: "$ash200",
+          pointerEvents: "none",
+        },
+      },
+      danger: {
+        backgroundColor: "$rose300",
+        color: "white",
+        fontWeight: "bold",
+        pressStyle: {
+          backgroundColor: "$rose200",
+        },
+        disabledStyle: {
+          backgroundColor: "$rose500",
+          color: "$ash200",
+          pointerEvents: "none",
         },
       },
     },

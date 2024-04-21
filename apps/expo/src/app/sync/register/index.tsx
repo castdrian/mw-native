@@ -28,7 +28,7 @@ function PassphraseWord({ word }: { word: string }) {
 
 export default function Page() {
   const theme = useTheme();
-  const words = genMnemonic().split(" ");
+  const words = genMnemonic();
 
   return (
     <ScreenLayout
@@ -86,7 +86,7 @@ export default function Page() {
                 gap: 8,
               }}
               onPress={async () => {
-                await Clipboard.setStringAsync(words.join(""));
+                await Clipboard.setStringAsync(words);
               }}
             >
               <Feather name="copy" size={18} color={theme.shade200.val} />
@@ -103,7 +103,7 @@ export default function Page() {
             justifyContent="center"
             padding="$3"
           >
-            {words.map((word, index) => (
+            {words.split(" ").map((word, index) => (
               <PassphraseWord key={index} word={word} />
             ))}
           </View>
@@ -122,7 +122,13 @@ export default function Page() {
           <Paragraph color="$ash50" textAlign="center" fontWeight="$semibold">
             Already have an account?{"\n"}
             <Text color="$purple100" fontWeight="$bold">
-              <Link href="/sync/login">Login here</Link>
+              <Link
+                href={{
+                  pathname: "/sync/login",
+                }}
+              >
+                Login here
+              </Link>
             </Text>
           </Paragraph>
         </MWCard.Footer>

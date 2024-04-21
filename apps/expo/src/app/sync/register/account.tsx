@@ -1,115 +1,43 @@
 import { useState } from "react";
-import { Link, Stack } from "expo-router";
-import { FontAwesome6, Ionicons } from "@expo/vector-icons";
-import { Circle, H4, Label, Paragraph, View, XStack, YStack } from "tamagui";
-import { LinearGradient } from "tamagui/linear-gradient";
+import { Stack, useRouter } from "expo-router";
+import { H4, Label, Paragraph, View, YStack } from "tamagui";
 
+import { Avatar } from "~/components/account/Avatar";
+import { ColorPicker, colors } from "~/components/account/ColorPicker";
+import {
+  expoIcons,
+  expoIconsToDbIcons,
+  UserIconPicker,
+} from "~/components/account/UserIconPicker";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
 import { MWInput } from "~/components/ui/Input";
 
-const colors = ["#0A54FF", "#CF2E68", "#F9DD7F", "#7652DD", "#2ECFA8"] as const;
-
-function ColorPicker(props: {
-  value: (typeof colors)[number];
-  onInput: (v: (typeof colors)[number]) => void;
-}) {
-  return (
-    <XStack gap="$2">
-      {colors.map((color) => {
-        return (
-          <View
-            onPress={() => props.onInput(color)}
-            flexGrow={1}
-            height="$4"
-            borderRadius="$4"
-            justifyContent="center"
-            alignItems="center"
-            backgroundColor={color}
-            key={color}
-          >
-            {props.value === color ? (
-              <Ionicons name="checkmark-circle" size={24} color="white" />
-            ) : null}
-          </View>
-        );
-      })}
-    </XStack>
-  );
-}
-
-const icons = [
-  "user-group",
-  "couch",
-  "mobile-screen",
-  "ticket",
-  "handcuffs",
-] as const;
-
-function UserIconPicker(props: {
-  value: (typeof icons)[number];
-  onInput: (v: (typeof icons)[number]) => void;
-}) {
-  return (
-    <XStack gap="$2">
-      {icons.map((icon) => {
-        return (
-          <View
-            flexGrow={1}
-            height="$4"
-            borderRadius="$4"
-            justifyContent="center"
-            alignItems="center"
-            backgroundColor={props.value === icon ? "$purple400" : "$shade400"}
-            borderColor={props.value === icon ? "$purple200" : "$shade400"}
-            borderWidth={1}
-            key={icon}
-            onPress={() => props.onInput(icon)}
-          >
-            <FontAwesome6 name={icon} size={24} color="white" />
-          </View>
-        );
-      })}
-    </XStack>
-  );
-}
-
-interface AvatarProps {
-  colorA: string;
-  colorB: string;
-  icon: (typeof icons)[number];
-}
-
-export function Avatar(props: AvatarProps) {
-  return (
-    <Circle
-      backgroundColor={props.colorA}
-      height="$6"
-      width="$6"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <LinearGradient
-        colors={[props.colorA, props.colorB]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        borderRadius="$12"
-        width="100%"
-        height="100%"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <FontAwesome6 name={props.icon} size={24} color="white" />
-      </LinearGradient>
-    </Circle>
-  );
-}
-
 export default function Page() {
-  const [color, setColor] = useState<(typeof colors)[number]>(colors[0]);
-  const [color2, setColor2] = useState<(typeof colors)[number]>(colors[0]);
-  const [icon, setIcon] = useState<(typeof icons)[number]>(icons[0]);
+  const router = useRouter();
+
+  const [deviceName, setDeviceName] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [colorA, setColorA] = useState<(typeof colors)[number]>(colors[0]);
+  const [colorB, setColorB] = useState<(typeof colors)[number]>(colors[0]);
+  const [icon, setIcon] = useState<(typeof expoIcons)[number]>(expoIcons[0]);
+
+  const handleNext = () => {
+    if (!deviceName) {
+      setErrorMessage("Please enter a device name");
+      return;
+    }
+    return router.push({
+      pathname: "/sync/register/confirm",
+      params: {
+        deviceName,
+        colorA,
+        colorB,
+        icon: expoIconsToDbIcons[icon],
+      },
+    });
+  };
 
   return (
     <ScreenLayout
@@ -129,7 +57,7 @@ export default function Page() {
       <MWCard bordered padded>
         <MWCard.Header>
           <View alignItems="center" marginBottom="$3">
-            <Avatar colorA={color} colorB={color2} icon={icon} />
+            <Avatar colorA={colorA} colorB={colorB} icon={icon} />
           </View>
 
           <H4 fontWeight="$bold" textAlign="center">
@@ -152,18 +80,19 @@ export default function Page() {
             <Label fontWeight="$bold">Device name</Label>
             <MWInput
               type="authentication"
-              placeholder="Passphrase"
-              secureTextEntry
+              placeholder="Personal phone"
               autoCorrect={false}
+              value={deviceName}
+              onChangeText={setDeviceName}
             />
           </YStack>
           <YStack gap="$1">
             <Label fontWeight="$bold">Profile color one</Label>
-            <ColorPicker value={color} onInput={(color) => setColor(color)} />
+            <ColorPicker value={colorA} onInput={(color) => setColorA(color)} />
           </YStack>
           <YStack gap="$1">
             <Label fontWeight="$bold">Profile color two</Label>
-            <ColorPicker value={color2} onInput={(color) => setColor2(color)} />
+            <ColorPicker value={colorB} onInput={(color) => setColorB(color)} />
           </YStack>
           <YStack gap="$1">
             <Label fontWeight="$bold">User icon</Label>
@@ -172,17 +101,14 @@ export default function Page() {
         </YStack>
 
         <MWCard.Footer justifyContent="center" flexDirection="column" gap="$4">
-          <Link
-            href={{
-              pathname: "/sync/register/confirm",
-            }}
-            replace
-            asChild
-          >
-            <MWButton type="purple" width="100%">
-              Next
-            </MWButton>
-          </Link>
+          {errorMessage && (
+            <Paragraph color="$red100" textAlign="center">
+              {errorMessage}
+            </Paragraph>
+          )}
+          <MWButton type="purple" width="100%" onPress={handleNext}>
+            Next
+          </MWButton>
         </MWCard.Footer>
       </MWCard>
     </ScreenLayout>

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import type {
   AccountWithToken,
@@ -8,9 +8,11 @@ import type {
   UserResponse,
 } from "@movie-web/api";
 import {
+  base64ToBuffer,
   bookmarkMediaToInput,
   bytesToBase64,
   bytesToBase64Url,
+  decryptData,
   encryptData,
   getBookmarks,
   getLoginChallengeToken,
@@ -192,9 +194,18 @@ export function useAuth() {
     [backendUrl, syncData, logout],
   );
 
+  const decryptedName = useMemo(() => {
+    if (!currentAccount) return "";
+    return decryptData(
+      currentAccount.deviceName,
+      base64ToBuffer(currentAccount.seed),
+    );
+  }, [currentAccount]);
+
   return {
     loggedIn,
     profile,
+    decryptedName,
     login,
     logout,
     register,

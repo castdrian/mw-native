@@ -1,12 +1,40 @@
-import { Stack } from "expo-router";
+import { useState } from "react";
+import { Link, Stack, useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 import { H4, Label, Paragraph, Text, YStack } from "tamagui";
 
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
 import { MWInput } from "~/components/ui/Input";
+import { useAuth } from "~/hooks/useAuth";
+import { useAuthStore } from "~/stores/settings";
 
 export default function Page() {
+  const backendUrl = useAuthStore((state) => state.backendUrl);
+  const router = useRouter();
+  const { login } = useAuth();
+
+  const [passphrase, setPassphrase] = useState("");
+  const [deviceName, setDeviceName] = useState("");
+
+  const mutation = useMutation({
+    mutationKey: ["login", backendUrl, passphrase, deviceName],
+    mutationFn: () =>
+      login({
+        mnemonic: passphrase,
+        userData: {
+          device: deviceName,
+        },
+      }),
+    onSuccess: (data) => {
+      if (data) {
+        return router.push("/(tabs)/movie-web");
+      }
+      return null;
+    },
+  });
+
   return (
     <ScreenLayout
       showHeader={false}
@@ -46,6 +74,8 @@ export default function Page() {
               placeholder="Passphrase"
               secureTextEntry
               autoCorrect={false}
+              value={passphrase}
+              onChangeText={setPassphrase}
             />
           </YStack>
           <YStack gap="$1">
@@ -54,6 +84,8 @@ export default function Page() {
               type="authentication"
               placeholder="Personal phone"
               autoCorrect={false}
+              value={deviceName}
+              onChangeText={setDeviceName}
             />
           </YStack>
         </YStack>
@@ -64,13 +96,22 @@ export default function Page() {
           flexDirection="column"
           gap="$4"
         >
-          <MWButton type="purple">Login</MWButton>
+          <MWButton type="purple" onPress={() => mutation.mutate()}>
+            Login
+          </MWButton>
+          {mutation.isError && (
+            <Text color="$red100" textAlign="center">
+              {mutation.error.message}
+            </Text>
+          )}
 
           <Paragraph color="$ash50" textAlign="center" fontWeight="$semibold">
             Don&apos;t have an account yet?{"\n"}
-            <Text color="$purple100" fontWeight="$bold">
-              Create an account.
-            </Text>
+            <Link href={{ pathname: "/sync/register" }} asChild>
+              <Text color="$purple100" fontWeight="$bold">
+                Create an account.
+              </Text>
+            </Link>
           </Paragraph>
         </MWCard.Footer>
       </MWCard>

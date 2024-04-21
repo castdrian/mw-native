@@ -7,13 +7,16 @@ import { getBackendMeta } from "@movie-web/api";
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
+import { useAuthStore } from "~/stores/settings";
 
 export default function Page() {
-  const { url } = useLocalSearchParams<{ url: string }>();
+  const { backendUrl } = useLocalSearchParams<{ backendUrl: string }>();
+
+  const setBackendUrl = useAuthStore((state) => state.setBackendUrl);
 
   const meta = useQuery({
-    queryKey: ["backendMeta", url],
-    queryFn: () => getBackendMeta(url as unknown as string),
+    queryKey: ["backendMeta", backendUrl],
+    queryFn: () => getBackendMeta(backendUrl as unknown as string),
   });
 
   return (
@@ -52,7 +55,7 @@ export default function Page() {
                   color="white"
                   textDecorationLine="underline"
                 >
-                  {url}
+                  {backendUrl}
                 </Text>
                 . Please confirm you trust it before making an account.
               </>
@@ -95,8 +98,13 @@ export default function Page() {
               pathname: "/sync/register",
             }}
             asChild
+            onPress={() => {
+              setBackendUrl(backendUrl);
+            }}
           >
-            <MWButton type="purple">I trust this server</MWButton>
+            <MWButton type="purple" disabled={!meta.isSuccess}>
+              I trust this server
+            </MWButton>
           </Link>
           <Link
             href={{

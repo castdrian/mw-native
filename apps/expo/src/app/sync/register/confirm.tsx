@@ -1,12 +1,45 @@
-import { Link, Stack } from "expo-router";
+import { useState } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
 import { H4, Label, Paragraph, YStack } from "tamagui";
 
 import ScreenLayout from "~/components/layout/ScreenLayout";
 import { MWButton } from "~/components/ui/Button";
 import { MWCard } from "~/components/ui/Card";
 import { MWInput } from "~/components/ui/Input";
+import { useAuth } from "~/hooks/useAuth";
 
 export default function Page() {
+  const router = useRouter();
+  const { deviceName, colorA, colorB, icon } = useLocalSearchParams<{
+    deviceName: string;
+    colorA: string;
+    colorB: string;
+    icon: string;
+  }>();
+  const { register } = useAuth();
+
+  const [passphrase, setPassphrase] = useState("");
+
+  const mutation = useMutation({
+    mutationKey: ["register", deviceName, colorA, colorB, icon],
+    mutationFn: () =>
+      register({
+        // TODO: "Add recaptchaToken",
+        mnemonic: passphrase,
+        userData: {
+          device: deviceName,
+          profile: { colorA, colorB, icon },
+        },
+      }),
+    onSuccess: (data) => {
+      if (data) {
+        return router.push("/(tabs)/movie-web");
+      }
+      return null;
+    },
+  });
+
   return (
     <ScreenLayout
       showHeader={false}
@@ -47,20 +80,22 @@ export default function Page() {
               placeholder="Passphrase"
               secureTextEntry
               autoCorrect={false}
+              value={passphrase}
+              onChangeText={setPassphrase}
             />
           </YStack>
         </YStack>
 
         <MWCard.Footer justifyContent="center" flexDirection="column" gap="$4">
-          <Link
-            href={{
-              pathname: "/(tabs)/movie-web",
-            }}
-            replace
-            asChild
-          >
-            <MWButton type="purple">Create account</MWButton>
-          </Link>
+          {mutation.isError && (
+            <Paragraph color="$red100" textAlign="center">
+              {mutation.error.message}
+            </Paragraph>
+          )}
+
+          <MWButton type="purple" onPress={() => mutation.mutate()}>
+            Create account
+          </MWButton>
         </MWCard.Footer>
       </MWCard>
     </ScreenLayout>

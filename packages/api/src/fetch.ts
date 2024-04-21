@@ -38,7 +38,10 @@ export async function f<T>(url: string, ops?: FetcherOptions): Promise<T> {
   const fullUrl = makeFullUrl(url, ops);
   const response = await fetch(fullUrl, {
     method: ops?.method ?? "GET",
-    headers: ops?.headers,
+    headers: {
+      "Content-Type": "application/json",
+      ...ops?.headers,
+    },
     body: ops?.body ? JSON.stringify(ops.body) : undefined,
   });
 
