@@ -88,7 +88,7 @@ export default function Page() {
 
         <MWCard.Footer justifyContent="center" flexDirection="column" gap="$4">
           {mutation.isError && (
-            <Paragraph color="$red100" textAlign="center">
+            <Paragraph color="$rose200" textAlign="center">
               {mutation.error.message}
             </Paragraph>
           )}

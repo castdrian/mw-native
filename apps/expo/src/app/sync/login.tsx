@@ -100,7 +100,7 @@ export default function Page() {
             Login
           </MWButton>
           {mutation.isError && (
-            <Text color="$red100" textAlign="center">
+            <Text color="$rose200" textAlign="center">
               {mutation.error.message}
             </Text>
           )}

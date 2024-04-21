@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Spinner, Text, XStack, YStack } from "tamagui";
+import { H3, Spinner, Text, XStack, YStack } from "tamagui";
 
 import {
   base64ToBuffer,
@@ -17,6 +17,7 @@ import { MWCard } from "../ui/Card";
 import { MWInput } from "../ui/Input";
 import { MWSeparator } from "../ui/Separator";
 import { Avatar } from "./Avatar";
+import { DeleteAccountAlert } from "./DeleteAccountAlert";
 import { getExpoIconFromDbIcon } from "./UserIconPicker";
 
 export function AccountInformation() {
@@ -115,6 +116,11 @@ export function AccountInformation() {
           </Text>
           <MWSeparator />
           {sessions.isLoading && <Spinner />}
+          {sessions.isError && (
+            <Text fontWeight="$bold" color="$rose200">
+              Error loading sessions
+            </Text>
+          )}
           {deviceListSorted.map((device) => (
             <MWCard bordered padded key={device.id}>
               <XStack gap="$4" alignItems="center">
@@ -135,6 +141,23 @@ export function AccountInformation() {
               </XStack>
             </MWCard>
           ))}
+        </YStack>
+
+        <YStack gap="$4">
+          <Text fontSize="$7" fontWeight="$bold">
+            Actions
+          </Text>
+          <MWSeparator />
+          <MWCard bordered padded>
+            <YStack gap="$3">
+              <H3 fontWeight="$bold">Delete account</H3>
+              <Text color="$ash300" fontWeight="$semibold">
+                This action is irreversible. All data will be deleted and
+                nothing can be recovered.
+              </Text>
+              <DeleteAccountAlert />
+            </YStack>
+          </MWCard>
         </YStack>
       </YStack>
     </ScreenLayout>
