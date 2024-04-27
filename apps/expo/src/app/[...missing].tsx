@@ -1,19 +1,23 @@
-import { View } from "react-native";
+import * as Linking from "expo-linking";
 import { Link, Stack } from "expo-router";
-
-import { Text } from "~/components/ui/Text";
+import { Text, View } from "tamagui";
 
 export default function NotFoundScreen() {
+  if (Linking.useURL()) return null;
   return (
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
-      <View className="flex-1 items-center justify-center p-5">
-        <Text className="text-lg font-bold">
-          This screen doesn&apos;t exist.
-        </Text>
+      <View flex={1} alignItems="center" justifyContent="center" padding={5}>
+        <Text fontWeight="bold">This screen doesn&apos;t exist.</Text>
 
-        <Link href="/" className="mt-4 py-4">
-          <Text className="text-sm text-sky-500">Go to home screen!</Text>
+        <Link
+          href="/"
+          style={{
+            marginTop: 16,
+            paddingVertical: 16,
+          }}
+        >
+          <Text color="skyblue">Go to home screen!</Text>
         </Link>
       </View>
     </>

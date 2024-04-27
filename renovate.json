@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["^@movie-web/"],
+      "enabled": true
+    }
+  ],
+  "updateInternalDeps": true,
+  "rangeStrategy": "bump",
+  "includeForks": true,
+  "automerge": true
+}

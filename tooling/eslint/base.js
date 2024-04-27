@@ -29,6 +29,11 @@ const config = {
       { checksVoidReturn: { attributes: false } },
     ],
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-enum-comparison": "off",
+    "@typescript-eslint/no-useless-template-literals": "error",
+    "prefer-template": "error",
   },
   ignorePatterns: [
     "**/*.config.js",
@@ -36,8 +41,26 @@ const config = {
     "**/.eslintrc.cjs",
     "dist",
     "pnpm-lock.yaml",
+    "tamagui-web.css",
   ],
   reportUnusedDisableDirectives: true,
+  // disable all typescript rules for js files
+  overrides: [
+    {
+      files: ["*.js", "*.cjs", "*.mjs"],
+      rules: {
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/require-await": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+      },
+    },
+  ],
 };
 
 module.exports = config;

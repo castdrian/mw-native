@@ -1,0 +1,5 @@
+{
+    "editor.formatOnSave": true,
+    "nodejs.editor.formatOnSave.prettier.mode": "Enabled",
+    "nodejs.editor.formatOnSave.eslint.mode": "Enabled"
+}

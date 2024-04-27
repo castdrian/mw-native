@@ -19,6 +19,8 @@ expo-env.d.ts
 apps/expo/.gitignore
 ios/
 android/
+!modules/*/ios/
+!modules/*/android/
 
 # production
 build
@@ -45,3 +47,6 @@ yarn-error.log*
 
 # turbo
 .turbo
+
+# tamagui
+.tamagui
