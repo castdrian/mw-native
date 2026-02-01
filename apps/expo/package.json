@@ -91,7 +91,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/react": "^18.2.48",
     "babel-plugin-module-resolver": "^5.0.0",
-    "eslint": "^8.56.0",
+    "eslint": "^9.0.0",
     "prettier": "^3.1.1",
     "typescript": "^5.4.3"
   },
